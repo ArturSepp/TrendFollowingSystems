@@ -1,13 +1,16 @@
-# TrendFollowingSystems
+# TrendFollowingSystems (`trendfollowing`)
 
 **Closed-form expected return, Sharpe ratio, and turnover of trend-following
 systems under white noise, AR(1), and ARFIMA processes — with three complete
 system implementations (European, American, Time Series Momentum), Monte Carlo
 verification, and an 84-contract futures dataset spanning 1959–2026.**
 
-[![CI](https://github.com/ArturSepp/TrendFollowingSystems/actions/workflows/ci.yml/badge.svg)](https://github.com/ArturSepp/TrendFollowingSystems/actions/workflows/ci.yml)
-[![Python](https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](https://github.com/ArturSepp/TrendFollowingSystems)
+[![PyPI](https://img.shields.io/pypi/v/trendfollowing?style=flat-square)](https://pypi.org/project/trendfollowing/)
+[![Python](https://img.shields.io/pypi/pyversions/trendfollowing?style=flat-square)](https://pypi.org/project/trendfollowing/)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE)
+[![CI](https://github.com/ArturSepp/TrendFollowingSystems/actions/workflows/ci.yml/badge.svg)](https://github.com/ArturSepp/TrendFollowingSystems/actions/workflows/ci.yml)
+[![Downloads](https://static.pepy.tech/badge/trendfollowing)](https://pepy.tech/project/trendfollowing)
+[![Monthly](https://static.pepy.tech/badge/trendfollowing/month)](https://pepy.tech/project/trendfollowing)
 
 **Paper:** Sepp, A. and Lucic, V., *The Science and Practice of Trend-Following
 Systems*. **Read and download the paper on SSRN:**
@@ -320,6 +323,23 @@ cd papers/tf_systems/replication && PYTHONPATH=../../.. python verify_ls_normali
 ```bash
 pytest tests/
 ```
+
+## Ecosystem
+
+This package is part of an open-source Python stack for quantitative finance — full catalogue at [github.com/ArturSepp](https://github.com/ArturSepp):
+
+| Package | Purpose |
+|---|---|
+| [`qis`](https://github.com/ArturSepp/QuantInvestStrats) | Performance analytics, factsheets, and visualisation |
+| [`optimalportfolios`](https://github.com/ArturSepp/OptimalPortfolios) | Portfolio construction and backtesting |
+| [`factorlasso`](https://github.com/ArturSepp/factorlasso) | Sparse factor models and factor covariance estimation |
+| [`bbg-fetch`](https://github.com/ArturSepp/BloombergFetch) | Bloomberg data fetching |
+| [`trendfollowing`](https://github.com/ArturSepp/TrendFollowingSystems) *(this package)* | Trend-following systems: closed-form theory and replication |
+| [`goal-based-allocation`](https://github.com/ArturSepp/GoalBasedAllocation) | Dynamic MV allocation under regime-switching jump-diffusions |
+| [`stochvolmodels`](https://github.com/ArturSepp/StochVolModels) | Stochastic volatility pricing analytics |
+| [`vanilla-option-pricers`](https://github.com/ArturSepp/VanillaOptionPricers) | Vectorised vanilla option pricers and implied volatility fitters |
+
+Dependency links within the stack: `optimalportfolios` builds on `qis` and `factorlasso`; `trendfollowing` builds on `qis`.
 
 ## Citation
 
