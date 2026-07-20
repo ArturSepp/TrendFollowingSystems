@@ -1,0 +1,79 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest]
+        python-version: ['3.10', '3.11', '3.12']
+        include:
+          - os: windows-latest
+            python-version: '3.12'
+          - os: macos-latest
+            python-version: '3.12'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install package with dev extras
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Run tests
+        # a public checkout has no papers/smart_diversification (untracked while
+        # in review): the companion test module skips itself in that state
+        run: pytest tests/ -q
+
+  verification:
+    # the fast analytic gates behind the manuscript claims, plus a smoke
+    # re-render of one process figure from the committed Monte Carlo caches
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install package
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+
+      - name: ARFIMA variance-scale gate
+        working-directory: papers/tf_systems/replication
+        run: PYTHONPATH=../../.. python verify_arfima_variance_scale.py
+
+      - name: EWMA normalization gate
+        working-directory: papers/tf_systems/replication
+        run: PYTHONPATH=../../.. python ewma_variance_check.py
+
+      - name: Figure re-render from the committed caches (smoke)
+        # file-level smoke only: pixel identity is asserted locally, not in CI,
+        # because glyph rendering varies across matplotlib versions
+        run: |
+          python - <<'PY'
+          import matplotlib
+          matplotlib.use('Agg')
+          from papers.tf_systems.replication.mc_net_sharpe_paper_figs import plot_paper_figure
+          fig = plot_paper_figure('expected_return_arfima1',
+                                  parts_path='papers/tf_systems/replication/results')
+          fig.savefig('smoke.png', dpi=100)
+          print('re-render from caches: OK')
+          PY

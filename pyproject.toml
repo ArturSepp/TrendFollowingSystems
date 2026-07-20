@@ -1,0 +1,90 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trendfollowing"
+version = "1.0.0"
+description = "Replication package for 'The Science and Practice of Trend-Following Systems': European, American, and TSMOM trend-following systems with closed-form expected return, Sharpe ratio, and turnover under white noise, AR(1), and ARFIMA processes, plus Monte Carlo verification and an 84-contract futures dataset"
+readme = "README.md"
+license = {text = "GPL-3.0-or-later"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Artur Sepp", email = "artursepp@gmail.com"},
+    {name = "Vladimir Lucic"},
+]
+keywords = [
+    "trend-following",
+    "momentum",
+    "time-series-momentum",
+    "tsmom",
+    "cta",
+    "managed-futures",
+    "sharpe-ratio",
+    "autocorrelation",
+    "arfima",
+    "long-memory",
+    "ewma-filter",
+    "backtesting",
+    "futures",
+    "quantitative-finance",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Topic :: Office/Business :: Financial :: Investment",
+]
+
+dependencies = [
+    "numpy>=1.26",
+    "pandas>=2.0",
+    "scipy>=1.11",
+    "numba>=0.59",
+    "matplotlib>=3.8",
+    "statsmodels>=0.14",
+    "qis>=5.0.6",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=4.0",
+    "ruff>=0.4",
+]
+
+[project.urls]
+Homepage = "https://github.com/ArturSepp/TrendFollowingSystems"
+Documentation = "https://github.com/ArturSepp/TrendFollowingSystems#readme"
+Repository = "https://github.com/ArturSepp/TrendFollowingSystems"
+Issues = "https://github.com/ArturSepp/TrendFollowingSystems/issues"
+
+[tool.setuptools.packages.find]
+include = ["trendfollowing*"]
+
+[tool.setuptools.package-data]
+trendfollowing = ["resources/*.csv"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--tb=short -q"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I"]
+
+[tool.coverage.run]
+source = ["trendfollowing"]
+
+[tool.coverage.report]
+show_missing = true

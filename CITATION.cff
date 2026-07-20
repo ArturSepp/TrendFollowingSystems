@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this package, please cite the paper below."
+title: "trendfollowing: replication package for The Science and Practice of Trend-Following Systems"
+authors:
+  - family-names: Sepp
+    given-names: Artur
+  - family-names: Lucic
+    given-names: Vladimir
+version: 1.0.0
+repository-code: "https://github.com/ArturSepp/TrendFollowingSystems"
+preferred-citation:
+  type: unpublished
+  title: "The Science and Practice of Trend-Following Systems"
+  authors:
+    - family-names: Sepp
+      given-names: Artur
+    - family-names: Lucic
+      given-names: Vladimir
+  year: 2026
+license: GPL-3.0-or-later

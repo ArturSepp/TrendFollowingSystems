@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.idea/
+.vscode/
+*.egg-info/
+build/
+dist/
+# NOTE: trendfollowing/resources/ (packaged dataset) and papers/*/paper/figures/
+# are TRACKED: the reproducibility claim of both papers depends on them.
+# LaTeX build artifacts and non-redistributable class files are ignored per
+# paper in papers/*/.gitignore.
+
+# The companion paper is under double-blind review (July 2026): its folder stays
+# on disk but untracked until publication. Remove this line to publish it.
+papers/smart_diversification/

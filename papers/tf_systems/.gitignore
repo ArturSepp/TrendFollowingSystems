@@ -1,0 +1,23 @@
+# .gitignore for papers/tf_systems
+#
+# paper/ tracks the LaTeX source, the compiled PDF, figures/, and the SIAM class
+# file siamonline250211.cls (committed on the author's decision, 16 July 2026, so
+# the paper folder is self-contained and `make paper` works from a fresh clone).
+
+# LaTeX build artifacts (the PDF is TRACKED)
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.synctex.gz
+paper/*.toc
+
+
+# regenerated intermediates that are not the committed caches
+replication/results/*.out
+
+# python
+**/__pycache__/
+*.pyc
+
+# local notes and reviews, never published
+private/
