@@ -10,11 +10,9 @@ verification, and an 84-contract futures dataset spanning 1959–2026.**
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE)
 
 **Paper:** Sepp, A. and Lucic, V., *The Science and Practice of Trend-Following
-Systems*, submitted to the *SIAM Journal on Financial Mathematics*. The SSRN
-preprint is at [ssrn.com/abstract=3167787](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3167787)
-(doi:[10.2139/ssrn.3167787](https://dx.doi.org/10.2139/ssrn.3167787)), and the
-submitted manuscript is compiled at
-[`papers/tf_systems/paper/TrendFollowing_PaperA_SIFIN_v1.pdf`](papers/tf_systems/paper/TrendFollowing_PaperA_SIFIN_v1.pdf).
+Systems*. **Read and download the paper on SSRN:**
+[ssrn.com/abstract=3167787](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3167787)
+(doi:[10.2139/ssrn.3167787](https://dx.doi.org/10.2139/ssrn.3167787)).
 See [Citation](#citation) for the BibTeX entry. The replication material for
 every figure and table is in [`papers/tf_systems/`](papers/tf_systems/).
 
@@ -22,11 +20,11 @@ every figure and table is in [`papers/tf_systems/`](papers/tf_systems/).
 of the European trend-following system's P&L into an autocorrelation channel
 and a squared-drift channel,
 
-$$
-\bar F_{1y} \;=\; h \sum_{m=1}^{\infty} \nu^{m}\rho(m) \;+\;
-\frac{l\,\sigma_{\mathrm{target}}}{\sqrt{a}}\,\mu^{2},
-\qquad h = l\,\sigma_{\mathrm{target}}\sqrt{a}\,\frac{1-\nu}{\nu},
-$$
+```math
+\bar F_{1y} = h \sum_{m=1}^{\infty} \nu^{m}\rho(m)
++ \frac{l \sigma_{\mathrm{target}}}{\sqrt{a}} \mu^{2},
+\qquad h = l \sigma_{\mathrm{target}} \sqrt{a} \frac{1-\nu}{\nu}
+```
 
 where $\rho(m)$ is the autocorrelation function of volatility-normalized
 returns, $\mu$ their annualized drift, and $\nu$ the filter smoothing parameter
@@ -40,7 +38,7 @@ The package is useful when three things matter:
 
 - You want to **select the filter span analytically** rather than by grid
   search: the AR-1 break-even cost is nearly span-invariant
-  ($c^{*}_{\infty} = \sqrt{\pi/2a}\,\phi/(1-\phi)$, 37–41bp at $\phi = 0.05$),
+  ($c^{*}_{\infty} = \sqrt{\pi/2a} \phi/(1-\phi)$, 37–41bp at $\phi = 0.05$),
   while ARFIMA long memory creates an interior cost-optimal span — two regimes
   the closed forms separate cleanly.
 - You want to **predict a contract's trend-following Sharpe ratio from its
@@ -137,10 +135,10 @@ ranks the performance of all three designs.
 For volatility-normalized returns with autocorrelation function $\rho(m)$ and
 annualized drift $\mu$, the annualized Sharpe ratio of the European system is
 
-$$
-SR \;=\; \frac{\sqrt{a}\,A_{\nu} + \mu^{2}/\sqrt{a}}
-{\sqrt{\,B_{\nu} + A_{\nu}^{2} + \kappa K_{\nu} + (\mu^{2}/a)\,(1 + B_{\nu} + 2A_{\nu})\,}},
-$$
+```math
+SR = \frac{\sqrt{a} A_{\nu} + \mu^{2}/\sqrt{a}}
+{\sqrt{B_{\nu} + A_{\nu}^{2} + \kappa K_{\nu} + (\mu^{2}/a)(1 + B_{\nu} + 2A_{\nu})}}
+```
 
 closed-form under any causal linear process, with the excess kurtosis $\kappa$
 of the innovations entering through the single loading $K_{\nu}$. Under trading
@@ -151,10 +149,52 @@ function $F(d, 1, 1-d; \nu)$. `trendfollowing.analytics` implements all of the
 above:
 
 - `sharpe.compute_annualised_sharpe(rho, long_span, short_span, sr_underlying)` — the generic formula
-- `sharpe.compute_realized_sharpe(returns, af, ddof)` — the canonical estimator $\sqrt{a}\,\hat E[f_t]/\sqrt{\widehat{\mathrm{Var}}[f_t]}$, equal to `qis.compute_sharpe_arithmetic` (guarded in the tests)
+- `sharpe.compute_realized_sharpe(returns, af, ddof)` — the canonical estimator $\sqrt{a} \hat E[f_t]/\sqrt{\widehat{\mathrm{Var}}[f_t]}$, equal to `qis.compute_sharpe_arithmetic` (guarded in the tests)
 - `sharpe.sharpe_ar1`, `sharpe.compute_kurtosis_loading`, `sharpe.compute_signal_moments` — per-process forms and loadings
 - `autocorrelation.population_acf(n_lags, phi, d)` — white noise, AR(1), ARFIMA(0,d,0), ARFIMA(1,d,0) (Sowell 1992)
 - `expected_return.expected_pnl_*`, `expected_return.expected_turnover` — expected return and turnover per process
+
+The closed forms are exact rather than fitted, and Monte Carlo confirms them
+process by process. The figure below is Figure 6.3 of the paper: the expected
+annual return, the gross Sharpe ratio, and the net Sharpe ratio of the European
+system under the ARFIMA process with long memory $d = 0.02$ and AR-1 feature
+$\phi \in \{-0.05, 0, 0.05\}$, with the analytic values as lines and the Monte
+Carlo estimates as markers.
+
+![ARFIMA process: analytic closed forms against Monte Carlo](papers/tf_systems/paper/figures/expected_return_arfima1.PNG)
+
+Analytic and Monte Carlo values agree at every span. The net Sharpe ratio in
+panel (C) attains an interior cost-optimal span, which long memory creates and
+the AR-1 process does not, because there the cost-optimal span diverges at the
+break-even cost.
+
+## Skewness of aggregated returns
+
+Trend-following returns acquire positive skewness under time aggregation with no
+drift and no predictability. The daily return multiplies the lagged signal by the
+current return, so the $T$-day cumulative return loads on the realized
+autocovariance of the volatility-normalized returns, which makes it a convex
+payoff on the realized trend. Under white noise the skewness is available in
+closed form,
+
+```math
+\varsigma(T) = \frac{6\nu \left( T(1-\nu^{2}) - 1 + \nu^{2T} \right)}
+{(1-\nu^{2})^{3/2} T^{3/2}}
+```
+
+which is zero at one day, positive at every horizon beyond one day, and peaks
+near half the filter span.
+
+![Skewness of aggregated trend-following returns](papers/tf_systems/paper/figures/aggregated_skewness.PNG)
+
+Figure 7.5 of the paper: panel (A) is the closed form across filter spans with
+Monte Carlo markers, panel (B) is Monte Carlo under white noise, AR(1), and
+ARFIMA at the span of 100 days, and panel (C) is the empirical profile across the
+84 futures contracts, whose median attains 2.33 at the horizon of 55 days against
+the closed-form 2.35 and whose interquartile range stays positive at every
+horizon. The right tail of trend-following returns is structural: it requires no
+forecasting skill, because it holds exactly where the expected return is zero.
+`analytics.skewness.skewness_white_noise(horizon, span)` implements the formula.
 
 ## Empirical illustration
 
@@ -181,6 +221,13 @@ You can reproduce the per-contract exercise in three lines
 ([`examples/predict_sharpe_from_acf.py`](examples/predict_sharpe_from_acf.py)):
 ES1 predicts 0.227 against a realized 0.206, and Corn predicts 0.625 against
 0.620.
+
+The three systems also run out of the box on the packaged dataset. The figure
+below is Figure 7.2 of the paper: the European, American, and TSMOM systems net
+of volume-based costs against the SG Trend Index, with the cumulative
+performance, the running drawdown, and the one-year EWMA correlations.
+
+![The three systems against the SG Trend Index](papers/tf_systems/paper/figures/tf_sg_backtest_paper.PNG)
 
 ## Examples
 
@@ -284,8 +331,7 @@ software (see also `CITATION.cff`):
   author  = {Sepp, Artur and Lucic, Vladimir},
   title   = {The Science and Practice of Trend-Following Systems},
   year    = {2026},
-  note    = {Submitted to the SIAM Journal on Financial Mathematics.
-             SSRN preprint: \url{https://ssrn.com/abstract=3167787}},
+  note    = {SSRN: \url{https://ssrn.com/abstract=3167787}},
   doi     = {10.2139/ssrn.3167787}
 }
 ```
