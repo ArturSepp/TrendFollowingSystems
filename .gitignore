@@ -23,3 +23,6 @@ dist/
 
 # internal notes - never publish
 papers/tf_systems/private/
+
+# companion paper material - untracked while under blind review
+papers/smart_diversification/
