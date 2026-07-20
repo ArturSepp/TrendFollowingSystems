@@ -76,6 +76,10 @@ trendfollowing = ["resources/*.csv"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "--tb=short -q"
+# repo root on sys.path so the tests can import the papers.* replication modules
+# under a bare `pytest` invocation, which unlike `python -m pytest` does not add the
+# current directory itself
+pythonpath = ["."]
 
 [tool.ruff]
 line-length = 100
