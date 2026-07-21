@@ -128,7 +128,7 @@ def portfolio_skewness_decomposition() -> None:
     prices = load_data()[0]
     f_all = {}
     for ticker in prices.columns:
-        ret = prices[ticker].dropna().pct_change()
+        ret = qis.to_returns(prices=prices[ticker].dropna(), is_log_returns=False)  # arithmetic daily returns
         vol = np.sqrt(qis.compute_ewm(data=np.square(ret), span=33))
         z = (ret / vol.shift(1)).iloc[250:].dropna()
         sig = w_l * qis.compute_ewm(data=z, span=250.0) - w_s * qis.compute_ewm(data=z, span=20.0)

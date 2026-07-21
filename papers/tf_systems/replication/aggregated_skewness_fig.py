@@ -158,7 +158,7 @@ def empirical_skew_panel(span: float,
     prices = load_data()[0]
     rows = {}
     for ticker in prices.columns:
-        returns = prices[ticker].dropna().pct_change()
+        returns = qis.to_returns(prices=prices[ticker].dropna(), is_log_returns=False)  # arithmetic daily returns
         vol = np.sqrt(qis.compute_ewm(data=np.square(returns), span=VOL_SPAN))
         z = (returns / vol.shift(1)).iloc[Z_WARMUP:].dropna()
         signal = qis.compute_ewm(data=z, span=span)

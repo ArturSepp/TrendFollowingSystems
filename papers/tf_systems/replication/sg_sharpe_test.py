@@ -31,8 +31,8 @@ def compute_monthly_returns(navs: pd.DataFrame,
                             time_period: qis.TimePeriod = TEST_PERIOD
                             ) -> pd.DataFrame:
     """month-end arithmetic returns of the navs over the test period"""
-    monthly_navs = time_period.locate(navs).asfreq('ME', method='ffill')
-    return monthly_navs.pct_change().dropna(how='all')
+    # arithmetic monthly returns via qis, the shared paper convention
+    return qis.to_returns(prices=time_period.locate(navs), is_log_returns=False, freq='ME').dropna(how='all')
 
 
 def run_tests(system_returns: pd.DataFrame,
