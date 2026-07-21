@@ -1,12 +1,15 @@
 cff-version: 1.2.0
+type: software
 message: "If you use this package, please cite the paper below."
 title: "trendfollowing: replication package for The Science and Practice of Trend-Following Systems"
 authors:
   - family-names: Sepp
     given-names: Artur
+    orcid: "https://orcid.org/0000-0002-7038-1748"
   - family-names: Lucic
     given-names: Vladimir
 version: 1.0.0
+date-released: "2026-07-20"
 repository-code: "https://github.com/ArturSepp/TrendFollowingSystems"
 preferred-citation:
   type: unpublished
@@ -14,6 +17,7 @@ preferred-citation:
   authors:
     - family-names: Sepp
       given-names: Artur
+      orcid: "https://orcid.org/0000-0002-7038-1748"
     - family-names: Lucic
       given-names: Vladimir
   year: 2026
