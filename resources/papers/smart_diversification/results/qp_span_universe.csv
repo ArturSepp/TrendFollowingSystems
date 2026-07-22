@@ -1,7 +1,0 @@
-psi,floor,realized_sr,realized_bear,"Fast LS(5,21)","Medium-Fast LS(10,63)","Medium LS(20,126)","Slow LS(20,252)"
-diagonal,no floor,0.841,-0.139,0.0,0.009,0.284,0.706
-diagonal,coverage 40%,0.841,-0.139,0.0,0.009,0.284,0.706
-diagonal,coverage max 68%,0.582,-0.132,0.0,1.0,0.0,0.0
-full residual,no floor,0.866,-0.141,0.0,0.0,0.0,1.0
-full residual,coverage 40%,0.866,-0.141,0.0,0.0,0.0,1.0
-full residual,coverage max 68%,0.582,-0.132,0.0,1.0,0.0,0.0
