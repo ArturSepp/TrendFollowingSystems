@@ -103,3 +103,50 @@ def test_realized_blend_frontier_endpoints():
     joint = to_periodic_returns(pd.concat([nav_b, nav_o], axis=1))
     d0 = compute_regime_sharpe_decomposition(strategy_returns=joint.iloc[:, 0], benchmark_returns=joint.iloc[:, 0])
     assert abs(frontier['sharpe'].iloc[0] - d0['total']) < 1e-10
+
+
+def test_mc_null_values_of_appendix_rows():
+    # the analytic nulls of the monthly and expanding rows: p*sr - kappa*rho
+    from papers.smart_diversification.replication.gaussian_null import compute_null_regime_contributions
+    bear_m, _, _ = compute_null_regime_contributions(sr=0.5, rho=0.6, periods_per_year=12.0)
+    assert np.isclose(bear_m, 0.16 * 0.5 - 0.8429 * 0.6, atol=1e-3)
+    bear_q, _, _ = compute_null_regime_contributions(sr=0.5, rho=0.6, periods_per_year=4.0)
+    assert np.isclose(bear_q, 0.16 * 0.5 - 0.4866 * 0.6, atol=1e-3)
+
+
+def test_mc_expanding_scheme_is_unbiased():
+    from papers.smart_diversification.replication.mc_estimation_errors import simulate_estimation_errors
+    stats = simulate_estimation_errors(n_periods=106, sr=0.6, rho=0.0, scheme='expanding',
+                                       warmup=40, n_sims=400, n_corr_sims=400)
+    assert np.isclose(stats['null_bear_sharpe'], 0.096, atol=1e-3)
+    # the mean estimate sits within two standard errors of the null on a small run
+    assert abs(stats['mean_bear_sharpe'] - stats['null_bear_sharpe']) < 2.0 * stats['se_bear_sharpe'] / np.sqrt(400) * 20
+
+
+def test_returns_to_nav_with_base_round_trip():
+    from papers.smart_diversification.replication.regime_analysis import returns_to_nav_with_base
+    r = pd.DataFrame({'x': [0.01, -0.02, 0.015]}, index=pd.date_range('2020-01-31', periods=3, freq='ME'))
+    navs = returns_to_nav_with_base(returns=r)
+    back = navs.pct_change().dropna()
+    assert len(back) == len(r) and np.allclose(back['x'].to_numpy(), r['x'].to_numpy())
+
+
+def test_anonymization_mapping_covers_the_sheet():
+    from papers.smart_diversification.replication.make_blind_package import build_anonymization_mapping
+    sheet = pd.DataFrame({'bear_sharpe': [0.4, 0.1, -0.3, -0.5, 0.6, 0.2],
+                          'group': ['CTA', 'CTA', 'LS', 'LS', 'LongVol', 'LongVol']},
+                         index=['a', 'b', 'c', 'd', 'e', 'f'])
+    mapping = build_anonymization_mapping(sheet=sheet)
+    assert mapping == {'a': 'CTA 1', 'b': 'CTA 2', 'c': 'LS 1', 'd': 'LS 2', 'e': 'QIS 1', 'f': 'QIS 2'}
+
+
+def test_shared_daily_annualisation_convention():
+    # both papers annualise daily statistics with AF_DAILY = 260, not the qis-inferred 252
+    import trendfollowing as tf
+    assert tf.AF_DAILY == 260.0 and tf.PPY_QUARTERLY == 4.0 and tf.PPY_MONTHLY == 12.0
+    rng = np.random.default_rng(11)
+    navs = pd.DataFrame({'x': 100.0 * np.exp(np.cumsum(0.01 * rng.standard_normal(500)))},
+                        index=pd.bdate_range('2020-01-02', periods=500))
+    vol = tf.compute_daily_annualised_vol(navs=navs)
+    manual = navs.pct_change().std() * np.sqrt(260.0)
+    assert np.allclose(vol.to_numpy(), manual.to_numpy())

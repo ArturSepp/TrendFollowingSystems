@@ -1,0 +1,23 @@
+,covar,floor,model_sr,realized_sr,realized_bear,top3
+0,mixture,no floor,1.425,0.869,-0.631,"QIS US 1Y Vol 22%, AQR 18%, HSBC GH 11%"
+1,mixture,coverage 25%,1.425,0.869,-0.631,"QIS US 1Y Vol 22%, AQR 18%, HSBC GH 11%"
+2,mixture,coverage 40%,1.411,0.893,-0.604,"QIS US 1Y Vol 27%, AQR 20%, Jupiter GEAR 11%"
+3,mixture,coverage 60%,1.153,0.881,-0.471,"QIS US 1Y Vol 42%, AQR 28%, QIS EU 1Y Vol 21%"
+4,mixture,coverage max,0.68,0.663,-0.264,"QIS US 1Y Vol 90%, QIS EU 1Y Vol 10%, AQR 0%"
+5,bear,no floor,3.763,0.767,-0.724,"HSBC GH 31%, QIS US Tail Hedge 13%, QIS US 1Y Vol 11%"
+6,bear,coverage 25%,3.616,0.801,-0.705,"HSBC GH 26%, QIS US 1Y Vol 15%, QIS EU 1Y Vol 10%"
+7,bear,coverage 40%,2.671,0.883,-0.64,"QIS US 1Y Vol 26%, QIS EU 1Y Vol 18%, HSBC GH 13%"
+8,bear,coverage 60%,1.136,0.853,-0.484,"QIS EU 1Y Vol 34%, QIS US 1Y Vol 31%, AQR 29%"
+9,bear,coverage max,0.413,0.688,-0.261,"QIS US 1Y Vol 98%, AQR 2%, QIS EU 1Y Vol 0%"
+10,normal,no floor,1.525,0.868,-0.775,"HSBC GH 62%, Jupiter GEAR 30%, QIS US 1Y Vol 6%"
+11,normal,coverage 25%,1.452,0.923,-0.729,"HSBC GH 32%, Jupiter GEAR 26%, QIS US 1Y Vol 22%"
+12,normal,coverage 40%,1.335,0.933,-0.662,"QIS US 1Y Vol 32%, Jupiter GEAR 23%, QIS EU 1Y Vol 16%"
+13,normal,coverage 60%,1.092,0.871,-0.483,"QIS US 1Y Vol 46%, QIS EU 1Y Vol 22%, AQR 20%"
+14,normal,coverage max,0.771,0.663,-0.264,"QIS US 1Y Vol 90%, QIS EU 1Y Vol 10%, AQR 0%"
+15,sample,no floor,0.989,0.989,-0.612,"QIS US 1Y Vol 40%, AQR 30%, Jupiter GEAR 30%"
+16,sample,coverage 25%,0.989,0.989,-0.612,"QIS US 1Y Vol 40%, AQR 30%, Jupiter GEAR 30%"
+17,sample,coverage 40%,0.989,0.989,-0.612,"QIS US 1Y Vol 40%, AQR 30%, Jupiter GEAR 30%"
+18,sample,coverage 60%,0.942,0.943,-0.459,"QIS US 1Y Vol 57%, AQR 37%, Jupiter GEAR 5%"
+19,sample,coverage max,0.688,0.688,-0.261,"QIS US 1Y Vol 98%, AQR 2%, QIS EU 1Y Vol 0%"
+20,none,benchmark,,0.545,-0.836,no overlays
+21,equal,1/15 each,,0.714,-0.739,all overlays 7%

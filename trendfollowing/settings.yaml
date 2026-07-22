@@ -1,0 +1,16 @@
+# local paths for resources and outputs, same approach as qis/settings.yaml
+# relative entries resolve against the repo root (the parent of the trendfollowing package folder)
+# after pip install, edit to absolute local paths and keep out of git tracking:
+# git update-index --skip-worktree trendfollowing/settings.yaml
+
+RESOURCE_PATH:
+  "resources/"
+
+UNIVERSE_DATA_PATH:
+  "resources/futures/"
+
+PAPERS_DATA_PATH:
+  "resources/papers/"
+
+OUTPUT_PATH:
+  "output/"

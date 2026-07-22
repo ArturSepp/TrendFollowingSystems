@@ -142,7 +142,8 @@ def run_local_test(local_test: LocalTests):
     These are integration tests that download real data and generate reports.
     Use for quick verification during development.
     """
-    local_path = os.environ.get("TF_RESOURCE_PATH", os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "resources", ""))
+    from trendfollowing.local_path import get_universe_data_path
+    local_path = get_universe_data_path()
 
     prices = qis.load_df_from_csv(file_name='bbg_futures_close', local_path=local_path)
     time_period = qis.TimePeriod(start='31Dec1999', end=None)

@@ -16,7 +16,8 @@ from qis import TimePeriod
 
 
 # the dataset shipped with the package is the default; set TF_RESOURCE_PATH to override with a local data folder
-LOCAL_PATH = os.environ.get("TF_RESOURCE_PATH", os.path.join(os.path.dirname(os.path.abspath(__file__)), "resources", ""))
+from trendfollowing.local_path import get_universe_data_path
+LOCAL_PATH = get_universe_data_path()
 
 
 # one-way volume-based transaction costs by asset group and period, following exhibit b1 in hurst et al (2017)
@@ -74,11 +75,13 @@ def generate_data() -> None:
                                           usd_returns=usd_returns,
                                           volume_costs=volume_costs,
                                           benchmark_prices=benchmark_prices,
-                                          descriptive_df=descriptive_df),
+                                          descriptive_df=descriptive_df,
+                                          credit_df=credit_df),
                             file_name='tf_system_data',
                             local_path=LOCAL_PATH)
 
 
+#@qis.timer
 def load_data(time_period: TimePeriod = None,
               tickers: List[str] = None
               ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, List[str]]:
