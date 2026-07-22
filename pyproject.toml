@@ -51,7 +51,7 @@ dependencies = [
     "numba>=0.59",
     "matplotlib>=3.8",
     "statsmodels>=0.14",
-    "qis>=5.0.6",
+    "qis>=5.0.9",
 ]
 
 [project.optional-dependencies]
