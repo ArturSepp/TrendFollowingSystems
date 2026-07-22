@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "trendfollowing"
-version = "1.0.2"
+version = "1.0.3"
 description = "Replication package for 'The Science and Practice of Trend-Following Systems': European, American, and TSMOM trend-following systems with closed-form expected return, Sharpe ratio, and turnover under white noise, AR(1), and ARFIMA processes, plus Monte Carlo verification and an 84-contract futures dataset"
 readme = "README.md"
 license = {text = "GPL-3.0-or-later"}

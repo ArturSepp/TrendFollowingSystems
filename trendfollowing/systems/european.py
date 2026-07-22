@@ -128,7 +128,10 @@ def run_european_tf_system(prices: pd.DataFrame,
 
     if portfolio_covar_span is not None:
         portfolio_var = qis.compute_portfolio_var_np(returns=returns_np, weights=weights, span=portfolio_covar_span)
-        reciprocal_portfolio_var = np.reciprocal(annualization_factor*portfolio_var, where=portfolio_var > 0.0)
+        # np.reciprocal with where= but no out= leaves the masked cells uninitialised (undefined
+        # behaviour); pass an initialised zero out so non-positive-variance days get zero leverage
+        reciprocal_portfolio_var = np.zeros_like(portfolio_var)
+        np.reciprocal(annualization_factor*portfolio_var, where=portfolio_var > 0.0, out=reciprocal_portfolio_var)
         leverage = portfolio_target_vol * np.sqrt(reciprocal_portfolio_var)
         weights = weights * qis.np_array_to_df_columns(a=leverage, ncols=len(prices.columns))
 

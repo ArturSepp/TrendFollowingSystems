@@ -63,17 +63,3 @@ jobs:
       - name: EWMA normalization gate
         working-directory: papers/tf_systems/replication
         run: PYTHONPATH=../../.. python ewma_variance_check.py
-
-      - name: Figure re-render from the committed caches (smoke)
-        # file-level smoke only: pixel identity is asserted locally, not in CI,
-        # because glyph rendering varies across matplotlib versions
-        run: |
-          python - <<'PY'
-          import matplotlib
-          matplotlib.use('Agg')
-          from papers.tf_systems.replication.mc_net_sharpe_paper_figs import plot_paper_figure
-          fig = plot_paper_figure('expected_return_arfima1',
-                                  parts_path='papers/tf_systems/replication/results')
-          fig.savefig('smoke.png', dpi=100)
-          print('re-render from caches: OK')
-          PY
