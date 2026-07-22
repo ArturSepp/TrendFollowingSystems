@@ -74,13 +74,11 @@ def generate_data() -> None:
                                           usd_returns=usd_returns,
                                           volume_costs=volume_costs,
                                           benchmark_prices=benchmark_prices,
-                                          descriptive_df=descriptive_df,
-                                          credit_df=credit_df),
+                                          descriptive_df=descriptive_df),
                             file_name='tf_system_data',
                             local_path=LOCAL_PATH)
 
 
-#@qis.timer
 def load_data(time_period: TimePeriod = None,
               tickers: List[str] = None
               ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame, List[str]]:
