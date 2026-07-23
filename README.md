@@ -348,11 +348,14 @@ software (see also `CITATION.cff`):
 
 ```bibtex
 @article{SeppLucic2026trendfollowing,
-  author  = {Sepp, Artur and Lucic, Vladimir},
-  title   = {The Science and Practice of Trend-Following Systems},
-  year    = {2026},
-  note    = {SSRN: \url{https://ssrn.com/abstract=3167787}},
-  doi     = {10.2139/ssrn.3167787}
+  author        = {Sepp, Artur and Lucic, Vladimir},
+  title         = {The Science and Practice of Trend-Following Systems},
+  year          = {2026},
+  eprint        = {2607.19497},
+  archivePrefix = {arXiv},
+  primaryClass  = {q-fin.ST},
+  note          = {SSRN: \url{https://ssrn.com/abstract=3167787}},
+  doi           = {10.2139/ssrn.3167787}
 }
 ```
 
