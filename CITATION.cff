@@ -1,20 +1,65 @@
 cff-version: 1.2.0
 message: "If you use this package, please cite the paper below."
+type: software
 title: "trendfollowing: replication package for The Science and Practice of Trend-Following Systems"
+abstract: >-
+  Replication package for "The Science and Practice of Trend-Following Systems":
+  European, American, and Time Series Momentum trend-following systems with
+  closed-form expected return, Sharpe ratio, and turnover under white noise,
+  AR(1), and ARFIMA processes, plus Monte Carlo verification and an 84-contract
+  futures dataset spanning 1959-2026.
 authors:
   - family-names: Sepp
     given-names: Artur
+    orcid: "https://orcid.org/0000-0002-7038-1748"
+    affiliation: "LGT Bank, Zurich, Switzerland"
+    email: artursepp@gmail.com
   - family-names: Lucic
     given-names: Vladimir
+    affiliation: "Marex Solutions, London, and Imperial College London"
 version: 1.0.0
+date-released: "2026-07-20"
+license: GPL-3.0-or-later
 repository-code: "https://github.com/ArturSepp/TrendFollowingSystems"
+repository-artifact: "https://pypi.org/project/trendfollowing/"
+url: "https://github.com/ArturSepp/TrendFollowingSystems"
+keywords:
+  - trend-following
+  - momentum
+  - time-series-momentum
+  - tsmom
+  - cta
+  - managed-futures
+  - sharpe-ratio
+  - autocorrelation
+  - arfima
+  - long-memory
+  - ewma-filter
+  - backtesting
+  - futures
+  - quantitative-finance
 preferred-citation:
-  type: unpublished
+  type: article
   title: "The Science and Practice of Trend-Following Systems"
   authors:
     - family-names: Sepp
       given-names: Artur
+      orcid: "https://orcid.org/0000-0002-7038-1748"
+      affiliation: "LGT Bank, Zurich, Switzerland"
     - family-names: Lucic
       given-names: Vladimir
+      affiliation: "Marex Solutions, London, and Imperial College London"
   year: 2026
-license: GPL-3.0-or-later
+  month: 7
+  doi: "10.48550/arXiv.2607.19497"
+  url: "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3167787"
+  identifiers:
+    - type: doi
+      value: "10.48550/arXiv.2607.19497"
+      description: "arXiv preprint arXiv:2607.19497 [q-fin.ST]"
+    - type: url
+      value: "https://arxiv.org/abs/2607.19497"
+      description: "arXiv abstract page"
+    - type: doi
+      value: "10.2139/ssrn.3167787"
+      description: "SSRN working paper version"
