@@ -50,7 +50,7 @@ trendfollowing/
   resources/   packaged data
   backtests.py, universe.py
 papers/        replication code for the paper (importable: papers.*)
-tests/         8 test modules (top-level, test_*.py)
+tests/         6 test modules (top-level, test_*.py)
 examples/      runnable examples
 ```
 

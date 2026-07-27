@@ -114,12 +114,12 @@ cd replication && PYTHONPATH=../../.. python sg_sharpe_test.py
   of the European filter. Results cached in `grid_cache.pkl`.
 - `cross_system_attribution.py`, `cross_system_attribution_best.py`, `cross_system_panel_c.py` —
   exploratory versions of the cross-system exhibits. The paper figures are produced by
-  `paper_code/tf_systems/cross_system_attribution_figs.py`.
+  `papers/tf_systems/replication/cross_system_attribution_figs.py`.
 
 ## Process-figure machinery (superseded by the package module)
 - `figpass_orchestrate.py`, `figpass_plot.py` — resumable per-configuration Monte Carlo parts and
   the restyled plotting pass. The maintained version is
-  `paper_code/tf_systems/mc_net_sharpe_paper_figs.py`.
+  `papers/tf_systems/replication/mc_net_sharpe_paper_figs.py`.
 - `wn_orchestrate.py`, `gen_wn_net.py`, `gen_arfima_net.py` — earlier white-noise and ARFIMA
   generators, kept for reference (old figure style).
 
