@@ -50,7 +50,7 @@ trendfollowing/
   resources/   packaged data
   backtests.py, universe.py
 papers/        replication code for the paper (importable: papers.*)
-tests/         6 test modules (top-level, test_*.py)
+tests/         7 test modules (top-level, test_*.py)
 examples/      runnable examples
 ```
 
@@ -70,8 +70,14 @@ verification job.
 
 ## Conventions
 
-- Test files are named `test_*.py` and live in the top-level `tests/` directory.
-- Line length 100 (`ruff`, rules `E`, `F`, `W`, `I`).
+- Test files are named `test_*.py` and live in the top-level `tests/` directory. This is a
+  deliberate deviation from the in-package `<subpackage>/tests/` layout the rest of the
+  stack uses: this is a replication package, and a reviewer who downloads it should find
+  the tests without first learning the package structure. Do not "fix" it to match a
+  sibling.
+- Line length 100 (`ruff`, rules `E`, `F`, `W`). `I` is not selected anywhere in this
+  stack: the import convention groups the scientific stack before the project packages,
+  which isort reorders.
 - Hot numerical paths are `numba`-compiled; keep them array-based and avoid Python-level
   loops or pandas operations inside compiled functions.
 - Closed-form analytics and Monte Carlo estimates are cross-checked against each other:
@@ -99,11 +105,12 @@ update the paper values to match new output.
 
 ## Release checklist
 
-A release touches three version locations. All three must agree:
+A release touches three version locations. All three must agree, and
+`tests/test_version_metadata.py` fails when they do not:
 
 1. `version` in `pyproject.toml`
 2. `version` and `date-released` in `CITATION.cff`
-3. the software BibTeX entry in `README.md` (if it pins a version)
+3. the `@software` BibTeX entry in `README.md`
 
 Then: commit, tag `v<version>`, build and publish to PyPI, and cut a GitHub Release
 with the same tag. Do not bump versions as part of an unrelated change, and do not

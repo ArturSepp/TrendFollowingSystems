@@ -7,6 +7,61 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-07-28
+
+**Portfolio-level volatility targeting in the European system produced undefined
+leverage on days of non-positive portfolio variance, and this release is the first
+to carry the fix.** `np.reciprocal(..., where=portfolio_var > 0.0)` was called
+without `out=`, so the cells the mask skips were left holding whatever the freshly
+allocated buffer contained rather than zero. `run_european_tf_system` with
+`portfolio_covar_span` set could therefore apply arbitrary leverage on those days,
+and the value was not reproducible between runs. The fix (`4b6e39a`, 2026-07-22)
+allocates a zero array and passes it as `out=`, so a non-positive-variance day
+gets zero leverage. Any European-system result produced with `portfolio_covar_span`
+set on a version at or below 1.0.3 should be regenerated.
+
+`trendfollowing/systems/american.py` and `trendfollowing/systems/tsmom.py` still
+call `np.reciprocal` the same way. Those two lines are unchanged in this release
+and are the open item behind it.
+
+1.0.3 was published without a changelog entry; it was a version bump in
+`pyproject.toml` and nothing else (`ff28a8a`).
+
+### Added
+
+- `tests/test_version_metadata.py`: `pyproject.toml`, `CITATION.cff` and the
+  `@software` BibTeX entry in `README.md` must carry the same version, and
+  `date-released` must be an ISO date. The three had drifted — see below.
+- A version-carrying `@software` BibTeX entry in `README.md`. The README cited the
+  paper and nothing else, so a replication had no way to record which version of
+  the code it ran; for a replication package that is the citation that matters.
+
+### Fixed
+
+- `CITATION.cff` said 1.0.0 against a published 1.0.3, so anyone citing the package
+  from that file named a release three patches behind the code that produced the
+  paper's tables. It now says 1.0.4 with a current `date-released`, and the new test
+  fails if it drifts again.
+
+### Changed
+
+- `numpy` floor raised to `>=2.0`, matching the rest of the stack. No resolution
+  changes: `qis` already requires it, so every install has resolved numpy 2.x
+  regardless of what this file declared.
+- ruff no longer selects `I`. Import order here groups the scientific stack before
+  the project packages, which isort's ordering contradicts; the rule was selected in
+  this repository and in no other of the stack.
+- `AGENTS.md` records the top-level `tests/` layout as a deliberate
+  replication-package deviation rather than a drift from the in-package convention
+  the siblings use.
+
+### Removed
+
+- `.coverage` and `example_ar1_knife_edge.png` are no longer tracked. Both are
+  generated: the PNG is written into the working directory by
+  `examples/analytic_sharpe_vs_span.py`, and nothing in the README or the papers
+  tree references it. `.gitignore` now covers `.coverage*` and `example_*.png`.
+
 ## [1.0.2] - 2026-07-22
 
 ### Added

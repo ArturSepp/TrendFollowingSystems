@@ -359,6 +359,19 @@ software (see also `CITATION.cff`):
 }
 ```
 
+The paper states the results; this package is what produced them, so a replication
+should also cite the version it ran:
+
+```bibtex
+@software{sepp2026trendfollowing,
+  author  = {Sepp, Artur and Lucic, Vladimir},
+  title   = {trendfollowing: replication package for The Science and Practice of Trend-Following Systems},
+  year    = {2026},
+  version = {1.0.4},
+  url     = {https://github.com/ArturSepp/TrendFollowingSystems}
+}
+```
+
 ## License
 
 GPL-3.0-or-later — see [`LICENSE`](LICENSE).

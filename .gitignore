@@ -6,6 +6,10 @@ __pycache__/
 .ruff_cache/
 build/
 dist/
+.coverage*
+
+# figures written by examples/ into the working directory when run
+example_*.png
 
 # ide
 .idea/
