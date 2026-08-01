@@ -61,7 +61,8 @@ def generate_data() -> None:
 
     group_data = strategy_universe.get_ac_data(to_value=True)
     names = strategy_universe.get_instrument_names()
-    descriptive_df = pd.concat([group_data.rename('group_data'), names.rename('names')], axis=1)
+    descriptive_df = pd.concat([group_data.rename('group_data'), names.rename('names')],
+                               axis=1, sort=False)
     volume_costs = get_costs(prices=prices, group_data=group_data)
 
     es_ty = qis.backtest_model_portfolio(prices=prices[['ES1 Index', 'TY1 Comdty']],
@@ -69,7 +70,7 @@ def generate_data() -> None:
                                                     rebalancing_freq='QE').get_portfolio_nav().to_frame('60/40 Equity/Bond')
 
     benchmark_prices = fetch_field_timeseries_per_tickers(tickers={'NEIXCTAT Index': 'SG Trend'}, freq='B', field='PX_LAST').ffill()
-    benchmark_prices = pd.concat([es_ty, benchmark_prices], axis=1)
+    benchmark_prices = pd.concat([es_ty, benchmark_prices], axis=1, sort=True)
 
     qis.save_df_dict_to_csv(datasets=dict(prices=prices,
                                           usd_returns=usd_returns,

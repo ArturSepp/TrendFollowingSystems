@@ -7,6 +7,22 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [1.0.5] - 2026-08-01
+
+### Fixed
+- Every `axis=1` `pd.concat` in `trendfollowing` and in `papers/` states `sort=` explicitly - 62
+  call sites, 43 `sort=True` where the joined index is dates and 19 `sort=False` where it is a
+  lag, a span, a Monte-Carlo path or a fund label. pandas 2.2 sorted the union of two
+  DatetimeIndexes whatever the argument said; pandas 3.0 honours an explicit `sort=False` and
+  pandas 4 drops the implicit sort too. The exposure is the same in both trees: a backtest nav
+  joined to a benchmark on a different calendar (`backtests.py`, `backtest_figs.py`,
+  `paper_figures.py`) would be built on an out-of-order time axis, with no exception - a
+  different number in a published exhibit. Test suite unchanged.
+
+### Added
+- `tests/test_concat_sort_convention.py`: an `axis=1` `pd.concat` under `trendfollowing/` or
+  `papers/` without an explicit `sort=` fails the suite. Static, reads the source with `ast`.
+
 ## [1.0.4] - 2026-07-28
 
 **Portfolio-level volatility targeting in the European system produced undefined

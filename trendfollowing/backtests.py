@@ -75,7 +75,7 @@ def joint_backtest(prices: pd.DataFrame,
                         a_backtest_outputs.portfolio_pnl_net.rename('American net'),
                         tsmom_backtest_outputs.portfolio_pnl.rename('TSMOM gross'),
                         tsmom_backtest_outputs.portfolio_pnl_net.rename('TSMOM net')
-                        ], axis=1)
+                        ], axis=1, sort=True)
 
     fig = qis.generate_multi_asset_factsheet(prices=prices,
                                              benchmark=benchmark_prices.columns[0],
@@ -84,7 +84,8 @@ def joint_backtest(prices: pd.DataFrame,
     df = pd.concat([benchmark_prices.iloc[:, -1],
                     e_backtest_outputs.portfolio_pnl_net.rename('European net'),
                     a_backtest_outputs.portfolio_pnl_net.rename('American net'),
-                    tsmom_backtest_outputs.portfolio_pnl_net.rename('TSMOM net')], axis=1)
+                    tsmom_backtest_outputs.portfolio_pnl_net.rename('TSMOM net')],
+                   axis=1, sort=True)
 
     qis.plot_returns_corr_matrix_time_series(prices=df, span=100,
                                              time_period=time_period,
@@ -148,7 +149,7 @@ def backtest_span_grid(prices: pd.DataFrame,
                 costs_[f"short={short_span:0.0f}"] = pd.Series(backtest_outputs.portfolio_cost, index=prices.index)
 
         pnls = pd.DataFrame.from_dict(pnls, orient='columns')
-        prices1 = pd.concat([benchmark_prices[benchmark], pnls], axis=1)
+        prices1 = pd.concat([benchmark_prices[benchmark], pnls], axis=1, sort=True)
         costs_ = pd.DataFrame.from_dict(costs_, orient='columns')
 
         ra_perf_table = qis.compute_bnb_regimes_pa_perf_table(prices=prices1,
@@ -206,7 +207,7 @@ def backtest_american_atr_multiplies_grid(prices: pd.DataFrame,
             costs_[key2] = pd.Series(backtest_outputs.portfolio_cost, index=prices.index)
         pnls = pd.DataFrame.from_dict(pnls, orient='columns')
         costs_ = pd.DataFrame.from_dict(costs_, orient='columns')
-        prices1 = pd.concat([benchmark_prices[benchmark], pnls], axis=1)
+        prices1 = pd.concat([benchmark_prices[benchmark], pnls], axis=1, sort=True)
         ra_perf_table = qis.compute_bnb_regimes_pa_perf_table(prices=prices1,
                                                               benchmark=benchmark,
                                                               regime_classifier=regime_classifier,
@@ -315,7 +316,7 @@ def backtest_tsmom_grid(prices: pd.DataFrame,
             costs_[key2] = pd.Series(backtest_outputs.portfolio_cost, index=prices.index)
 
         pnls = pd.DataFrame.from_dict(pnls, orient='columns')
-        prices1 = pd.concat([benchmark_prices[benchmark], pnls], axis=1)
+        prices1 = pd.concat([benchmark_prices[benchmark], pnls], axis=1, sort=True)
         costs_ = pd.DataFrame.from_dict(costs_, orient='columns')
         ra_perf_table = qis.compute_bnb_regimes_pa_perf_table(prices=prices1,
                                                               benchmark=benchmark,
@@ -339,7 +340,7 @@ def plot_backtest(pnl, net_pnl, turnover, costs, weights):
     with sns.axes_style("darkgrid"):
         fig, axs = plt.subplots(2, 2, figsize=(15, 12), tight_layout=True)
 
-        pnls = pd.concat([pnl, net_pnl.rename('net')], axis=1)
+        pnls = pd.concat([pnl, net_pnl.rename('net')], axis=1, sort=True)
         qis.plot_prices_with_dd(prices=pnls,
                                 axs=axs[:, 0])
         qis.plot_time_series(df=turnover.rolling(250).sum(),

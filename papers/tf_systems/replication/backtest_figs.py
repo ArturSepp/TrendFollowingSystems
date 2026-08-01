@@ -65,7 +65,7 @@ def compute_joint_backtest_data(prices: pd.DataFrame,
 
     navs = pd.concat([e_backtest_outputs.portfolio_pnl_net.rename('European'),
                       a_backtest_outputs.portfolio_pnl_net.rename('American'),
-                      tsmom_backtest_outputs.portfolio_pnl_net.rename('TSMOM')], axis=1)
+                      tsmom_backtest_outputs.portfolio_pnl_net.rename('TSMOM')], axis=1, sort=True)
     if is_net:
         navs = qis.compute_net_navs_ex_perf_man_fees(navs=navs,
                                 man_fee=0.02,
@@ -74,11 +74,12 @@ def compute_joint_backtest_data(prices: pd.DataFrame,
 
     turnover = pd.concat([e_backtest_outputs.portfolio_vol_turnover.rename('European'),
                           a_backtest_outputs.portfolio_vol_turnover.rename('American'),
-                          tsmom_backtest_outputs.portfolio_vol_turnover.rename('TSMOM')], axis=1)
+                          tsmom_backtest_outputs.portfolio_vol_turnover.rename('TSMOM')],
+                         axis=1, sort=True)
 
     costs = pd.concat([e_backtest_outputs.portfolio_cost.rename('European'),
                        a_backtest_outputs.portfolio_cost.rename('American'),
-                       tsmom_backtest_outputs.portfolio_cost.rename('TSMOM')], axis=1)
+                       tsmom_backtest_outputs.portfolio_cost.rename('TSMOM')], axis=1, sort=True)
     return navs, turnover, costs
 
 
@@ -94,7 +95,7 @@ def plot_joint_backtest(prices: pd.DataFrame,
                                                         volume_costs=volume_costs,
                                                         is_net=is_net,
                                                         portfolio_covar_span=None)
-    prices = pd.concat([benchmark_prices.iloc[:, -1], navs], axis=1)
+    prices = pd.concat([benchmark_prices.iloc[:, -1], navs], axis=1, sort=True)
 
     if time_period is not None:
         benchmark_prices = time_period.locate(benchmark_prices)
@@ -575,7 +576,7 @@ def plot_regime_diversification(prices: pd.DataFrame,
                                                         volume_costs=volume_costs,
                                                         is_net=is_net)
     benchmark = benchmark_prices.columns[0]
-    prices = pd.concat([benchmark_prices, navs], axis=1)
+    prices = pd.concat([benchmark_prices, navs], axis=1, sort=True)
 
     if time_period is not None:
         benchmark_prices = time_period.locate(benchmark_prices)
@@ -697,7 +698,7 @@ def plot_backtest_overlay(prices: pd.DataFrame,
         fig, axs = plt.subplots(1, len(navs.columns), figsize=(16, 6), tight_layout=True)
 
         for idx, column in enumerate(navs.columns):
-            e_prices = pd.concat([balanced, navs[column]], axis=1)
+            e_prices = pd.concat([balanced, navs[column]], axis=1, sort=True)
             e_overlays = {}
             for ov in overlay_weight:
                 ticker = f"{1-ov:0.0%}/{ov:0.0%} Balanced/{column} TF"
@@ -754,7 +755,7 @@ def compute_sharpe_ratios(prices: pd.DataFrame,
     prices_at_navs = prices.where(instrument_navs.isna()==False, other=np.nan)
     instrument_navs_sharpe = log_sharpes(prices=instrument_navs).rename('TF marginal')
     prices_sharpe = log_sharpes(prices_at_navs).rename('Delta1')
-    df = pd.concat([prices_sharpe, instrument_navs_sharpe], axis=1)
+    df = pd.concat([prices_sharpe, instrument_navs_sharpe], axis=1, sort=False)
     qis.plot_scatter(df=df, fit_intercept=False)
 
 

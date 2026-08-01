@@ -25,7 +25,7 @@ def plot_filter_weights(local_path: Optional[str] = None) -> plt.Figure:
     ds1 = qis.compute_ewm_long_short_filter(data=data, long_span=50, short_span=None, warmup_period=None).rename(f"short span=0, long span=50")
     ds2 = qis.compute_ewm_long_short_filter(data=data, long_span=250, short_span=None, warmup_period=None).rename(f"short span=0, long span=250")
     ds3 = qis.compute_ewm_long_short_filter(data=data, long_span=250, short_span=50, warmup_period=None).rename(f"short span=50, long span=250")
-    df = pd.concat([ds1, ds2, ds3], axis=1)
+    df = pd.concat([ds1, ds2, ds3], axis=1, sort=False)
     df.iloc[0, :] = np.nan
     with sns.axes_style("darkgrid"):
         fig, ax = plt.subplots(1, 1, figsize=(11, 5), tight_layout=True)

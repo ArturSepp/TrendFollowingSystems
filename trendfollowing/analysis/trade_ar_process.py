@@ -130,8 +130,8 @@ def run_local_test(local_test: LocalTests):
             pnls[key] = pd.DataFrame(pnl[:, :50])
             final_pnls.append(pd.Series(pnl[-1, :], name=key))
             sharpes.append(pd.Series(sharpe_ratio(pnl=pnl), name=key))
-        final_pnls = pd.concat(final_pnls, axis=1)
-        sharpes = pd.concat(sharpes, axis=1)
+        final_pnls = pd.concat(final_pnls, axis=1, sort=False)
+        sharpes = pd.concat(sharpes, axis=1, sort=False)
 
         with sns.axes_style("darkgrid"):
             fig, axs = plt.subplots(2, 3, figsize=(18, 10), tight_layout=True)

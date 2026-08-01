@@ -142,7 +142,7 @@ def report_process_pnl(process_type: pe.ProcessType = pe.ProcessType.AR_P,
     print(f"mc vol = {np.sqrt(annualization_factor)*np.nanmean(path_vols)}")
     print(f"process_vol = {np.sqrt(1.0/(1.0-phi))}")
 
-    df = pd.concat([path_vols, turnovers], axis=1)
+    df = pd.concat([path_vols, turnovers], axis=1, sort=False)
     fig, ax = plt.subplots(1, 1, figsize=(10, 8), tight_layout=True)
     qis.plot_scatter(df=df, x='vol',
                      order=1,  # regression order

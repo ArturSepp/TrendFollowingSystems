@@ -156,7 +156,8 @@ def plot_attribution_figure(predicted_total: pd.DataFrame,
         autocorr_df = autocorr_df.replace(0.0, np.nan)  # ewm warmup zeros are not estimates
         quantiles = pd.concat([autocorr_df.quantile(q=0.25, axis=1).rename('25% quantile'),
                                autocorr_df.median(axis=1).rename('Median'),
-                               autocorr_df.quantile(q=0.75, axis=1).rename('75% quantile')], axis=1).dropna().loc[ac_start:]
+                               autocorr_df.quantile(q=0.75, axis=1).rename('75% quantile')],
+                              axis=1, sort=False).dropna().loc[ac_start:]
         qis.plot_time_series(df=quantiles,
                              title=f"(A) EWM lag-1 autocorrelation of volatility-normalised returns",
                              x_date_freq='5YE',
@@ -172,7 +173,7 @@ def plot_attribution_figure(predicted_total: pd.DataFrame,
             ax.scatter(predicted_total[span], realised[span], s=14, alpha=0.65,
                        color=cmap(i), label=f"span={span}")
         joint = pd.concat([predicted_total[spans].stack().rename('pred'), realised[spans].stack().rename('real')],
-                          axis=1).replace([np.inf, -np.inf], np.nan).dropna()
+                          axis=1, sort=False).replace([np.inf, -np.inf], np.nan).dropna()
         slope, intercept = np.polyfit(joint['pred'], joint['real'], deg=1)
         corr = joint['pred'].corr(joint['real'])
         lims = np.array([joint.min().min(), joint.max().max()])
@@ -220,13 +221,14 @@ def run_local_test(local_test: LocalTests):
                              realised=realised, stats=stats).items():
             df.to_csv(os.path.join(local_path, f"attribution_{name}.csv"))
         joint = pd.concat([predicted_total[SPANS].stack().rename('pred'),
-                           realised[SPANS].stack().rename('real')], axis=1).dropna()
+                           realised[SPANS].stack().rename('real')], axis=1, sort=False).dropna()
         slope, _ = np.polyfit(joint['pred'], joint['real'], deg=1)
         print(f"pooled corr = {joint['pred'].corr(joint['real']):.4f}, slope = {slope:.4f}")
         autocorr_df = autocorr_df.replace(0.0, np.nan)  # ewm warmup zeros are not estimates
         quantiles = pd.concat([autocorr_df.quantile(q=0.25, axis=1).rename('q25'),
                                autocorr_df.median(axis=1).rename('median'),
-                               autocorr_df.quantile(q=0.75, axis=1).rename('q75')], axis=1).dropna()
+                               autocorr_df.quantile(q=0.75, axis=1).rename('q75')],
+                              axis=1, sort=False).dropna()
         quantiles.to_csv(os.path.join(local_path, "attribution_ac_evolution.csv"))
         print(f"instruments included: {len(stats.index)}")
         print(f"medians by span:\npred_ac:\n{predicted_ac.median(axis=0)}\n"

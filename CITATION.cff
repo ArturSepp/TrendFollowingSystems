@@ -17,8 +17,8 @@ authors:
   - family-names: Lucic
     given-names: Vladimir
     affiliation: "Marex Solutions, London, and Imperial College London"
-version: 1.0.4
-date-released: "2026-07-28"
+version: 1.0.5
+date-released: "2026-08-01"
 license: GPL-3.0-or-later
 repository-code: "https://github.com/ArturSepp/TrendFollowingSystems"
 repository-artifact: "https://pypi.org/project/trendfollowing/"

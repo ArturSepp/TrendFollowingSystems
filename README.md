@@ -367,7 +367,7 @@ should also cite the version it ran:
   author  = {Sepp, Artur and Lucic, Vladimir},
   title   = {trendfollowing: replication package for The Science and Practice of Trend-Following Systems},
   year    = {2026},
-  version = {1.0.4},
+  version = {1.0.5},
   url     = {https://github.com/ArturSepp/TrendFollowingSystems}
 }
 ```

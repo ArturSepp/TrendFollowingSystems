@@ -187,14 +187,16 @@ def plot_params_vs_pnl(prices: pd.DataFrame,
 
             kwargs = dict(xvar_format=xvar_format, yvar_format='{:.2f}', full_sample_order=1,
                           fontsize=14)
-            df_1 = pd.concat([multiplier*df1['Estimate'].rename(title), sharpe], axis=1).dropna()
+            df_1 = pd.concat([multiplier*df1['Estimate'].rename(title), sharpe],
+                             axis=1, sort=False).dropna()
             qis.plot_scatter(df=df_1,
                              # title=f"Period 1962-2004",
                              title=f"({qis.idx_to_alphabet(idx+1)}1)  {title}: Period 1962-2004",
                              ax=axs[idx, 0],
                              **kwargs)
 
-            df_2 = pd.concat([multiplier*df2['Estimate'].rename(title), sharpe], axis=1).dropna()
+            df_2 = pd.concat([multiplier*df2['Estimate'].rename(title), sharpe],
+                             axis=1, sort=False).dropna()
             qis.plot_scatter(df=df_2,
                              title=f"({qis.idx_to_alphabet(idx+1)}2) {title}: Period 2005-2024",
                              ax=axs[idx, 1],

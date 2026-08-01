@@ -180,7 +180,8 @@ def plot_group_acf_ewm(prices: pd.DataFrame,
             autocorr_df = autocorr_df.replace({0.0: np.nan})
             df = pd.concat([autocorr_df.quantile(q=0.25, axis=1).rename('25% Quantile'),
                             autocorr_df.median(axis=1).rename('Median'),
-                            autocorr_df.quantile(q=0.75, axis=1).rename('75% Quantile')], axis=1)
+                            autocorr_df.quantile(q=0.75, axis=1).rename('75% Quantile')],
+                           axis=1, sort=False)
 
             qis.plot_time_series(df=df,
                                  title=f"Returns frequency={freq}",
@@ -206,7 +207,7 @@ def plot_acf(time_period: da.TimePeriod = None):
         returns = ret.to_returns(prices=prices, freq=freq)
         acfs, m_acf, std_acf = estimate_acf_from_paths(paths=returns, is_pacf=True)
         ac_acfs.append(acfs)
-    ac_acfs = pd.concat(ac_acfs, axis=1)
+    ac_acfs = pd.concat(ac_acfs, axis=1, sort=False)
 
     with sns.axes_style("darkgrid"):
         fig, axs = plt.subplots(1, 1, figsize=(18, 10), tight_layout=True)

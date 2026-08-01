@@ -62,7 +62,7 @@ def estimate_atr_vol(samples: Dict[pd.Timestamp, pd.DataFrame]) -> pd.DataFrame:
         vols[date] = np.sqrt(np.nanmean(np.square(returns)))
     atrs = pd.Series(atrs, name='ARTR')
     vols = pd.Series(vols, name='St. Dev')
-    df = pd.concat([vols, atrs], axis=1)
+    df = pd.concat([vols, atrs], axis=1, sort=True)
     return df
 
 
@@ -105,19 +105,20 @@ def plot_timeseries_figure(ticker: str,
     ewma_vols_np =  compute_vol(returns=returns_np, vol_span=vol_span, is_lag1=False)
     ewma_vols = pd.Series(ewma_vols_np, index=returns.index, name='EMWA Vol')
     atr_ewma = compute_ewma_atr(ohlc_prices=ohlc_prices, vol_span=vol_span).rename('EWMA RTR') / 1.4
-    vols = np.sqrt(annualization_factor) * pd.concat([ewma_vols, atr_ewma], axis=1)
+    vols = np.sqrt(annualization_factor) * pd.concat([ewma_vols, atr_ewma], axis=1, sort=True)
 
     # target weights
     ewma_vol_target_weights = (vol_target / (np.sqrt(annualization_factor) * ewma_vols))
     atr_vol_target_weights = (vol_target / (np.sqrt(annualization_factor) *atr_ewma))
-    voltarget_weights = pd.concat([ewma_vol_target_weights, atr_vol_target_weights], axis=1)
+    voltarget_weights = pd.concat([ewma_vol_target_weights, atr_vol_target_weights],
+                                  axis=1, sort=True)
 
     # vol-norm returns
     ewma_vol_norm_returns = returns_np[:-1] / ewma_vols_np[1:]
     atr_vol_norm_returns = returns_np[:-1] / atr_ewma.to_numpy()[1:]
     vol_norm_returns = pd.concat([pd.Series(ewma_vol_norm_returns, index=returns.index[1:], name='EMWA Vol'),
                                   pd.Series(atr_vol_norm_returns, index=returns.index[1:], name='EMWA RTR')
-                                  ], axis=1)
+                                  ], axis=1, sort=True)
     dfs = {# ('Volatilities', 'Log-Volatilities'): (vols, np.log(vols)),
         'Volatilities': (vols, vols),
         '15% Volatility target weights': (voltarget_weights, voltarget_weights),

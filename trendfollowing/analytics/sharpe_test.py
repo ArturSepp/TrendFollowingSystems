@@ -55,7 +55,7 @@ def sharpe_difference_test(returns1: pd.Series,
     """
     if not isinstance(returns1, pd.Series) or not isinstance(returns2, pd.Series):
         raise ValueError(f"returns must be pd.Series, got {type(returns1)!r}, {type(returns2)!r}")
-    joint = pd.concat([returns1.rename('r1'), returns2.rename('r2')], axis=1).dropna()
+    joint = pd.concat([returns1.rename('r1'), returns2.rename('r2')], axis=1, sort=True).dropna()
     n_obs = len(joint.index)
     if n_obs < 24:
         raise ValueError(f"joint sample must have at least 24 observations, got {n_obs!r}")

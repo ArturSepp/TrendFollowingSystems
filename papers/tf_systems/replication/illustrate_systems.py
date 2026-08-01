@@ -196,7 +196,7 @@ def plot_american_signals(price: pd.Series,
                        pd.Series(short_ewma, index=price.index, name='Fast Ewma'),
                        pd.Series(long_ewma - signal_atr_multiplier* true_range, index=price.index, name='Slow Ewma - q*ATR')
                        ],
-                      axis=1)
+                      axis=1, sort=True)
 
     weights, stop_loss = run_american_on_instrument(price=np_prices,
                                                     long_ewma=long_ewma,
@@ -212,7 +212,7 @@ def plot_american_signals(price: pd.Series,
     # stop-loss
     stop_loss_long = pd.Series(np.where(weights > 0.0, stop_loss, np.nan), index=price.index, name='Long Stop-Loss').fillna(0.0)
     stop_loss_short = pd.Series(np.where(weights < 0.0, stop_loss, np.nan), index=price.index, name='Short Stop-Loss').fillna(0.0)
-    prices = pd.concat([price, stop_loss_long, stop_loss_short], axis=1)
+    prices = pd.concat([price, stop_loss_long, stop_loss_short], axis=1, sort=True)
 
     # p&l
     instrument_pnl = weights[:-1] * returns_np[1:]
