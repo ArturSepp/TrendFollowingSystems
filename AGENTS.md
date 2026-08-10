@@ -98,7 +98,7 @@ verification job.
 <!-- ===== SHARED AGENT CORE (consumer variant) — begin =====
      Generated from SHARED_AGENT_CORE.md in the maintainer's project knowledge. Do not hand-edit
      between these markers — propose the change to the maintainer instead. Variants: builder
-     (qis) / consumer / standalone. Last synced 2026-08-08, agent core v1.2. -->
+     (qis) / consumer / standalone. Last synced 2026-08-09, agent core v1.4. -->
 
 ## Domain invariants
 
@@ -122,12 +122,17 @@ Not inferable from any single file, and the source of numerically wrong code tha
 This package consumes `qis` (analytics, backtesting, reporting). Reimplementing a capability it
 exports is a defect, not a convenience. Triggers — stop and check the export list before
 writing: backtest, rebalance, turnover, drawdown, Sharpe, volatility target, bootstrap,
-resample, unsmooth, covariance, correlation, regime, factsheet, tracking error, risk
-contribution.
+resample, unsmooth, covariance, correlation, regime, factsheet, tracking error, realised
+tracking error, information ratio, benchmark beta, marginal contribution, risk contribution.
 
 - **The hard stop:** a `for` loop over dates accumulating a position, a weight or a P&L is
   `qis.backtest_model_portfolio`. The hand-rolled version gets drift adjustment wrong — `qis`
   holds *units* between rebalancings, not weights.
+- **Never hand-roll `d' Σ d`, a beta ratio, or a TE decomposition.** Ex-ante tracking error,
+  factor exposures, benchmark beta and marginal TE come from `qis.RiskModel` (a plain
+  `{date: covar}` dict constructs a covariance-only model); realised ex-post TE is
+  `qis.compute_ewma_realised_tracking_error` (EWMA series), and whole-sample TE/IR scalars are
+  `qis.compute_te_ir_errors`.
 - **Never invent a symbol.** If a function, class, or keyword argument is not in the export
   list, it does not exist. Check in one line —
   `python -c "import qis; print([n for n in dir(qis) if 'unsmooth' in n.lower()])"`;
