@@ -1,0 +1,10 @@
+# Writable paths only. The immutable futures dataset is package data and is not
+# configured here. Environment overrides remain TF_PAPERS_PATH and TF_OUTPUT_PATH.
+# In a checkout these paths resolve from the repository root; after installation
+# they resolve under ~/.trendfollowing. Do not edit files inside site-packages.
+
+PAPERS_DATA_PATH:
+  "resources/papers/"
+
+OUTPUT_PATH:
+  "output/"

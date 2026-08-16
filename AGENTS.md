@@ -4,11 +4,10 @@ Guidance for AI coding agents working in the **TrendFollowingSystems** repositor
 
 ## Project overview
 
-`trendfollowing` implements closed-form analytics for trend-following systems —
-expected return, Sharpe ratio, skewness, and turnover under white noise, AR(1), and
-ARFIMA processes — together with three complete system implementations (European,
-American, and time-series momentum), Monte Carlo verification, and backtests on an
-84-contract futures dataset spanning 1959-2026.
+`trendfollowing` provides closed-form trend-following analytics, reference system
+implementations, and reproducible futures evidence in Python for quantitative researchers
+and practitioners. It is a research and replication library, not a broker integration or
+general-purpose execution engine; portfolio analytics and reporting are delegated to `qis`.
 
 It is the replication package for *The Science and Practice of Trend-Following Systems*
 (Sepp and Lucic, 2026). Distribution and import name `trendfollowing`. Licensed
@@ -42,16 +41,18 @@ sibling package, say so rather than reimplementing it here.
 ## Repository layout
 
 ```
-trendfollowing/
+src/trendfollowing/
   analytics/   closed-form formulas for system moments
   processes/   price process models (white noise, AR(1), ARFIMA)
   systems/     European, American and TSMOM system implementations
   analysis/    analysis helpers
-  resources/   packaged data
+  resources/   immutable futures data installed with the package
   backtests.py, universe.py
+resources/     writable paper replication caches; not installed
 papers/        replication code for the paper (importable: papers.*)
-tests/         7 test modules (top-level, test_*.py)
-examples/      runnable examples
+tests/         top-level test modules (test_*.py)
+examples/      runnable examples; kept at repository root
+docs/          Sphinx/MyST documentation source; generated output stays untracked
 ```
 
 ## Commands
@@ -60,13 +61,17 @@ examples/      runnable examples
 pip install -e ".[dev]"
 pytest tests/ -q                 # as CI runs it
 pytest tests/test_sharpe.py -v   # one module
-ruff check trendfollowing/       # lint
+ruff check src/trendfollowing/   # lint
+pip install -e ".[docs]"         # documentation toolchain
+sphinx-build -W --keep-going -b html docs docs/_build/html
+sphinx-build -W --keep-going -b linkcheck docs docs/_build/linkcheck
 ```
 
 `[tool.pytest.ini_options] pythonpath = ["."]` puts the repository root on `sys.path`
-so tests can import the `papers.*` replication modules under a bare `pytest`
-invocation. Supported Python is >= 3.10; CI runs 3.10 - 3.12 plus a separate
-verification job.
+only so tests can import the non-installed `papers.*` replication modules under a bare
+`pytest` invocation. `tests/test_src_layout.py` prevents that exception from masking a
+legacy root `trendfollowing/` package. Supported Python is >= 3.10; CI runs 3.10 - 3.12
+plus separate verification and built-artifact jobs.
 
 ## Conventions
 
@@ -89,7 +94,7 @@ verification job.
 
 - Do not change analytical formulas without the corresponding Monte Carlo verification
   passing. The tests exist precisely to catch algebra errors.
-- Do not modify the packaged futures dataset in `trendfollowing/resources/` or the
+- Do not modify the futures dataset in `src/trendfollowing/resources/futures/` or the
   universe definitions: published backtests depend on them.
 - Do not reimplement performance statistics or plotting — use `qis`.
 - Do not commit backtest output, figures, or log files (`sg.log` in the repository root

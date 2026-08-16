@@ -32,7 +32,7 @@ jobs:
       - name: Install package with dev extras
         run: |
           python -m pip install --upgrade pip
-          pip install -e ".[dev]"
+          pip install ".[dev]"
 
       - name: Run tests
         # a public checkout has no papers/smart_diversification (untracked while
@@ -63,3 +63,30 @@ jobs:
       - name: EWMA normalization gate
         working-directory: papers/tf_systems/replication
         run: PYTHONPATH=../../.. python ewma_variance_check.py
+
+  artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Build and inspect distributions
+        run: |
+          python -m pip install --upgrade pip build twine
+          python -m build
+          python -m twine check dist/*
+          python -c "from pathlib import Path; from zipfile import ZipFile; wheel = next(Path('dist').glob('*.whl')); names = ZipFile(wheel).namelist(); assert sum(name.endswith('.csv') and '/resources/futures/' in name for name in names) == 8"
+          python -c "from pathlib import Path; import tarfile; sdist = next(Path('dist').glob('*.tar.gz')); names = tarfile.open(sdist).getnames(); assert sum(name.endswith('.csv') and '/resources/futures/' in name for name in names) == 8"
+
+      - name: Install wheel
+        run: python -m pip install dist/*.whl
+
+      - name: Verify wheel import outside checkout
+        working-directory: ${{ runner.temp }}
+        run: |
+          python -c "from importlib.metadata import version; from pathlib import Path; import trendfollowing as tf; package_path = Path(tf.__file__).resolve(); checkout = Path(r'${{ github.workspace }}').resolve(); assert not package_path.is_relative_to(checkout), package_path; assert tf.__version__ == version('trendfollowing'); assert abs(tf.sharpe_ar1(phi=0.05, long_span=21) - 0.336) < 0.001"
+          python -c "from trendfollowing.universe import load_data; prices, costs, benchmarks, description, groups = load_data(); assert prices.shape == (17487, 84); assert costs.shape == prices.shape; assert list(benchmarks.columns) == ['60/40 Equity/Bond', 'SG Trend']; assert description.index.equals(prices.columns); assert groups[0] == 'Equities'"

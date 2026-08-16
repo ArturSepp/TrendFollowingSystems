@@ -7,6 +7,45 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Changed
+- Established the minimal Sphinx/MyST documentation site and a warning-as-error
+  GitHub Pages workflow. The server-rendered landing page routes readers to the
+  quickstart, example workflows, API map, paper replication, project history,
+  source, issue tracker, citation metadata, PyPI, and the `qis` dependency.
+- Moved the installable package from `trendfollowing/` to `src/trendfollowing/`.
+  Distribution and import names, public call signatures, examples, tests, paper
+  replication modules, resources, and numerical results are unchanged. CI now
+  tests a normal install and verifies a built wheel from outside the checkout.
+- Moved the immutable futures CSVs into `src/trendfollowing/resources/futures/`
+  and included them in wheels and source distributions. The default data path is
+  resolved with `importlib.resources`; `TF_RESOURCE_PATH` remains an external
+  override and is evaluated whenever a loader is called.
+- Writable paper caches and outputs now default under `~/.trendfollowing` after
+  installation while retaining repository-root defaults in a source checkout.
+  Installed package files are never treated as writable configuration or data.
+- Aligned the README, package summary, citation metadata, and repository guidance
+  on one public role and boundary. Installation now leads with
+  `pip install trendfollowing`, and the documented `qis >= 5.0.9` floor matches
+  package metadata.
+
+### Added
+- `tests/test_docs_foundation.py` guards the canonical documentation URL,
+  required navigation, docs dependency extra, ignored build output, and Pages
+  workflow contract.
+- `tests/test_src_layout.py` guards the src layout, prevents the root `papers.*`
+  path exception from masking a legacy package, and keeps public examples at the
+  repository root.
+- `tests/test_packaged_resources.py` guards bundled-resource completeness,
+  call-time environment overrides, and the explicit external regeneration path.
+- Expanded `tests/test_version_metadata.py` to require installed runtime,
+  project, citation, and README version metadata to agree and to guard the
+  canonical public identity.
+
+### Fixed
+- Replaced the stale literal `trendfollowing.__version__ == "1.0.0"` with the
+  installed distribution version from `importlib.metadata`. An uninstalled
+  direct source import reports `0+unknown` instead of inventing a release value.
+
 ## [1.0.5] - 2026-08-01
 
 ### Fixed

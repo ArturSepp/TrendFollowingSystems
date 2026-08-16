@@ -8,7 +8,7 @@ order; pandas 3.0 still sorts when no ``sort=`` is passed, under a ``Pandas4Warn
 that pandas 4 will not. A call that says nothing therefore means one thing today and another
 after the next major release.
 
-``papers/`` is covered as well as ``trendfollowing/``, and for the stronger reason. A backtest
+``papers/`` is covered as well as ``src/trendfollowing/``, and for the stronger reason. A backtest
 nav joined to a benchmark on a different calendar is the union case, and under pandas 4 the
 exhibit would be built from a panel whose time axis is out of order - no exception, a different
 number in a published table. The package's own joins in ``backtests.py`` are the same shape.
@@ -22,7 +22,8 @@ or statistic labels rather than dates.
 
 The check is static - it reads the source with ``ast`` and imports nothing.
 
-To confirm it can fail, drop ``sort=True`` from any concat in ``trendfollowing/backtests.py``:
+To confirm it can fail, drop ``sort=True`` from any concat in
+``src/trendfollowing/backtests.py``:
 the call site is reported below by file, line and the object being concatenated. That was run
 before this file was committed.
 """
@@ -34,7 +35,7 @@ import pytest
 
 # scripts, tests and code already marked for deletion carry no convention
 EXCLUDED_PARTS: Tuple[str, ...] = ('examples', 'tests', 'notebooks', '_to_delete')
-COVERED: Tuple[str, ...] = ('trendfollowing', 'papers')
+COVERED: Tuple[str, ...] = ('src/trendfollowing', 'papers')
 
 
 def _repo_root() -> Optional[Path]:
