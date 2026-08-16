@@ -6,8 +6,8 @@ Source: adapted from
 `C:\Users\artur\OneDrive\analytics\my_github\.agents\ROADMAP_OSS_DISCOVERABILITY_AND_ADOPTION.md`.
 
 Status: execution in progress. U0 and the public-data portion of U1 were recorded on 2026-08-16;
-M1, M2, U2, and U3a passed on 2026-08-16. The next step is Maintainer Gate A; no credentialed
-external action has been taken.
+M1, M2, U2, U3a, and Maintainer Gate A passed on 2026-08-16. The next implementation stage is
+U3b.
 
 ## Outcome
 
@@ -543,6 +543,8 @@ release.
 
 ## Maintainer Gate A — External identity, hosting, and indexing
 
+**Execution status (2026-08-16): PASS.** See `agents/DISCOVERABILITY_AUDIT.md`.
+
 These actions require repository and Search Console authority:
 
 1. Enable GitHub Pages for the approved workflow/environment.
@@ -960,6 +962,7 @@ Use `PASS-LOCAL` only temporarily before required deployed checks, then replace 
 2026-08-16 · M2 · main@working-tree · PASS · bundled futures resources, override contract, and artifact checks passed
 2026-08-16 · U2 · main@working-tree · PASS · canonical identity, runtime metadata, and built-artifact checks passed
 2026-08-16 · U3a · main@working-tree · PASS · warning-free HTML/linkcheck, static navigation, and Pages workflow passed
+2026-08-16 · Gate A · main@2e30bb5 · PASS · Pages, canonical GitHub identity, Search Console ownership, and sitemap submission completed
 ```
 
 ## Definition of complete
