@@ -31,6 +31,9 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   package metadata.
 
 ### Added
+- Added a dependency-free deployed-documentation audit that checks bounded HTTP fetches,
+  redirects, canonical URLs, crawler directives, server-rendered content and navigation,
+  internal task routes, required project links, `robots.txt`, and the generated sitemap.
 - Added persistent Search Console HTML verification, generated sitemap support,
   and a crawler-visible `robots.txt` declaration for the canonical Pages site.
 - `tests/test_docs_foundation.py` guards the canonical documentation URL,
