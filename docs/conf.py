@@ -13,7 +13,7 @@ except PackageNotFoundError:
     release = "development"
 version = release
 
-extensions = ["myst_parser"]
+extensions = ["myst_parser", "sphinx_sitemap"]
 source_suffix = {".md": "markdown"}
 root_doc = "index"
 language = "en"
@@ -24,6 +24,7 @@ html_theme = "alabaster"
 html_title = "trendfollowing documentation"
 html_short_title = "trendfollowing"
 html_baseurl = "https://artursepp.github.io/TrendFollowingSystems/"
+html_extra_path = ["robots.txt"]
 html_theme_options = {
     "description": "Closed-form trend-following analytics and reproducible futures evidence",
     "github_button": True,
@@ -43,7 +44,11 @@ myst_html_meta = {
     "keywords": (
         "trend-following, time-series momentum, managed futures, quantitative finance, Python"
     ),
+    "google-site-verification": "WJen7v3RzYStpnJNMjZL5X35cuWl__U-MBvZtgN65-g",
 }
+
+sitemap_url_scheme = "{link}"
+sitemap_indent = 2
 
 linkcheck_retries = 2
 linkcheck_timeout = 30

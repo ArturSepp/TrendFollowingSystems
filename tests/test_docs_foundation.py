@@ -14,8 +14,11 @@ def test_sphinx_configuration_uses_canonical_url_and_myst() -> None:
 
     assert config["root_doc"] == "index"
     assert config["source_suffix"] == {".md": "markdown"}
-    assert config["extensions"] == ["myst_parser"]
+    assert config["extensions"] == ["myst_parser", "sphinx_sitemap"]
     assert config["html_baseurl"] == CANONICAL_DOCS_URL
+    assert config["html_extra_path"] == ["robots.txt"]
+    assert config["sitemap_url_scheme"] == "{link}"
+    assert config["myst_html_meta"]["google-site-verification"]
 
 
 def test_landing_page_routes_every_required_destination() -> None:
@@ -44,7 +47,16 @@ def test_docs_extra_and_ignored_build_output_are_declared() -> None:
     assert "docs = [" in pyproject
     assert '"sphinx>=7.2"' in pyproject
     assert '"myst-parser>=2.0"' in pyproject
+    assert '"sphinx-sitemap>=2.9"' in pyproject
     assert "docs/_build/" in gitignore
+
+
+def test_robots_file_allows_crawling_and_names_the_canonical_sitemap() -> None:
+    robots = (DOCS_ROOT / "robots.txt").read_text(encoding="utf-8")
+
+    assert "User-agent: *" in robots
+    assert "Allow: /" in robots
+    assert f"Sitemap: {CANONICAL_DOCS_URL}sitemap.xml" in robots
 
 
 def test_pages_workflow_builds_checks_and_deploys_documentation() -> None:
