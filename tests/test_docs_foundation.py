@@ -51,6 +51,14 @@ def test_docs_extra_and_ignored_build_output_are_declared() -> None:
     assert "docs/_build/" in gitignore
 
 
+def test_public_entry_points_use_the_canonical_docs_url() -> None:
+    pyproject = (REPOSITORY_ROOT / "pyproject.toml").read_text(encoding="utf-8")
+    readme = (REPOSITORY_ROOT / "README.md").read_text(encoding="utf-8")
+
+    assert f'Documentation = "{CANONICAL_DOCS_URL}"' in pyproject
+    assert f"]({CANONICAL_DOCS_URL})" in readme
+
+
 def test_robots_file_allows_crawling_and_names_the_canonical_sitemap() -> None:
     robots = (DOCS_ROOT / "robots.txt").read_text(encoding="utf-8")
 

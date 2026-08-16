@@ -8,6 +8,8 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 ### Changed
+- Pointed package metadata and the README documentation badge to the deployed
+  canonical GitHub Pages site after Maintainer Gate A passed.
 - Established the minimal Sphinx/MyST documentation site and a warning-as-error
   GitHub Pages workflow. The server-rendered landing page routes readers to the
   quickstart, example workflows, API map, paper replication, project history,
