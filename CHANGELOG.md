@@ -31,6 +31,11 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   package metadata.
 
 ### Added
+- Added `examples/quickstart.py` as the single offline, deterministic first-success source for
+  AR(1) and ARFIMA closed forms. The documentation includes that root file mechanically, and
+  tests execute it from an installed package without allowing output files or GUI access.
+- Added headless temporary-directory smoke tests for every claimed root example and documented
+  their environment, data boundary, runtime, output files, and compact expected results.
 - Added a dependency-free deployed-documentation audit that checks bounded HTTP fetches,
   redirects, canonical URLs, crawler directives, server-rendered content and navigation,
   internal task routes, required project links, `robots.txt`, and the generated sitemap.

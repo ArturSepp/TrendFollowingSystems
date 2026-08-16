@@ -82,21 +82,19 @@ pip install -e ".[dev]"
 
 ## Quickstart
 
-The closed forms re-export at the package top level:
+The authoritative first-success script is
+[`examples/quickstart.py`](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/examples/quickstart.py).
+It uses only the installed top-level API to compute deterministic AR(1) and ARFIMA closed forms:
 
-```python
-import trendfollowing as tf
-
-# closed-form Sharpe ratio of the European system under an AR-1 process
-sr = tf.sharpe_ar1(phi=0.05, long_span=21)                      # 0.336
-
-# the generic formula: any population autocorrelation function
-rho = tf.population_acf(n_lags=2000, phi=-0.05, d=0.1)          # ARFIMA(1,d,0)
-sr = tf.compute_annualised_sharpe(rho=rho, long_span=250, short_span=20)
-
-# the canonical realized-Sharpe estimator shared by all estimation layers
-sr_hat = tf.compute_realized_sharpe(returns=daily_returns, af=260.0)
+```console
+python examples/quickstart.py
 ```
+
+It prints the installed version, AR(1) Sharpe `0.200195`, ARFIMA(0,d,0) Sharpe `0.288820`, and
+the 260-day annualization, zero-drift, and single-EWMA conventions. It runs without network or
+data access, writes no files, and points to `PHI`, `D`, and `LONG_SPAN` as the first parameters
+to change. The [documentation quickstart](https://artursepp.github.io/TrendFollowingSystems/quickstart.html)
+includes the same file mechanically.
 
 A portfolio backtest of the paper's LS(250,20) filter on the packaged universe:
 
