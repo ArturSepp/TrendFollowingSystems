@@ -29,6 +29,8 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   package metadata.
 
 ### Added
+- Added persistent Search Console HTML verification, generated sitemap support,
+  and a crawler-visible `robots.txt` declaration for the canonical Pages site.
 - `tests/test_docs_foundation.py` guards the canonical documentation URL,
   required navigation, docs dependency extra, ignored build output, and Pages
   workflow contract.
