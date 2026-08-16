@@ -1,9 +1,16 @@
+"""Closed-form trend-following analytics and reproducible futures evidence.
+
+This is a research and replication library, not a broker integration or
+general-purpose execution engine. Portfolio analytics and reporting are
+delegated to qis.
 """
-trendfollowing: replication package for The Science and Practice of Trend-Following Systems
-reference: Sepp, A. and Lucic, V., The Science and Practice of Trend-Following Systems,
-https://ssrn.com/abstract=3167787
-"""
-__version__ = "1.0.0"
+from importlib.metadata import PackageNotFoundError as _PackageNotFoundError
+from importlib.metadata import version as _distribution_version
+
+try:
+    __version__ = _distribution_version("trendfollowing")
+except _PackageNotFoundError:  # imported directly from an uninstalled source tree
+    __version__ = "0+unknown"
 
 from trendfollowing.analytics.filters import (span_to_nu,
                                               compute_ewm_long_short_weights)

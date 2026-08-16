@@ -15,7 +15,8 @@ from typing import List, Tuple
 from qis import TimePeriod
 
 
-# the dataset shipped with the package is the default; set TF_RESOURCE_PATH to override with a local data folder
+# Kept for compatibility with older research scripts. Public loaders resolve the
+# path at call time so a TF_RESOURCE_PATH override never depends on import order.
 from trendfollowing.local_path import get_universe_data_path
 LOCAL_PATH = get_universe_data_path()
 
@@ -52,10 +53,19 @@ def generate_data() -> None:
     (maintainers only): prices, usd returns, volume costs, the 60/40 and sg trend
     benchmarks, and the instrument metadata
     """
+    resource_override = os.environ.get('TF_RESOURCE_PATH')
+    if not resource_override:
+        raise RuntimeError(
+            'set TF_RESOURCE_PATH to an external writable folder before regenerating data'
+        )
+    local_path = os.path.abspath(os.path.expanduser(resource_override)) + os.sep
+
     from futures_strats.data.universes.futures.bbg_futures import Universes
     from bbg_fetch import fetch_field_timeseries_per_tickers
 
-    strategy_universe = Universes.BBG_FUTURES_INVESTABLE.load_universe_data(local_path=LOCAL_PATH)
+    strategy_universe = Universes.BBG_FUTURES_INVESTABLE.load_universe_data(
+        local_path=local_path
+    )
     prices = strategy_universe.get_prices()
     usd_returns = strategy_universe.get_usd_returns()
 
@@ -79,7 +89,7 @@ def generate_data() -> None:
                                           descriptive_df=descriptive_df,
                                           credit_df=credit_df),
                             file_name='tf_system_data',
-                            local_path=LOCAL_PATH)
+                            local_path=local_path)
 
 
 #@qis.timer
@@ -92,8 +102,9 @@ def load_data(time_period: TimePeriod = None,
     descriptive metadata, and the asset-group order, optionally restricted to a
     time period and a ticker list
     """
+    local_path = get_universe_data_path()
     dfs = qis.load_df_dict_from_csv(dataset_keys=['prices', 'volume_costs', 'benchmark_prices', 'descriptive_df'],
-                                    file_name='tf_system_data', local_path=LOCAL_PATH)
+                                    file_name='tf_system_data', local_path=local_path)
     prices = dfs['prices']
     volume_costs = dfs['volume_costs']
     benchmark_prices = dfs['benchmark_prices']

@@ -1,9 +1,10 @@
-# TrendFollowingSystems (`trendfollowing`)
+# trendfollowing
 
-**Closed-form expected return, Sharpe ratio, and turnover of trend-following
-systems under white noise, AR(1), and ARFIMA processes — with three complete
-system implementations (European, American, Time Series Momentum), Monte Carlo
-verification, and an 84-contract futures dataset spanning 1959–2026.**
+`trendfollowing` — closed-form trend-following analytics, reference system implementations,
+and reproducible futures evidence in Python for quantitative researchers and practitioners.
+
+It is a research and replication library, not a broker integration or general-purpose execution
+engine; portfolio analytics and reporting are delegated to `qis`.
 
 [![PyPI](https://img.shields.io/pypi/v/trendfollowing?style=flat-square)](https://pypi.org/project/trendfollowing/)
 [![Python](https://img.shields.io/pypi/pyversions/trendfollowing?style=flat-square)](https://pypi.org/project/trendfollowing/)
@@ -60,15 +61,23 @@ read. The backtest layer builds on [`qis`](https://github.com/ArturSepp/QuantInv
 ## Installation
 
 ```bash
+pip install trendfollowing
+```
+
+Python >= 3.10 and `qis` >= 5.0.9. The analytical layer and the Monte Carlo
+verification run without any data. Wheels and source checkouts include the
+empirical dataset (84 futures contracts, benchmarks, volume-based costs;
+1959–2026).
+
+### Development installation
+
+For an editable checkout with the test and lint tools:
+
+```bash
 git clone https://github.com/ArturSepp/TrendFollowingSystems.git
 cd TrendFollowingSystems
 pip install -e ".[dev]"
 ```
-
-Python >= 3.10 and `qis` >= 5.0.6. The analytical layer and the Monte Carlo
-verification run without any data. The empirical layer runs from the dataset
-packaged in `trendfollowing/resources` (84 futures contracts, benchmarks,
-volume-based costs; 1959–2026).
 
 ## Quickstart
 
@@ -112,17 +121,17 @@ Sharpe ratio of 1.10 at a 15.2% realized volatility over 1960–2026
 
 ## The three systems
 
-**European** ([`systems/european.py`](trendfollowing/systems/european.py)):
+**European** ([`systems/european.py`](src/trendfollowing/systems/european.py)):
 continuous weights from a variance-preserving EWMA filter, single or
 long-short, applied to volatility-normalized returns, with volatility-targeted
 position sizing. The system of the closed forms.
 
-**American** ([`systems/american.py`](trendfollowing/systems/american.py)):
+**American** ([`systems/american.py`](src/trendfollowing/systems/american.py)):
 binary positions from the crossover of two price EWMA filters with an ATR
 entry buffer and ATR trailing stop-losses, in the tradition of the turtle
 systems. Position size is fixed at trade inception.
 
-**TSMOM** ([`systems/tsmom.py`](trendfollowing/systems/tsmom.py)): the
+**TSMOM** ([`systems/tsmom.py`](src/trendfollowing/systems/tsmom.py)): the
 normalized sum of signs of volatility-normalized period returns, generalizing
 Moskowitz–Ooi–Pedersen time series momentum to a period length L and lookback
 of M periods.
@@ -266,15 +275,18 @@ figure-by-figure map and the verification catalogue.
 ## Repository layout
 
 ```
-trendfollowing/                     the installable library
-    analytics/                          closed-form results of the paper
-    systems/                            european.py, american.py, tsmom.py
-    processes/                          simulation of return-generating processes
-    universe.py                         futures universe data layer
-    resources/                          packaged dataset: 84 futures series (1959-2026),
-                                        benchmarks, volume-based costs, metadata
-    backtests.py                        portfolio-level backtests of the three systems (qis)
-examples/                           self-contained usage cases
+src/
+    trendfollowing/                     the installable library
+        analytics/                          closed-form results of the paper
+        systems/                            european.py, american.py, tsmom.py
+        processes/                          simulation of return-generating processes
+        resources/futures/                  84 futures series (1959-2026), benchmarks,
+                                           volume-based costs, and metadata
+        universe.py                         futures universe data layer
+        backtests.py                        portfolio-level backtests of the three systems (qis)
+resources/
+    papers/                            writable paper-replication caches; not installed
+examples/                           self-contained usage cases; kept at repository root
 papers/
     tf_systems/                         'The Science and Practice of Trend-Following Systems'
         paper/                              LaTeX source, siamonline class, compiled PDF, figures
@@ -284,15 +296,15 @@ tests/                              pytest suite
 
 ## Data
 
-The dataset in `trendfollowing/resources` contains the daily prices and USD
-returns of the 84 futures contracts used in the paper (July 1959 to July
-2026), the benchmark series, the volume-based cost schedule, and the
-instrument metadata. The universe covers the most liquid contracts across
-global equity, bond, short-rate, currency, and commodity markets. The
+The dataset installed under `trendfollowing/resources/futures` contains the
+daily prices and USD returns of the 84 futures contracts used in the paper
+(July 1959 to July 2026), the benchmark series, the volume-based cost schedule,
+and the instrument metadata. The universe covers the most liquid contracts
+across global equity, bond, short-rate, currency, and commodity markets. The
 continuous series are constructed so that their relative returns carry no
 roll-related jumps and equal the excess returns of the held contract.
-`trendfollowing.universe.load_data()` serves all empirical scripts from these
-files; set `TF_RESOURCE_PATH` to override with a local folder.
+`trendfollowing.universe.load_data()` resolves these files through package
+resources; set `TF_RESOURCE_PATH` to override them with an external folder.
 
 ## Sharpe convention
 
@@ -365,7 +377,7 @@ should also cite the version it ran:
 ```bibtex
 @software{sepp2026trendfollowing,
   author  = {Sepp, Artur and Lucic, Vladimir},
-  title   = {trendfollowing: replication package for The Science and Practice of Trend-Following Systems},
+  title   = {trendfollowing},
   year    = {2026},
   version = {1.0.5},
   url     = {https://github.com/ArturSepp/TrendFollowingSystems}

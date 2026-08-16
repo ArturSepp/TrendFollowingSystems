@@ -13,7 +13,7 @@ body:
     attributes:
       label: "trendfollowing version"
       description: "Output of `pip show trendfollowing` (the Version line)"
-      placeholder: "e.g. 1.0.0"
+      placeholder: "e.g. 1.2.3"
     validations:
       required: true
 

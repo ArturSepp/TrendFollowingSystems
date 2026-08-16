@@ -1,13 +1,13 @@
 cff-version: 1.2.0
-message: "If you use this package, please cite the paper below."
+message: "If you use this software, please cite this package version and the paper below."
 type: software
-title: "trendfollowing: replication package for The Science and Practice of Trend-Following Systems"
+title: "trendfollowing"
 abstract: >-
-  Replication package for "The Science and Practice of Trend-Following Systems":
-  European, American, and Time Series Momentum trend-following systems with
-  closed-form expected return, Sharpe ratio, and turnover under white noise,
-  AR(1), and ARFIMA processes, plus Monte Carlo verification and an 84-contract
-  futures dataset spanning 1959-2026.
+  trendfollowing — closed-form trend-following analytics, reference system
+  implementations, and reproducible futures evidence in Python for quantitative
+  researchers and practitioners. It is a research and replication library, not
+  a broker integration or general-purpose execution engine; portfolio analytics
+  and reporting are delegated to qis.
 authors:
   - family-names: Sepp
     given-names: Artur

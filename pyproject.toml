@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "trendfollowing"
 version = "1.0.5"
-description = "Replication package for 'The Science and Practice of Trend-Following Systems': European, American, and TSMOM trend-following systems with closed-form expected return, Sharpe ratio, and turnover under white noise, AR(1), and ARFIMA processes, plus Monte Carlo verification and an 84-contract futures dataset"
+description = "trendfollowing — closed-form trend-following analytics, reference system implementations, and reproducible futures evidence in Python for quantitative researchers and practitioners."
 readme = "README.md"
 license = {text = "GPL-3.0-or-later"}
 requires-python = ">=3.10"
@@ -60,25 +60,35 @@ dev = [
     "pytest-cov>=4.0",
     "ruff>=0.4",
 ]
+docs = [
+    "sphinx>=7.2",
+    "myst-parser>=2.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/ArturSepp/TrendFollowingSystems"
 Documentation = "https://github.com/ArturSepp/TrendFollowingSystems#readme"
 Repository = "https://github.com/ArturSepp/TrendFollowingSystems"
 Issues = "https://github.com/ArturSepp/TrendFollowingSystems/issues"
+Changelog = "https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CHANGELOG.md"
+Paper = "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3167787"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
+where = ["src"]
 include = ["trendfollowing*"]
 
 [tool.setuptools.package-data]
-trendfollowing = ["settings.yaml"]  # data lives in <repo_root>/resources, see local_path.py
+trendfollowing = ["settings.yaml", "resources/futures/*.csv"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "--tb=short -q"
-# repo root on sys.path so the tests can import the papers.* replication modules
-# under a bare `pytest` invocation, which unlike `python -m pytest` does not add the
-# current directory itself
+# The repo root is on sys.path only so tests can import the non-installed papers.*
+# replication modules. tests/test_src_layout.py prevents this exception from masking
+# a legacy root trendfollowing/ package.
 pythonpath = ["."]
 
 [tool.ruff]
@@ -90,7 +100,7 @@ line-length = 100
 select = ["E", "F", "W"]
 
 [tool.coverage.run]
-source = ["trendfollowing"]
+source = ["src/trendfollowing"]
 
 [tool.coverage.report]
 show_missing = true
