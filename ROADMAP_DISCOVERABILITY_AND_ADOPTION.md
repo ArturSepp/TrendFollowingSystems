@@ -6,8 +6,8 @@ Source: adapted from
 `C:\Users\artur\OneDrive\analytics\my_github\.agents\ROADMAP_OSS_DISCOVERABILITY_AND_ADOPTION.md`.
 
 Status: execution in progress. U0 and the public-data portion of U1 were recorded on 2026-08-16;
-M1, M2, U2, U3a, Maintainer Gate A, and U3b passed on 2026-08-16. The next implementation stage
-is U6.
+M1, M2, U2, U3a, Maintainer Gate A, U3b, and U6 passed on 2026-08-16. The next implementation
+stage is U4a.
 
 ## Outcome
 
@@ -603,6 +603,10 @@ claims.
 
 ## U6 — Create one root source of truth for first success
 
+**Execution status (2026-08-16): PASS.** The root quickstart, mechanical docs inclusion,
+headless example matrix, and clean-wheel execution passed. See
+`agents/U6_IMPLEMENTATION_REPORT.md`.
+
 **Deliverable:** `examples/quickstart.py` at repository root plus docs inclusion/drift checks.
 
 The script:
@@ -968,6 +972,7 @@ Use `PASS-LOCAL` only temporarily before required deployed checks, then replace 
 2026-08-16 · U3a · main@working-tree · PASS · warning-free HTML/linkcheck, static navigation, and Pages workflow passed
 2026-08-16 · Gate A · main@2e30bb5 · PASS · Pages, canonical GitHub identity, Search Console ownership, and sitemap submission completed
 2026-08-16 · U3b · main@working-tree · PASS · deployed HTTP, canonical, robots, sitemap, navigation, and outbound-route audit passed
+2026-08-16 · U6 · main@working-tree · PASS · root quickstart, docs drift guard, headless examples, and clean-wheel execution passed
 ```
 
 ## Definition of complete
