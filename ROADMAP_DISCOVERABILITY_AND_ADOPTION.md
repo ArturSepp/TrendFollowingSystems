@@ -840,6 +840,12 @@ hosted run.
 
 ## U8 — Release, deploy, and align trust surfaces
 
+**Execution status (2026-08-17): PASS.** Release 1.1.0 was published from
+`main@9e56f586` as tag `v1.1.0` after PR 11 and the full cross-platform CI matrix passed.
+PyPI and GitHub Release artifact hashes agree; clean wheel, sdist, and no-cache PyPI installs
+passed the quickstart and empirical loader contracts; the intended Pages deployment and the
+deployed canonical, robots, sitemap, navigation, and outbound-route audit passed.
+
 **Deliverable:** an explicitly approved release because layout, wheel contents, metadata, README,
 and runtime version behavior must reach PyPI. A 1.1.0 release is a reasonable non-breaking
 candidate, but the maintainer chooses the version.
@@ -885,6 +891,10 @@ meet both first-success and empirical contracts, and numerical evidence is uncha
 release.
 
 ## U9 — Measure at approximately 30, 60, and 90 days
+
+**D0 is 2026-08-17.** The release-relative Europe/Zurich observation dates are 2026-09-16,
+2026-10-16, and 2026-11-15. No task scheduling has been created; the scheduling approval below
+remains required.
 
 **Deliverable:** update `agents/DISCOVERABILITY_90_DAY_REPORT.md` at each checkpoint.
 
@@ -995,6 +1005,7 @@ Use `PASS-LOCAL` only temporarily before required deployed checks, then replace 
 2026-08-17 · U5 · main@working-tree · PASS · dated neutral comparison, official-source/license audit, docs contract, HTML, and linkcheck passed
 2026-08-17 · Gate B · main@working-tree · PASS · hosted-notebook decision recorded; evidence supports deferral through the first 90-day cycle
 2026-08-17 · U7 · main@working-tree · SKIPPED · no hosted notebook or second execution surface; reconsider only on U9 evidence
+2026-08-17 · U8 · main@9e56f586 / v1.1.0 · PASS · PyPI, GitHub Release, installed artifacts, Pages deployment, and deployed trust-surface checks passed
 ```
 
 ## Definition of complete
