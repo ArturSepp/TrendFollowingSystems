@@ -7,7 +7,8 @@ Source: adapted from
 
 Status: execution in progress. U0 and the public-data portion of U1 were recorded on 2026-08-16;
 M1, M2, U2, U3a, Maintainer Gate A, U3b, and U6 passed on 2026-08-16. U4a passed on
-2026-08-17. U4b, U4c, and U5 passed on 2026-08-17. The next stage is Maintainer Gate B.
+2026-08-17. U4b, U4c, U5, and Maintainer Gate B passed on 2026-08-17; U7 was
+skipped. The next stage is U8, which requires explicit release approval.
 
 ## Outcome
 
@@ -792,6 +793,9 @@ package into a general execution engine.
 
 ## Maintainer Gate B — Decide on a hosted notebook
 
+**Decision (2026-08-17): DEFER.** U7 is skipped through the first 90-day cycle. See
+`agents/GATE_B_HOSTED_NOTEBOOK_DECISION.md`.
+
 **Default recommendation:** defer U7 through the first 90-day cycle.
 
 The root script and static docs should establish first success with less maintenance and without a
@@ -808,7 +812,17 @@ Approval criteria:
 
 Record `SKIPPED` when deferred; scheduling a later review is not a completed U7.
 
+The decision follows the default recommendation because U6 already proved the released-wheel,
+offline, deterministic root quickstart and its mechanical documentation inclusion. D0 has not
+started, so no U9 observation yet shows that qualified users fail to install or run locally or
+that paper readers need a hosted trial. The Colab-specific approval criteria and recurring
+maintenance commitment were therefore not exercised. Reconsider only on the evidence triggers
+above; no review was scheduled at this gate.
+
 ## U7 — Optional thin hosted notebook
+
+**Execution status (2026-08-17): SKIPPED.** Maintainer Gate B deferred this optional stage; no
+notebook, hosted runtime, dependency, or second quickstart source was added.
 
 **Deliverable, only after Gate B approval:** one output-free notebook linking to and mechanically
 checking the root `examples/quickstart.py`.
@@ -979,6 +993,8 @@ Use `PASS-LOCAL` only temporarily before required deployed checks, then replace 
 2026-08-17 · U4b · main@working-tree · PASS · sample-ACF guide, timing and data audit, root output checks, wheel symbols, and docs build passed
 2026-08-17 · U4c · main@working-tree · PASS · three-system guide, timing and units audit, root output checks, wheel symbols, and docs build passed
 2026-08-17 · U5 · main@working-tree · PASS · dated neutral comparison, official-source/license audit, docs contract, HTML, and linkcheck passed
+2026-08-17 · Gate B · main@working-tree · PASS · hosted-notebook decision recorded; evidence supports deferral through the first 90-day cycle
+2026-08-17 · U7 · main@working-tree · SKIPPED · no hosted notebook or second execution surface; reconsider only on U9 evidence
 ```
 
 ## Definition of complete
