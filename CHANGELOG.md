@@ -7,6 +7,8 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-08-17
+
 ### Changed
 - Pointed package metadata and the README documentation badge to the deployed
   canonical GitHub Pages site after Maintainer Gate A passed.
