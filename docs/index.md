@@ -22,6 +22,12 @@ Use the three maintained, root-level scripts described in
 {doc}`example workflows <workflows>` to analyze spans, predict Sharpe from an
 autocorrelation function, or backtest the European system on packaged futures data.
 
+### Explain realized Sharpe from sample moments
+
+Use the {doc}`Sharpe prediction and attribution guide <predict_sharpe_from_acf>` to separate
+point-in-time research from the in-sample replication workflow and to audit data coverage,
+volatility normalization, lag construction, and estimation risk.
+
 ### Reproduce the research
 
 Start from the {doc}`paper and replication map <paper>` for the paper, executable
@@ -33,6 +39,7 @@ replication modules, data boundaries, and citation instructions.
 |---|---|
 | Quickstart | {doc}`Install and make the first calculation <quickstart>` |
 | Closed-form analytics | {doc}`Compare processes and select a filter span <closed_form_analytics>` |
+| Predict Sharpe | {doc}`Attribute realized Sharpe to sample ACF and drift <predict_sharpe_from_acf>` |
 | Workflows | {doc}`Run the maintained examples <workflows>` |
 | API | {doc}`Find the public modules and symbols <api>` |
 | Paper and replication | {doc}`Connect the package to the research evidence <paper>` |
@@ -49,6 +56,7 @@ replication modules, data boundaries, and citation instructions.
 
 quickstart
 closed_form_analytics
+predict_sharpe_from_acf
 workflows
 api
 paper
