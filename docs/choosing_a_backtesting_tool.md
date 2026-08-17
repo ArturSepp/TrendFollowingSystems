@@ -37,7 +37,7 @@ strategy types that `trendfollowing` intentionally does not implement.
 “Not identified” means that the capability was not found in the official sources audited for this
 page. It is not proof that no extension, user code, branch, or paid product can provide it.
 
-| Capability | `trendfollowing` 1.0.5 | pysystemtrade 1.8.2 | vectorbt 1.1.0 | Backtesting.py 0.6.6 |
+| Capability | `trendfollowing` 1.1.0 | pysystemtrade 1.8.2 | vectorbt 1.1.0 | Backtesting.py 0.6.6 |
 |---|---|---|---|---|
 | Primary design and audience | Research and replication library for closed-form trend-following analysis and maintained futures reference systems; not a broker or general execution engine. | Systematic-futures backtesting plus a production system for technically experienced users; the [repository][pst-repo] documents its scope and support expectations. | Matrix-oriented general strategy research for multi-asset and large parameter sweeps; see the [official feature list][vbt-repo]. | Compact, bar-by-bar entry/exit strategy testing and optimization for an individual tradeable asset; see the [official quickstart][bt-quickstart]. |
 | Closed-form trend-following moments | Expected return, volatility, Sharpe ratio, skewness, and turnover are package workflows; see {doc}`closed-form analytics <closed_form_analytics>`. | **Not identified** as a documented project capability in the [repository][pst-repo] or [backtesting guide][pst-backtesting]. | **Not identified** in the audited [community feature set][vbt-repo]. | **Not identified** in the audited [API][bt-api] and [quickstart][bt-quickstart]. |
@@ -104,7 +104,7 @@ from selection and recommendation.
 
 | Project | Version basis used here | Activity/source interpretation |
 |---|---|---|
-| `trendfollowing` | [1.0.5 on PyPI][tf-pypi], released 2026-08-01 | This documentation and the repository's tagged package metadata define the compared public contract. |
+| `trendfollowing` | [1.1.0 on PyPI][tf-pypi], released 2026-08-17 | This documentation and the repository's tagged package metadata define the compared public contract. |
 | pysystemtrade | [1.8.2 tagged release][pst-release], published 2024-11-06 | 1.8.2 is the latest official tagged release found. The project is not on PyPI; current capability links use the active official `develop` repository and documentation. The [repository history note][pst-repo] records the January 2026 move to `pst-group`. |
 | vectorbt | [1.1.0 on PyPI][vbt-pypi], released 2026-07-05 | The official community repository and its 1.1.0 package/release records define the compared scope; VectorBT PRO is not assessed. |
 | Backtesting.py | [0.6.6 on PyPI][bt-pypi], released 2026-07-22 | PyPI is the stable-version record used because the official [GitHub releases page][bt-releases] has no latest release object; current official docs and the repository define capabilities. |

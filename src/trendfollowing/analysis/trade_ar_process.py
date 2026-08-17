@@ -4,6 +4,7 @@ forecast with linear or sign sizing, with pacf diagnostics of the simulated path
 reference: Sepp, A. and Lucic, V., The Science and Practice of Trend-Following Systems,
 https://ssrn.com/abstract=3167787
 """
+
 # packages
 import numpy as np
 import pandas as pd
@@ -21,10 +22,7 @@ from trendfollowing.processes.path_engine import set_seed, simulate_ar_p_paths
 
 
 @njit
-def trade_ar1(xt: np.ndarray,
-              phi: np.ndarray,
-              is_ar_sizing: bool = True
-              ) -> np.ndarray:
+def trade_ar1(xt: np.ndarray, phi: np.ndarray, is_ar_sizing: bool = True) -> np.ndarray:
     """
     cumulative pnl of trading the one-step ar(p) forecast on each path, with the
     size equal to the forecast (linear sizing) or its sign
@@ -35,12 +33,12 @@ def trade_ar1(xt: np.ndarray,
     pnl = np.zeros((m_times, n_path))
 
     for t in np.arange(p, m_times):
-        forecast_1 = phi_ @ np.ascontiguousarray(xt[t-p: t, :])
+        forecast_1 = phi_ @ np.ascontiguousarray(xt[t - p : t, :])
         if is_ar_sizing:
             size = forecast_1
         else:
             size = np.sign(forecast_1)
-        pnl[t, :] = pnl[t-1, :] + size * xt[t, :]
+        pnl[t, :] = pnl[t - 1, :] + size * xt[t, :]
 
     return pnl
 
@@ -59,6 +57,7 @@ class LocalTests(Enum):
     """
     runnable example cases
     """
+
     AR1 = 1
     TRADE_AR1 = 2
     OU_SECONDS_PATHS = 3
@@ -75,35 +74,31 @@ def run_local_test(local_test: LocalTests):
     set_seed(1)
 
     if local_test == LocalTests.AR1:
-        #phi = np.array([-0.5])
-        #x0 = np.array([1.0])
+        # phi = np.array([-0.5])
+        # x0 = np.array([1.0])
         phi = np.array([-0.6, 0.3])
         x0 = np.array([0.0, 0.0])
 
         n_path = 100
         n_path_cut = 20
-        paths = simulate_ar_p_paths(phi=phi,
-                                    x0=x0,
-                                    n_path=n_path,
-                                    m_times=1000,
-                                    c=0.0,
-                                    noise_std=1.0)
+        paths = simulate_ar_p_paths(
+            phi=phi, x0=x0, n_path=n_path, m_times=1000, c=0.0, noise_std=1.0
+        )
         acfs, m_acf, std_acf = qis.estimate_acf_from_paths(paths=paths, is_pacf=True)
-        paths = pd.DataFrame(paths, columns=[f"path{p+1}" for p in range(n_path)])
+        paths = pd.DataFrame(paths, columns=[f"path{p + 1}" for p in range(n_path)])
 
         with sns.axes_style("darkgrid"):
             fig, axs = plt.subplots(2, 2, figsize=(18, 10), tight_layout=True)
         qis.plot_line(df=paths.iloc[:, :n_path_cut], ax=axs[0][0])
         qis.plot_histogram(df=paths.iloc[:, :n_path_cut], ax=axs[0][1])
-        plot_pacf(paths.iloc[:, 0], lags=10, title=f"path0", ax=axs[1][0])
+        plot_pacf(paths.iloc[:, 0], lags=10, title="path0", ax=axs[1][0])
         # peb.errorbar(df=m_acf, y_std_errors=std_acf, var_format='{:.2%}', ax=axs[1][1])
         qis.df_boxplot_by_index(df=acfs, ax=axs[1][1])
         print(pacf(paths.iloc[:, 0], nlags=10))
 
     elif local_test == LocalTests.TRADE_AR1:
-
-        #phi1 = -0.4
-        #phi = np.array([-0.6, 0.3])
+        # phi1 = -0.4
+        # phi = np.array([-0.6, 0.3])
 
         # phi = np.array([0.5])
         phi = np.array([-0.4, 0.1, 0.1])
@@ -113,11 +108,7 @@ def run_local_test(local_test: LocalTests):
 
         n_path = 1000
         m_times = 1000
-        xt = simulate_ar_p_paths(phi=phi,
-                                 n_path=n_path,
-                                 m_times=m_times,
-                                 mean=0.0,
-                                 noise_std=1.0)
+        xt = simulate_ar_p_paths(phi=phi, n_path=n_path, m_times=m_times, mean=0.0, noise_std=1.0)
 
         name1 = 'Forecast Size'
         name2 = 'Sign Size'
@@ -140,9 +131,13 @@ def run_local_test(local_test: LocalTests):
         kwargs = dict(legend_loc=None)
 
         acfs, m_acf, std_acf = qis.estimate_acf_from_paths(paths=xt, is_pacf=True)
-        qis.df_boxplot_by_index(df=acfs, title='Partial AFC', ylabel=r'$\rho$', y_limits=(-1, 1), ax=axs[0][0])
+        qis.df_boxplot_by_index(
+            df=acfs, title='Partial AFC', ylabel=r'$\rho$', y_limits=(-1, 1), ax=axs[0][0]
+        )
         acfs, m_acf, std_acf = qis.estimate_acf_from_paths(paths=xt, is_pacf=False)
-        qis.df_boxplot_by_index(df=acfs, title='AFC', ylabel=r'$\rho$', y_limits=(-1, 1), ax=axs[1][0])
+        qis.df_boxplot_by_index(
+            df=acfs, title='AFC', ylabel=r'$\rho$', y_limits=(-1, 1), ax=axs[1][0]
+        )
 
         qis.plot_line(df=pnls[name1], title=f"P&L path: {name1}", ax=axs[0][1], **kwargs)
         qis.plot_line(df=pnls[name2], title=f"P&L path: {name2}", ax=axs[1][1], **kwargs)
@@ -156,7 +151,6 @@ def run_local_test(local_test: LocalTests):
 
 
 if __name__ == '__main__':
-
     local_test = LocalTests.TRADE_AR1
 
     run_local_test(local_test=local_test)
