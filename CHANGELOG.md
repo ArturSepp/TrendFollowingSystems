@@ -31,6 +31,9 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   package metadata.
 
 ### Added
+- Added a focused Sharpe-prediction and attribution guide covering point-in-time versus in-sample
+  use, volatility normalization, lag and drift estimation, packaged-data coverage, missing
+  observations, paper-replication conventions, output interpretation, and estimation risk.
 - Added a task-oriented closed-form analytics and span-selection guide covering white-noise,
   AR(1), ARFIMA, and empirical-ACF inputs; output and cost units; arithmetic excess-return
   Sharpe; exact versus leading-order results; the authoritative root example; and failure modes.
