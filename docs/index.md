@@ -34,6 +34,13 @@ Use the {doc}`three-system comparison and backtest guide <system_comparison_and_
 choose among European, American, and TSMOM rules and to make their inputs, exposure units, costs,
 volatility targets, warmups, timing, and reusable-versus-paper workflows explicit.
 
+### Choose the right research or backtesting tool
+
+Use the dated, source-backed
+{doc}`package choice guide <choosing_a_backtesting_tool>` to compare `trendfollowing` with
+pysystemtrade, vectorbt, and Backtesting.py by workflow, analytical scope, data, production
+integration, audience, and license implications.
+
 ### Reproduce the research
 
 Start from the {doc}`paper and replication map <paper>` for the paper, executable
@@ -47,6 +54,7 @@ replication modules, data boundaries, and citation instructions.
 | Closed-form analytics | {doc}`Compare processes and select a filter span <closed_form_analytics>` |
 | Predict Sharpe | {doc}`Attribute realized Sharpe to sample ACF and drift <predict_sharpe_from_acf>` |
 | Compare systems | {doc}`Choose and backtest European, American, or TSMOM <system_comparison_and_backtest>` |
+| Choose a tool | {doc}`Compare specialized research and broader backtesting workflows <choosing_a_backtesting_tool>` |
 | Workflows | {doc}`Run the maintained examples <workflows>` |
 | API | {doc}`Find the public modules and symbols <api>` |
 | Paper and replication | {doc}`Connect the package to the research evidence <paper>` |
@@ -65,6 +73,7 @@ quickstart
 closed_form_analytics
 predict_sharpe_from_acf
 system_comparison_and_backtest
+choosing_a_backtesting_tool
 workflows
 api
 paper

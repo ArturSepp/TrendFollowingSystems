@@ -25,6 +25,7 @@ def test_landing_page_routes_every_required_destination() -> None:
     landing_page = (DOCS_ROOT / "index.md").read_text(encoding="utf-8")
     required_routes = (
         "quickstart",
+        "choosing_a_backtesting_tool",
         "workflows",
         "api",
         "paper",
@@ -38,6 +39,33 @@ def test_landing_page_routes_every_required_destination() -> None:
 
     for route in required_routes:
         assert route in landing_page
+
+
+def test_package_choice_guide_has_dated_neutral_source_contract() -> None:
+    guide = (DOCS_ROOT / "choosing_a_backtesting_tool.md").read_text(encoding="utf-8")
+
+    required_content = (
+        "2026-08-17",
+        "## Overlap and different design goals",
+        "## Capability matrix",
+        "## Workflow-based decision guide",
+        "## Where `trendfollowing` is specialized",
+        "## Where broader tools are a better fit",
+        "## Methodology, versions, sources, and limitations",
+        "pysystemtrade 1.8.2",
+        "vectorbt 1.1.0",
+        "Backtesting.py 0.6.6",
+        "Not identified",
+        "No universal winner",
+        "https://github.com/pst-group/pysystemtrade",
+        "https://github.com/polakowo/vectorbt",
+        "https://github.com/kernc/backtesting.py",
+        "Apache 2.0 with Commons Clause",
+        "AGPL-3.0",
+    )
+
+    for entry in required_content:
+        assert entry in guide
 
 
 def test_docs_extra_and_ignored_build_output_are_declared() -> None:

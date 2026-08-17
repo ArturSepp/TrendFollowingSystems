@@ -31,6 +31,11 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   package metadata.
 
 ### Added
+- Added a dated, neutral package-choice guide comparing `trendfollowing` with pysystemtrade,
+  vectorbt, and Backtesting.py across analytical scope, reference systems, data, scientific
+  replication, general backtesting, production integration, audience, and license implications.
+  Competitor claims link to audited official sources, and undocumented capabilities remain
+  explicitly unknown.
 - Added a focused European, American, and TSMOM comparison and backtest guide covering inputs,
   outputs, units, costs, volatility targeting, warmup and no-look-ahead timing, packaged-universe
   overrides, `qis` delegation, the authoritative empirical example, and verification routes.
@@ -51,8 +56,8 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Added persistent Search Console HTML verification, generated sitemap support,
   and a crawler-visible `robots.txt` declaration for the canonical Pages site.
 - `tests/test_docs_foundation.py` guards the canonical documentation URL,
-  required navigation, docs dependency extra, ignored build output, and Pages
-  workflow contract.
+  required navigation, package-choice source contract, docs dependency extra,
+  ignored build output, and Pages workflow contract.
 - `tests/test_src_layout.py` guards the src layout, prevents the root `papers.*`
   path exception from masking a legacy package, and keeps public examples at the
   repository root.

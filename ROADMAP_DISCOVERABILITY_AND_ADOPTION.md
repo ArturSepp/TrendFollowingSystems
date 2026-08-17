@@ -7,7 +7,7 @@ Source: adapted from
 
 Status: execution in progress. U0 and the public-data portion of U1 were recorded on 2026-08-16;
 M1, M2, U2, U3a, Maintainer Gate A, U3b, and U6 passed on 2026-08-16. U4a passed on
-2026-08-17. U4b and U4c passed on 2026-08-17. The next implementation stage is U5.
+2026-08-17. U4b, U4c, and U5 passed on 2026-08-17. The next stage is Maintainer Gate B.
 
 ## Outcome
 
@@ -740,6 +740,8 @@ values, or generated marketing figures.
 
 ## U5 — Publish a neutral comparison and choice guide
 
+**Execution status (2026-08-17): PASS.** See `agents/U5_IMPLEMENTATION_REPORT.md`.
+
 **Deliverable:** one dated page comparing workflows, not declaring a universal winner.
 
 Candidate genuine alternatives:
@@ -976,6 +978,7 @@ Use `PASS-LOCAL` only temporarily before required deployed checks, then replace 
 2026-08-17 · U4a · main@working-tree · PASS · focused guide, public-symbol audit, root example, numerical cross-checks, and docs build passed
 2026-08-17 · U4b · main@working-tree · PASS · sample-ACF guide, timing and data audit, root output checks, wheel symbols, and docs build passed
 2026-08-17 · U4c · main@working-tree · PASS · three-system guide, timing and units audit, root output checks, wheel symbols, and docs build passed
+2026-08-17 · U5 · main@working-tree · PASS · dated neutral comparison, official-source/license audit, docs contract, HTML, and linkcheck passed
 ```
 
 ## Definition of complete
