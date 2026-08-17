@@ -31,6 +31,9 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   package metadata.
 
 ### Added
+- Added a focused European, American, and TSMOM comparison and backtest guide covering inputs,
+  outputs, units, costs, volatility targeting, warmup and no-look-ahead timing, packaged-universe
+  overrides, `qis` delegation, the authoritative empirical example, and verification routes.
 - Added a focused Sharpe-prediction and attribution guide covering point-in-time versus in-sample
   use, volatility normalization, lag and drift estimation, packaged-data coverage, missing
   observations, paper-replication conventions, output interpretation, and estimation risk.

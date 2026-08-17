@@ -9,7 +9,11 @@ import time
 
 import pytest
 import trendfollowing as tf
+from trendfollowing.backtests import joint_backtest
+from trendfollowing.systems.american import run_american_system
+from trendfollowing.systems.backtest_utils import BacktestOutputs
 from trendfollowing.systems.european import run_european_tf_system
+from trendfollowing.systems.tsmom import run_tsmom_system
 from trendfollowing.universe import load_data
 
 
@@ -18,6 +22,7 @@ EXAMPLES_ROOT = REPOSITORY_ROOT / "examples"
 QUICKSTART = EXAMPLES_ROOT / "quickstart.py"
 CLOSED_FORM_GUIDE = REPOSITORY_ROOT / "docs" / "closed_form_analytics.md"
 PREDICT_SHARPE_GUIDE = REPOSITORY_ROOT / "docs" / "predict_sharpe_from_acf.md"
+SYSTEM_COMPARISON_GUIDE = REPOSITORY_ROOT / "docs" / "system_comparison_and_backtest.md"
 PUBLIC_ANALYTICS_SYMBOLS = (
     "population_acf",
     "compute_annualised_sharpe",
@@ -35,6 +40,14 @@ PREDICTION_GUIDE_SYMBOLS = (
     ("tf.compute_realized_sharpe", tf.compute_realized_sharpe),
     ("trendfollowing.universe.load_data", load_data),
     ("trendfollowing.systems.european.run_european_tf_system", run_european_tf_system),
+)
+SYSTEM_GUIDE_SYMBOLS = (
+    ("trendfollowing.universe.load_data", load_data),
+    ("trendfollowing.systems.european.run_european_tf_system", run_european_tf_system),
+    ("trendfollowing.systems.american.run_american_system", run_american_system),
+    ("trendfollowing.systems.tsmom.run_tsmom_system", run_tsmom_system),
+    ("trendfollowing.systems.backtest_utils.BacktestOutputs", BacktestOutputs),
+    ("trendfollowing.backtests.joint_backtest", joint_backtest),
 )
 EXPECTED_QUICKSTART_LINES = (
     "AR(1): phi=+0.050, span=63 days, annualized Sharpe=0.200195",
@@ -151,6 +164,43 @@ def test_prediction_guide_routes_to_built_symbols_and_authoritative_example() ->
     assert "examples/predict_sharpe_from_acf.py" in guide
     assert "python examples/predict_sharpe_from_acf.py" in guide
     assert "predict_sharpe_from_acf" in landing_page
+
+
+def test_system_comparison_guide_routes_to_built_symbols_and_authoritative_example() -> None:
+    for label, symbol in SYSTEM_GUIDE_SYMBOLS:
+        assert callable(symbol), label
+
+    guide = SYSTEM_COMPARISON_GUIDE.read_text(encoding="utf-8")
+    landing_page = (REPOSITORY_ROOT / "docs" / "index.md").read_text(encoding="utf-8")
+
+    for label, _ in SYSTEM_GUIDE_SYMBOLS:
+        assert f"`{label}`" in guide
+    for term in (
+        "continuous EWMA weights",
+        "ATR entry buffer",
+        "ATR trailing stops",
+        "TSMOM signs",
+        "one-way fractional cost",
+        "portfolio-level volatility targeting",
+        "`warmup_period=250`",
+        "no look-ahead",
+        "in-sample initialization",
+        "does not make a supplied full-panel calculation fully point-in-time",
+        "date *t*",
+        "*t+1*",
+        "annualization factor of 260",
+        "arithmetic simple-return",
+        "84-contract",
+        "`TF_RESOURCE_PATH`",
+        "`qis`",
+        "Verification catalog",
+        "Paper reproduction",
+        "Reusable package workflow",
+    ):
+        assert term in guide
+    assert "examples/backtest_european_system.py" in guide
+    assert "python examples/backtest_european_system.py" in guide
+    assert "system_comparison_and_backtest" in landing_page
 
 
 def test_quickstart_runs_offline_without_output_files(tmp_path: Path) -> None:

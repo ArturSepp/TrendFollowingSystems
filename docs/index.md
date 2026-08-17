@@ -28,6 +28,12 @@ Use the {doc}`Sharpe prediction and attribution guide <predict_sharpe_from_acf>`
 point-in-time research from the in-sample replication workflow and to audit data coverage,
 volatility normalization, lag construction, and estimation risk.
 
+### Compare and backtest the reference systems
+
+Use the {doc}`three-system comparison and backtest guide <system_comparison_and_backtest>` to
+choose among European, American, and TSMOM rules and to make their inputs, exposure units, costs,
+volatility targets, warmups, timing, and reusable-versus-paper workflows explicit.
+
 ### Reproduce the research
 
 Start from the {doc}`paper and replication map <paper>` for the paper, executable
@@ -40,6 +46,7 @@ replication modules, data boundaries, and citation instructions.
 | Quickstart | {doc}`Install and make the first calculation <quickstart>` |
 | Closed-form analytics | {doc}`Compare processes and select a filter span <closed_form_analytics>` |
 | Predict Sharpe | {doc}`Attribute realized Sharpe to sample ACF and drift <predict_sharpe_from_acf>` |
+| Compare systems | {doc}`Choose and backtest European, American, or TSMOM <system_comparison_and_backtest>` |
 | Workflows | {doc}`Run the maintained examples <workflows>` |
 | API | {doc}`Find the public modules and symbols <api>` |
 | Paper and replication | {doc}`Connect the package to the research evidence <paper>` |
@@ -57,6 +64,7 @@ replication modules, data boundaries, and citation instructions.
 quickstart
 closed_form_analytics
 predict_sharpe_from_acf
+system_comparison_and_backtest
 workflows
 api
 paper
