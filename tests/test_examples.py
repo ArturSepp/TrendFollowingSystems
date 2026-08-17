@@ -8,11 +8,25 @@ import sys
 import time
 
 import pytest
+import trendfollowing as tf
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 EXAMPLES_ROOT = REPOSITORY_ROOT / "examples"
 QUICKSTART = EXAMPLES_ROOT / "quickstart.py"
+CLOSED_FORM_GUIDE = REPOSITORY_ROOT / "docs" / "closed_form_analytics.md"
+PUBLIC_ANALYTICS_SYMBOLS = (
+    "population_acf",
+    "compute_annualised_sharpe",
+    "expected_annual_return",
+    "expected_turnover",
+    "skewness_white_noise",
+    "sharpe_white_noise",
+    "sharpe_white_noise_approx",
+    "sharpe_ar1",
+    "sharpe_ar1_approx",
+    "sharpe_arfima",
+)
 EXPECTED_QUICKSTART_LINES = (
     "AR(1): phi=+0.050, span=63 days, annualized Sharpe=0.200195",
     "ARFIMA(0,d,0): d=0.020, span=63 days, annualized Sharpe=0.288820",
@@ -60,6 +74,35 @@ def test_root_quickstart_is_the_single_documented_source(tmp_path: Path) -> None
     assert "{literalinclude} ../examples/quickstart.py" in docs
     assert ":language: python" in docs
     assert "examples/quickstart.py" in readme
+
+
+def test_closed_form_guide_routes_to_public_api_and_authoritative_example() -> None:
+    assert tf.AF_DAILY == 260
+    for name in PUBLIC_ANALYTICS_SYMBOLS:
+        assert callable(getattr(tf, name, None)), name
+
+    guide = CLOSED_FORM_GUIDE.read_text(encoding="utf-8")
+    landing_page = (REPOSITORY_ROOT / "docs" / "index.md").read_text(encoding="utf-8")
+
+    for name in PUBLIC_ANALYTICS_SYMBOLS:
+        assert f"`tf.{name}`" in guide
+    for term in (
+        "white noise",
+        "AR(1)",
+        "ARFIMA",
+        "empirical ACF",
+        "arithmetic simple-excess-return Sharpe",
+        "`long_span`",
+        "`short_span`",
+        "`sr_underlying`",
+        "`af`",
+        "Failure modes",
+        "Non-goals",
+    ):
+        assert term in guide
+    assert "examples/analytic_sharpe_vs_span.py" in guide
+    assert "python examples/analytic_sharpe_vs_span.py" in guide
+    assert "closed_form_analytics" in landing_page
 
 
 def test_quickstart_runs_offline_without_output_files(tmp_path: Path) -> None:
