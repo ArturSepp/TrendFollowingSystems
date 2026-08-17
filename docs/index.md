@@ -13,7 +13,8 @@ execution engine. Portfolio analytics and reporting are delegated to
 ### Evaluate a trend signal analytically
 
 Install the package and calculate a closed-form Sharpe ratio in the
-{doc}`quickstart <quickstart>`.
+{doc}`quickstart <quickstart>`, then compare process assumptions, output units, exact results,
+and span costs in the {doc}`closed-form analytics guide <closed_form_analytics>`.
 
 ### Run a reference workflow
 
@@ -31,6 +32,7 @@ replication modules, data boundaries, and citation instructions.
 | Resource | Destination |
 |---|---|
 | Quickstart | {doc}`Install and make the first calculation <quickstart>` |
+| Closed-form analytics | {doc}`Compare processes and select a filter span <closed_form_analytics>` |
 | Workflows | {doc}`Run the maintained examples <workflows>` |
 | API | {doc}`Find the public modules and symbols <api>` |
 | Paper and replication | {doc}`Connect the package to the research evidence <paper>` |
@@ -46,6 +48,7 @@ replication modules, data boundaries, and citation instructions.
 :hidden:
 
 quickstart
+closed_form_analytics
 workflows
 api
 paper

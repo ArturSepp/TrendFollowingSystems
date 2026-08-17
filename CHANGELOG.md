@@ -31,6 +31,9 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   package metadata.
 
 ### Added
+- Added a task-oriented closed-form analytics and span-selection guide covering white-noise,
+  AR(1), ARFIMA, and empirical-ACF inputs; output and cost units; arithmetic excess-return
+  Sharpe; exact versus leading-order results; the authoritative root example; and failure modes.
 - Added `examples/quickstart.py` as the single offline, deterministic first-success source for
   AR(1) and ARFIMA closed forms. The documentation includes that root file mechanically, and
   tests execute it from an installed package without allowing output files or GUI access.
