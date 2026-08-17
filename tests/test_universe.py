@@ -2,7 +2,6 @@
 tests for the packaged futures dataset: shapes, benchmarks, and metadata alignment
 """
 # packages
-import pandas as pd
 # project
 from trendfollowing.universe import load_data
 

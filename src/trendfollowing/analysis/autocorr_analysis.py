@@ -4,6 +4,7 @@ per-group acf estimates and plots behind the autocorrelation exhibits of the pap
 reference: Sepp, A. and Lucic, V., The Science and Practice of Trend-Following Systems,
 https://ssrn.com/abstract=3167787
 """
+
 # packages
 import numpy as np
 import pandas as pd
@@ -24,48 +25,54 @@ from futures_strats.data.universes.futures.bbg_futures import Universes
 from futures_strats.local_path import LOCAL_PATH
 
 
-def compute_returns_autocorrelation(prices: Union[pd.DataFrame, pd.Series],
-                                    freq: str = 'B',
-                                    span: int = 31,
-                                    autocorr_span: int = 31,
-                                    is_ra_returns: bool = False
-                                    ) -> Union[pd.DataFrame, pd.Series]:
-
+def compute_returns_autocorrelation(
+    prices: Union[pd.DataFrame, pd.Series],
+    freq: str = 'B',
+    span: int = 31,
+    autocorr_span: int = 31,
+    is_ra_returns: bool = False,
+) -> Union[pd.DataFrame, pd.Series]:
     """
     sample acf of log returns per instrument at the given lags
     """
     if isinstance(prices, pd.Series):
         prices = prices.to_frame()
     returns_1 = qis.to_returns(prices=prices, is_log_returns=True, freq=None, drop_first=True)
-    autocorr_df = qis.ewm_xy_convolution(returns=returns_1,
-                                         freq=freq,
-                                         convolution_type=qis.ConvolutionType.AUTO_CORR,
-                                         is_ra_returns=is_ra_returns)
+    autocorr_df = qis.ewm_xy_convolution(
+        returns=returns_1,
+        freq=freq,
+        convolution_type=qis.ConvolutionType.AUTO_CORR,
+        is_ra_returns=is_ra_returns,
+    )
     return autocorr_df
 
 
-def compute_returns_autocorrelation0(prices: Union[pd.DataFrame, pd.Series],
-                                    freq: str = 'B',
-                                    span: int = 31,
-                                    autocorr_span: int = 31,
-                                    is_ra_returns: bool = False
-                                    ) -> Union[pd.DataFrame, pd.Series]:
+def compute_returns_autocorrelation0(
+    prices: Union[pd.DataFrame, pd.Series],
+    freq: str = 'B',
+    span: int = 31,
+    autocorr_span: int = 31,
+    is_ra_returns: bool = False,
+) -> Union[pd.DataFrame, pd.Series]:
     """
     sample acf of log returns per instrument, legacy variant kept for comparison
     """
     if is_ra_returns:
         returns_1 = qis.to_returns(prices=prices, is_log_returns=True, freq=None, drop_first=True)
-        returns = qis.compute_sum_freq_ra_returns(returns=returns_1, freq=freq, span=span,
-                                                  is_log_returns_to_arithmetic=False,
-                                                  is_norm=False,
-                                                  warmup_period=100)
+        returns = qis.compute_sum_freq_ra_returns(
+            returns=returns_1,
+            freq=freq,
+            span=span,
+            is_log_returns_to_arithmetic=False,
+            is_norm=False,
+            warmup_period=100,
+        )
     else:
         returns = qis.to_returns(prices=prices, is_log_returns=True, freq=freq, drop_first=True)
 
-    autocorr_df = qis.compute_ewm_vector_autocorr_df(data=returns,
-                                                     span=autocorr_span,
-                                                     lag=1,
-                                                     is_normalize=True)
+    autocorr_df = qis.compute_ewm_vector_autocorr_df(
+        data=returns, span=autocorr_span, lag=1, is_normalize=True
+    )
     return autocorr_df
 
 
@@ -83,13 +90,13 @@ def get_prices(time_period: da.TimePeriod = None) -> Tuple[Dict, pd.Series]:
     return ac_prices, ac_data
 
 
-def plot_instrument_acf(price: pd.Series,
-                        freqs: List[str] = ('B', 'W-MON', 'ME', 'QE'),
-                        ra_spans: List[int] = (2.5, 5, 21, 63),
-                        nlags: int = 20,
-                        is_ra_returns: bool = False
-                        ):
-
+def plot_instrument_acf(
+    price: pd.Series,
+    freqs: List[str] = ('B', 'W-MON', 'ME', 'QE'),
+    ra_spans: List[int] = (2.5, 5, 21, 63),
+    nlags: int = 20,
+    is_ra_returns: bool = False,
+):
     """
     plot the sample acf and pacf bars of one instrument's returns
     """
@@ -98,35 +105,48 @@ def plot_instrument_acf(price: pd.Series,
         axs = qis.to_flat_list(axs)
 
         for idx, freq in enumerate(freqs):
-            returns_1 = qis.to_returns(prices=price, is_log_returns=True, freq=None, drop_first=True)
+            returns_1 = qis.to_returns(
+                prices=price, is_log_returns=True, freq=None, drop_first=True
+            )
             if is_ra_returns:
-                returns = qis.compute_sum_freq_ra_returns(returns=returns_1, freq=freq, span=ra_spans[idx],
-                                                          is_log_returns_to_arithmetic=False,
-                                                          is_norm=False)
+                returns = qis.compute_sum_freq_ra_returns(
+                    returns=returns_1,
+                    freq=freq,
+                    span=ra_spans[idx],
+                    is_log_returns_to_arithmetic=False,
+                    is_norm=False,
+                )
             else:
-                returns = qis.to_returns(prices=price, is_log_returns=True, freq=freq, drop_first=True)
+                returns = qis.to_returns(
+                    prices=price, is_log_returns=True, freq=freq, drop_first=True
+                )
 
             acfs, pacfs = qis.estimate_acf_from_path(path=returns, nlags=nlags)
-            qis.plot_bars(df=acfs,
-                          title=f"Returns frequency={freq}",
-                          legend_loc=None,
-                          x_rotation=0,
-                          xlabel='lag',
-                          ax=axs[idx])
+            qis.plot_bars(
+                df=acfs,
+                title=f"Returns frequency={freq}",
+                legend_loc=None,
+                x_rotation=0,
+                xlabel='lag',
+                ax=axs[idx],
+            )
             ax = axs[idx]
             n_error = 1.0 / np.sqrt(len(returns.index))
             ax.axhline(n_error, color='red', linestyle='dashed', linewidth=1)
             ax.axhline(-n_error, color='red', linestyle='dashed', linewidth=1)
-            qis.set_suptitle(fig, title=f"Autocorrelation of {price.name}: {qis.get_time_period(df=price).to_str()}")
+            qis.set_suptitle(
+                fig,
+                title=f"Autocorrelation of {price.name}: {qis.get_time_period(df=price).to_str()}",
+            )
 
 
-def plot_instrument_acf_ewm(prices: Union[pd.Series, pd.DataFrame],
-                            freqs: List[str] = ('B', 'W-MON', 'ME', 'QE'),
-                            ra_span: int = 31,
-                            autocorr_spans: List[int] = (10*260, 10*52, 10*12, 10*4),
-                            is_ra_returns: bool = False
-                            ):
-
+def plot_instrument_acf_ewm(
+    prices: Union[pd.Series, pd.DataFrame],
+    freqs: List[str] = ('B', 'W-MON', 'ME', 'QE'),
+    ra_span: int = 31,
+    autocorr_spans: List[int] = (10 * 260, 10 * 52, 10 * 12, 10 * 4),
+    is_ra_returns: bool = False,
+):
     """
     plot the ewm-smoothed acf of instrument returns across lags
     """
@@ -135,35 +155,38 @@ def plot_instrument_acf_ewm(prices: Union[pd.Series, pd.DataFrame],
         axs = qis.to_flat_list(axs)
 
         for idx, freq in enumerate(freqs):
-            autocorr_df = compute_returns_autocorrelation(prices=prices,
-                                                          freq=freq,
-                                                          span=ra_span,
-                                                          autocorr_span=autocorr_spans[idx],
-                                                          is_ra_returns=is_ra_returns)
+            autocorr_df = compute_returns_autocorrelation(
+                prices=prices,
+                freq=freq,
+                span=ra_span,
+                autocorr_span=autocorr_spans[idx],
+                is_ra_returns=is_ra_returns,
+            )
             if isinstance(prices, pd.DataFrame) and len(prices.columns) > 10:
                 legend_loc = None
             else:
                 legend_loc = 'upper left'
-            qis.plot_time_series(df=autocorr_df,
-                                 title=f"Returns frequency={freq}",
-                                 x_date_freq='YE',
-                                 date_format='%d-%b-%y',
-                                 legend_loc=legend_loc,
-                                 ax=axs[idx])
+            qis.plot_time_series(
+                df=autocorr_df,
+                title=f"Returns frequency={freq}",
+                x_date_freq='YE',
+                date_format='%d-%b-%y',
+                legend_loc=legend_loc,
+                ax=axs[idx],
+            )
             ax = axs[idx]
             n_error = 1.0 / np.sqrt(autocorr_spans[idx])
             ax.axhline(n_error, color='red', linestyle='dashed', linewidth=1)
             ax.axhline(-n_error, color='red', linestyle='dashed', linewidth=1)
 
 
-
-def plot_group_acf_ewm(prices: pd.DataFrame,
-                       freqs: List[str] = ('B', 'W-MON', 'ME', 'QE'),
-                       ra_span: int = 31,
-                       autocorr_spans: List[int] = (10*260, 10*52, 10*12, 10*4),
-                       is_ra_returns: bool = False
-                       ) -> plt.Figure:
-
+def plot_group_acf_ewm(
+    prices: pd.DataFrame,
+    freqs: List[str] = ('B', 'W-MON', 'ME', 'QE'),
+    ra_span: int = 31,
+    autocorr_spans: List[int] = (10 * 260, 10 * 52, 10 * 12, 10 * 4),
+    is_ra_returns: bool = False,
+) -> plt.Figure:
     """
     plot the ewm-smoothed acf aggregated by asset group
     """
@@ -172,24 +195,33 @@ def plot_group_acf_ewm(prices: pd.DataFrame,
         axs = qis.to_flat_list(axs)
 
         for idx, freq in enumerate(freqs):
-            autocorr_df = compute_returns_autocorrelation(prices=prices,
-                                                          freq=freq,
-                                                          span=ra_span,
-                                                          autocorr_span=autocorr_spans[idx],
-                                                          is_ra_returns=is_ra_returns)
+            autocorr_df = compute_returns_autocorrelation(
+                prices=prices,
+                freq=freq,
+                span=ra_span,
+                autocorr_span=autocorr_spans[idx],
+                is_ra_returns=is_ra_returns,
+            )
             autocorr_df = autocorr_df.replace({0.0: np.nan})
-            df = pd.concat([autocorr_df.quantile(q=0.25, axis=1).rename('25% Quantile'),
-                            autocorr_df.median(axis=1).rename('Median'),
-                            autocorr_df.quantile(q=0.75, axis=1).rename('75% Quantile')],
-                           axis=1, sort=False)
+            df = pd.concat(
+                [
+                    autocorr_df.quantile(q=0.25, axis=1).rename('25% Quantile'),
+                    autocorr_df.median(axis=1).rename('Median'),
+                    autocorr_df.quantile(q=0.75, axis=1).rename('75% Quantile'),
+                ],
+                axis=1,
+                sort=False,
+            )
 
-            qis.plot_time_series(df=df,
-                                 title=f"Returns frequency={freq}",
-                                 x_date_freq='YE',
-                                 date_format='%d-%b-%y',
-                                 framealpha=0.9,
-                                 trend_line=qis.TrendLine.ZERO_SHADOWS,
-                                 ax=axs[idx])
+            qis.plot_time_series(
+                df=df,
+                title=f"Returns frequency={freq}",
+                x_date_freq='YE',
+                date_format='%d-%b-%y',
+                framealpha=0.9,
+                trend_line=qis.TrendLine.ZERO_SHADOWS,
+                ax=axs[idx],
+            )
             ax = axs[idx]
             n_error = 1.0 / np.sqrt(autocorr_spans[idx])
             ax.axhline(n_error, color='red', linestyle='dashed', linewidth=1)
@@ -214,7 +246,9 @@ def plot_acf(time_period: da.TimePeriod = None):
         box.df_boxplot_by_index(df=ac_acfs, ax=axs)
 
     returns = ret.to_returns(prices=ac_prices['Universe'], freq=freq)
-    returns, weights, _ = tra.compute_ra_returns(returns=ret.to_returns(prices=ac_prices['Universe'],is_first_zero=True), ewm_lambda=0.94)
+    returns, weights, _ = tra.compute_ra_returns(
+        returns=ret.to_returns(prices=ac_prices['Universe'], is_first_zero=True), ewm_lambda=0.94
+    )
     # returns = returns.resample('QE').sum().iloc[1:, :]
     print(returns)
 
@@ -246,6 +280,7 @@ def run_local_test(local_test: LocalTests):
     """
 
     from futures_strats.local_path import LOCAL_PATH
+
     universe_data = Universes.BBG_FUTURES.load_universe_data(local_path=LOCAL_PATH)
     prices = universe_data.get_prices(freq='B').ffill()
     time_period = da.TimePeriod('31Dec1990', None)
@@ -283,7 +318,6 @@ def run_local_test(local_test: LocalTests):
 
 
 if __name__ == '__main__':
-
     local_test = LocalTests.TIME_SERIES_AUTOCORR
 
 run_local_test(local_test=local_test)

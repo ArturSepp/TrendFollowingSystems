@@ -100,6 +100,11 @@ line-length = 100
 # stack before the project packages, which isort reorders.
 select = ["E", "F", "W"]
 
+[tool.ruff.lint.per-file-ignores]
+# These modules exist to re-export their imported symbols as the documented public API.
+"src/trendfollowing/__init__.py" = ["F401"]
+"src/trendfollowing/analytics/__init__.py" = ["F401"]
+
 [tool.coverage.run]
 source = ["src/trendfollowing"]
 

@@ -31,6 +31,9 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   on one public role and boundary. Installation now leads with
   `pip install trendfollowing`, and the documented `qis >= 5.0.9` floor matches
   package metadata.
+- Brought `src/trendfollowing`, tests, and root examples under the declared Ruff
+  E/F/W line-length gate. Intentional public re-export modules retain narrowly
+  scoped F401 exceptions; the formatting cleanup does not alter numerical results.
 
 ### Added
 - Added a dated, neutral package-choice guide comparing `trendfollowing` with pysystemtrade,
@@ -73,6 +76,8 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Replaced the stale literal `trendfollowing.__version__ == "1.0.0"` with the
   installed distribution version from `importlib.metadata`. An uninstalled
   direct source import reports `0+unknown` instead of inventing a release value.
+- Removed an undefined `credit_df` entry from maintainer-only data regeneration
+  and made screener figure output honor `TF_FIGURE_PATH`.
 
 ## [1.0.5] - 2026-08-01
 

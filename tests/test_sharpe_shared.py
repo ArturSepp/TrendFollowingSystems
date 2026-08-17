@@ -3,10 +3,12 @@ guards for the shared Sharpe estimator: the formula identity, bit-parity with th
 expressions it replaced, and the cross-repo parity with the qis SharpeConvention
 proposal when a patched qis is installed (skips on released qis)
 """
+
 # packages
 import numpy as np
 import pandas as pd
 import pytest
+
 # project
 from trendfollowing.analytics.sharpe import compute_realized_sharpe
 
@@ -53,21 +55,37 @@ def test_regime_decomposition_parity_with_patched_qis():
         pytest.skip("installed qis predates the SharpeConvention proposal")
     gaussian_null = pytest.importorskip("papers.smart_diversification.replication.gaussian_null")
     import qis
+
     rng = np.random.RandomState(7)
     idx = pd.date_range('1990-12-31', periods=140, freq='QE')
-    bench = pd.Series(0.015 + 0.05 * rng.randn(140), index=idx).add(1.0).cumprod().rename('Balanced')
+    bench = (
+        pd.Series(0.015 + 0.05 * rng.randn(140), index=idx).add(1.0).cumprod().rename('Balanced')
+    )
     a1 = pd.Series(0.010 + 0.06 * rng.randn(140), index=idx).add(1.0).cumprod().rename('A1')
     prices = pd.concat([bench, a1], axis=1)
     sampled = prices.pct_change().dropna()
-    paper = gaussian_null.compute_regime_sharpe_decomposition(strategy_returns=sampled['A1'],
-                                                              benchmark_returns=sampled['Balanced'],
-                                                              periods_per_year=4.0, tail_prob=0.16)
+    paper = gaussian_null.compute_regime_sharpe_decomposition(
+        strategy_returns=sampled['A1'],
+        benchmark_returns=sampled['Balanced'],
+        periods_per_year=4.0,
+        tail_prob=0.16,
+    )
     perf_params = qis.PerfParams(freq='QE', sharpe_convention=config.SharpeConvention.ARITHMETIC)
-    table = qis.compute_bnb_regimes_pa_perf_table(prices=prices, benchmark='Balanced', freq='QE',
-                                                  q=np.array([0.0, 0.16, 0.84, 1.0]),
-                                                  perf_params=perf_params)
-    qis_row = table.loc['A1', [c for c in table.columns
-                               if 'Sharpe' in c and any(r in c for r in ('Bear', 'Normal', 'Bull'))]]
+    table = qis.compute_bnb_regimes_pa_perf_table(
+        prices=prices,
+        benchmark='Balanced',
+        freq='QE',
+        q=np.array([0.0, 0.16, 0.84, 1.0]),
+        perf_params=perf_params,
+    )
+    qis_row = table.loc[
+        'A1',
+        [
+            c
+            for c in table.columns
+            if 'Sharpe' in c and any(r in c for r in ('Bear', 'Normal', 'Bull'))
+        ],
+    ]
     diff = np.abs(np.array([paper['bear'], paper['normal'], paper['bull']]) - qis_row.to_numpy())
     assert diff.max() < 1e-14
 
@@ -87,9 +105,12 @@ def test_local_fallback_equals_standalone():
     # the local strict-inequality construction
     q_low, q_high = r_b.quantile(tail), r_b.quantile(1.0 - tail)
     sigma = r_a.std(ddof=1)
-    local = {'Bear-Sharpe': np.sqrt(4.0) * (r_b < q_low).mean() * r_a[r_b < q_low].mean() / sigma,
-             'Bull-Sharpe': np.sqrt(4.0) * (r_b > q_high).mean() * r_a[r_b > q_high].mean() / sigma}
-    standalone = rc.compute_regime_sharpe_decomposition(returns=r_a, benchmark_returns=r_b,
-                                                        af=4.0, q=np.array([0.0, tail, 1.0 - tail, 1.0]))
+    local = {
+        'Bear-Sharpe': np.sqrt(4.0) * (r_b < q_low).mean() * r_a[r_b < q_low].mean() / sigma,
+        'Bull-Sharpe': np.sqrt(4.0) * (r_b > q_high).mean() * r_a[r_b > q_high].mean() / sigma,
+    }
+    standalone = rc.compute_regime_sharpe_decomposition(
+        returns=r_a, benchmark_returns=r_b, af=4.0, q=np.array([0.0, tail, 1.0 - tail, 1.0])
+    )
     for key, value in local.items():
         assert abs(standalone[key] - value) < 1e-14

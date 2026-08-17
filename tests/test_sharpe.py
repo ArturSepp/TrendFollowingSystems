@@ -1,14 +1,23 @@
 """
-tests for tf_model.paper.sharpe: variance preservation, closed forms, consistency with expected-return formulas
+tests for tf_model.paper.sharpe: variance preservation, closed forms, and
+consistency with expected-return formulas
 """
+
 # packages
 import numpy as np
+
 # project
 from trendfollowing.analytics.filters import span_to_nu
 from trendfollowing.analytics.autocorrelation import population_acf, compute_psi_nu
-from trendfollowing.analytics.sharpe import (compute_signal_moments, compute_annualised_sharpe,
-                                             sharpe_white_noise, sharpe_white_noise_approx,
-                                             sharpe_ar1, sharpe_ar1_approx, expected_annual_return)
+from trendfollowing.analytics.sharpe import (
+    compute_signal_moments,
+    compute_annualised_sharpe,
+    sharpe_white_noise,
+    sharpe_white_noise_approx,
+    sharpe_ar1,
+    sharpe_ar1_approx,
+    expected_annual_return,
+)
 from trendfollowing.analytics.expected_return import expected_pnl_white_noise, expected_pnl_ar1
 
 
@@ -43,12 +52,16 @@ def test_sowell_acf_finite_and_normalised():
 def test_expected_return_matches_formulas():
     rho_wn = population_acf(n_lags=5)
     for span in [21.0, 250.0]:
-        mine = expected_annual_return(rho=rho_wn, long_span=span, sr_underlying=0.5, vol_target=0.15)
+        mine = expected_annual_return(
+            rho=rho_wn, long_span=span, sr_underlying=0.5, vol_target=0.15
+        )
         his = expected_pnl_white_noise(long_span=span, mean=0.5, vol_target=0.15)
         assert np.isclose(mine, his)
     rho_ar = population_acf(n_lags=3000, phi=0.05)
     for span in [21.0, 250.0]:
-        mine = expected_annual_return(rho=rho_ar, long_span=span, sr_underlying=0.0, vol_target=0.15)
+        mine = expected_annual_return(
+            rho=rho_ar, long_span=span, sr_underlying=0.0, vol_target=0.15
+        )
         his = expected_pnl_ar1(phi=0.05, long_span=span, mean=0.0, vol_target=0.15)
         assert np.isclose(mine, his)
 
@@ -61,6 +74,11 @@ def test_sharpe_independent_of_variance_scale_zero_drift():
 
 
 def test_approximations_close_to_exact():
-    assert np.isclose(sharpe_ar1(phi=0.05, long_span=21.0), sharpe_ar1_approx(phi=0.05, long_span=21.0), atol=5e-3)
-    assert np.isclose(sharpe_white_noise(long_span=21.0, sr_underlying=0.25),
-                      sharpe_white_noise_approx(long_span=21.0, sr_underlying=0.25), atol=5e-3)
+    assert np.isclose(
+        sharpe_ar1(phi=0.05, long_span=21.0), sharpe_ar1_approx(phi=0.05, long_span=21.0), atol=5e-3
+    )
+    assert np.isclose(
+        sharpe_white_noise(long_span=21.0, sr_underlying=0.25),
+        sharpe_white_noise_approx(long_span=21.0, sr_underlying=0.25),
+        atol=5e-3,
+    )
