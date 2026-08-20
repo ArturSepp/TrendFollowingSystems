@@ -68,7 +68,7 @@ docs = [
 
 [project.urls]
 Homepage = "https://github.com/ArturSepp/TrendFollowingSystems"
-Documentation = "https://artursepp.github.io/TrendFollowingSystems/"
+Documentation = "https://trendfollowingsystems.readthedocs.io"
 Repository = "https://github.com/ArturSepp/TrendFollowingSystems"
 Issues = "https://github.com/ArturSepp/TrendFollowingSystems/issues"
 Changelog = "https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CHANGELOG.md"

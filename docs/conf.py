@@ -1,5 +1,6 @@
 """Sphinx configuration for the trendfollowing documentation site."""
 
+import os
 from importlib.metadata import PackageNotFoundError, version as distribution_version
 
 
@@ -23,7 +24,10 @@ nitpicky = True
 html_theme = "alabaster"
 html_title = "trendfollowing documentation"
 html_short_title = "trendfollowing"
-html_baseurl = "https://artursepp.github.io/TrendFollowingSystems/"
+html_baseurl = os.environ.get(
+    "READTHEDOCS_CANONICAL_URL",
+    "https://trendfollowingsystems.readthedocs.io/en/latest/",
+)
 html_extra_path = ["robots.txt"]
 html_theme_options = {
     "description": "Closed-form trend-following analytics and reproducible futures evidence",
