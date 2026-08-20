@@ -15,9 +15,9 @@ from urllib.request import Request, urlopen
 import xml.etree.ElementTree as ET
 
 
-DEFAULT_ROOT = "https://artursepp.github.io/TrendFollowingSystems/"
+DEFAULT_ROOT = "https://trendfollowingsystems.readthedocs.io/en/latest/"
 PAGE_PATHS = {
-    "landing": ("", "index.html"),
+    "landing": ("", ""),
     "quickstart": ("quickstart.html", "quickstart.html"),
     "workflows": ("workflows.html", "workflows.html"),
     "api": ("api.html", "api.html"),

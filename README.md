@@ -10,7 +10,7 @@ engine; portfolio analytics and reporting are delegated to `qis`.
 [![Python](https://img.shields.io/pypi/pyversions/trendfollowing?style=flat-square)](https://pypi.org/project/trendfollowing/)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE)
 [![CI](https://github.com/ArturSepp/TrendFollowingSystems/actions/workflows/ci.yml/badge.svg)](https://github.com/ArturSepp/TrendFollowingSystems/actions/workflows/ci.yml)
-[![Documentation](https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg)](https://artursepp.github.io/TrendFollowingSystems/)
+[![Documentation](https://img.shields.io/badge/docs-Read%20the%20Docs-blue.svg)](https://trendfollowingsystems.readthedocs.io/en/latest/)
 [![Downloads](https://static.pepy.tech/badge/trendfollowing)](https://pepy.tech/project/trendfollowing)
 [![Monthly](https://static.pepy.tech/badge/trendfollowing/month)](https://pepy.tech/project/trendfollowing)
 
@@ -93,7 +93,7 @@ python examples/quickstart.py
 It prints the installed version, AR(1) Sharpe `0.200195`, ARFIMA(0,d,0) Sharpe `0.288820`, and
 the 260-day annualization, zero-drift, and single-EWMA conventions. It runs without network or
 data access, writes no files, and points to `PHI`, `D`, and `LONG_SPAN` as the first parameters
-to change. The [documentation quickstart](https://artursepp.github.io/TrendFollowingSystems/quickstart.html)
+to change. The [documentation quickstart](https://trendfollowingsystems.readthedocs.io/en/latest/quickstart.html)
 includes the same file mechanically.
 
 A portfolio backtest of the paper's LS(250,20) filter on the packaged universe:

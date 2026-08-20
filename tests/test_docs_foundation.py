@@ -2,14 +2,17 @@
 
 from pathlib import Path
 import runpy
+from types import SimpleNamespace
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 DOCS_ROOT = REPOSITORY_ROOT / "docs"
-CANONICAL_DOCS_URL = "https://artursepp.github.io/TrendFollowingSystems/"
+CANONICAL_DOCS_URL = "https://trendfollowingsystems.readthedocs.io/en/latest/"
+DOCUMENTATION_URL = "https://trendfollowingsystems.readthedocs.io"
 
 
-def test_sphinx_configuration_uses_canonical_url_and_myst() -> None:
+def test_sphinx_configuration_uses_canonical_url_and_myst(monkeypatch) -> None:
+    monkeypatch.delenv("READTHEDOCS_CANONICAL_URL", raising=False)
     config = runpy.run_path(str(DOCS_ROOT / "conf.py"))
 
     assert config["root_doc"] == "index"
@@ -19,6 +22,24 @@ def test_sphinx_configuration_uses_canonical_url_and_myst() -> None:
     assert config["html_extra_path"] == ["robots.txt"]
     assert config["sitemap_url_scheme"] == "{link}"
     assert config["myst_html_meta"]["google-site-verification"]
+
+
+def test_sphinx_configuration_uses_readthedocs_canonical_override(monkeypatch) -> None:
+    canonical_url = "https://trendfollowingsystems.readthedocs.io/en/stable/"
+    monkeypatch.setenv("READTHEDOCS_CANONICAL_URL", canonical_url)
+    config = runpy.run_path(str(DOCS_ROOT / "conf.py"))
+    context = {"pageurl": f"{canonical_url}index.html"}
+
+    config["_use_root_canonical"](
+        SimpleNamespace(config=SimpleNamespace(html_baseurl=canonical_url)),
+        "index",
+        "page.html",
+        context,
+        None,
+    )
+
+    assert config["html_baseurl"] == canonical_url
+    assert context["pageurl"] == canonical_url
 
 
 def test_landing_page_routes_every_required_destination() -> None:
@@ -83,7 +104,7 @@ def test_public_entry_points_use_the_canonical_docs_url() -> None:
     pyproject = (REPOSITORY_ROOT / "pyproject.toml").read_text(encoding="utf-8")
     readme = (REPOSITORY_ROOT / "README.md").read_text(encoding="utf-8")
 
-    assert f'Documentation = "{CANONICAL_DOCS_URL}"' in pyproject
+    assert f'Documentation = "{DOCUMENTATION_URL}"' in pyproject
     assert f"]({CANONICAL_DOCS_URL})" in readme
 
 

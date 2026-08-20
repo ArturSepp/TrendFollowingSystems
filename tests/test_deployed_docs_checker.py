@@ -1,6 +1,8 @@
 """Unit tests for the deployed documentation audit helpers."""
 
 from tools.check_deployed_docs import (
+    DEFAULT_ROOT,
+    PAGE_PATHS,
     parse_html,
     parse_sitemap,
     validate_html,
@@ -9,6 +11,11 @@ from tools.check_deployed_docs import (
 
 
 CANONICAL = "https://example.test/project/quickstart.html"
+
+
+def test_deployed_audit_defaults_to_readthedocs() -> None:
+    assert DEFAULT_ROOT == "https://trendfollowingsystems.readthedocs.io/en/latest/"
+    assert PAGE_PATHS["landing"] == ("", "")
 
 
 def _valid_html() -> str:
