@@ -54,6 +54,18 @@ myst_html_meta = {
 sitemap_url_scheme = "{link}"
 sitemap_indent = 2
 
+
+def _use_root_canonical(app, pagename, templatename, context, doctree) -> None:
+    """Use the HTTPS site root, rather than index.html, as the landing canonical."""
+    if pagename == "index":
+        context["pageurl"] = app.config.html_baseurl
+
+
+def setup(app) -> None:
+    """Register documentation build hooks."""
+    app.connect("html-page-context", _use_root_canonical)
+
+
 linkcheck_retries = 2
 linkcheck_timeout = 30
 linkcheck_workers = 5
