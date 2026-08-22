@@ -154,7 +154,7 @@ def run_european_screener(
     return fig
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     """
     runnable example cases
     """
@@ -163,7 +163,7 @@ class LocalTests(Enum):
     SMALL_UNIVERSE = 2
 
 
-def run_local_test(local_test: LocalTests):
+def run_local(local: Locals):
     """Run local tests for development and debugging purposes.
 
     These are integration tests that download real data and generate reports.
@@ -178,7 +178,7 @@ def run_local_test(local_test: LocalTests):
         "TF_FIGURE_PATH", qis.local_path.get_output_path()
     )  # set TF_FIGURE_PATH to the paper figures folder
 
-    if local_test == LocalTests.TF_UNIVERSE:
+    if local == Locals.TF_UNIVERSE:
         time_period = qis.TimePeriod(start='31Dec1998', end=None)
         from trendfollowing.universe import load_data
 
@@ -191,7 +191,7 @@ def run_local_test(local_test: LocalTests):
         fig = run_european_screener(prices=prices, group_data=group_data, group_order=group_order)
         qis.save_fig(fig, file_name='tf_signal', local_path=local_path)
 
-    elif local_test == LocalTests.SMALL_UNIVERSE:
+    elif local == Locals.SMALL_UNIVERSE:
         from bbg_fetch import fetch_field_timeseries_per_tickers
 
         time_period = qis.TimePeriod(start='31Dec1998', end=None)
@@ -223,4 +223,4 @@ def run_local_test(local_test: LocalTests):
 
 
 if __name__ == '__main__':
-    run_local_test(local_test=LocalTests.TF_UNIVERSE)
+    run_local(local=Locals.TF_UNIVERSE)

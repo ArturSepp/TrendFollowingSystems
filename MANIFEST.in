@@ -1,0 +1,4 @@
+prune src/trendfollowing/run_local
+prune src/trendfollowing/*/run_local
+prune src/trendfollowing/*/*/run_local
+prune src/trendfollowing/*/*/*/run_local

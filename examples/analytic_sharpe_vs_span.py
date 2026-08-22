@@ -53,13 +53,13 @@ def compute_net_sharpe_by_span(
     return pd.DataFrame.from_dict(out, orient='index')
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     AR1_KNIFE_EDGE = 1
     ARFIMA_INTERIOR_OPTIMUM = 2
 
 
-def run_local_test(local_test: LocalTests) -> None:
-    if local_test == LocalTests.AR1_KNIFE_EDGE:
+def run_local(local: Locals) -> None:
+    if local == Locals.AR1_KNIFE_EDGE:
         # the AR-1 gross Sharpe and the cost drag both decay with 1/sqrt(span),
         # so the sign of the net Sharpe ratio is span-invariant at leading order
         fig, ax = plt.subplots(1, 1, figsize=(9, 5), tight_layout=True)
@@ -77,7 +77,7 @@ def run_local_test(local_test: LocalTests) -> None:
         fig.savefig('example_ar1_knife_edge.png', dpi=150)
         print(compute_net_sharpe_by_span(phi=0.05).round(3))
 
-    elif local_test == LocalTests.ARFIMA_INTERIOR_OPTIMUM:
+    elif local == Locals.ARFIMA_INTERIOR_OPTIMUM:
         # long memory with d=0.02 creates a hump-shaped net Sharpe ratio with an
         # interior optimum at the one-to-three-month spans, as in the paper
         fig, ax = plt.subplots(1, 1, figsize=(9, 5), tight_layout=True)
@@ -99,4 +99,4 @@ def run_local_test(local_test: LocalTests) -> None:
 
 
 if __name__ == '__main__':
-    run_local_test(local_test=LocalTests.ARFIMA_INTERIOR_OPTIMUM)
+    run_local(local=Locals.ARFIMA_INTERIOR_OPTIMUM)

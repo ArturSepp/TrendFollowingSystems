@@ -7,6 +7,14 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-08-22
+
+### Changed
+- Separated development runners from automated pytest modules: source-adjacent workflows now
+  live in no-init `run_local/*_run.py` folders with `Locals` / `run_local(local=...)`, while
+  root examples use the same dispatcher names and published paper replication scripts retain
+  their existing orchestration contract. Development runners are excluded from distributions.
+
 ## [1.1.0] - 2026-08-17
 
 ### Changed

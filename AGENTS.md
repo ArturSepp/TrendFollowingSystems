@@ -43,9 +43,9 @@ sibling package, say so rather than reimplementing it here.
 ```
 src/trendfollowing/
   analytics/   closed-form formulas for system moments
-  processes/   price process models (white noise, AR(1), ARFIMA)
+  processes/   price process models (white noise, AR(1), ARFIMA); local runners beside owners
   systems/     European, American and TSMOM system implementations
-  analysis/    analysis helpers
+  run_local/   source-adjacent development runners; excluded from distributions
   resources/   immutable futures data installed with the package
   backtests.py, universe.py
 resources/     writable paper replication caches; not installed
@@ -80,6 +80,12 @@ plus separate verification and built-artifact jobs.
   stack uses: this is a replication package, and a reviewer who downloads it should find
   the tests without first learning the package structure. Do not "fix" it to match a
   sibling.
+- Development runners live in the nearest `run_local/<subject>_run.py` directory, define
+  `Locals` and `run_local(local=...)`, and have no `__init__.py`. Never import `run_local`
+  from production code or a public `__init__.py`; setuptools and `MANIFEST.in` exclude the
+  runners from built distributions. Root `examples/` remain broader user workflows but use
+  the same dispatcher names. Published `papers/tf_systems/replication` scripts retain their
+  orchestrated execution contract unless a replication-specific change explicitly replaces it.
 - Line length 100 (`ruff`, rules `E`, `F`, `W`). `I` is not selected anywhere in this
   stack: the import convention groups the scientific stack before the project packages,
   which isort reorders.

@@ -87,8 +87,3 @@ def test_axis1_concat_states_sort() -> None:
     assert not offenders, (
             "axis=1 pd.concat without an explicit sort=; pass sort=True when the index is dates, "
             "sort=False when it is labels:\n" + '\n'.join(offenders))
-
-
-if __name__ == '__main__':
-    for offender in find_implicit_sort_sites(_repo_root()):
-        print(offender)

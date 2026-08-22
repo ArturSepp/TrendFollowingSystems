@@ -66,12 +66,12 @@ def predict_and_realize(
     return pd.DataFrame.from_dict(rows, orient='index')
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     PREDICT_CORE_CONTRACTS = 1
 
 
-def run_local_test(local_test: LocalTests) -> None:
-    if local_test == LocalTests.PREDICT_CORE_CONTRACTS:
+def run_local(local: Locals) -> None:
+    if local == Locals.PREDICT_CORE_CONTRACTS:
         table = predict_and_realize(
             tickers=['ES1 Index', 'TY1 Comdty', 'GC1 Comdty', 'C 1 Comdty'], span=63
         )
@@ -79,4 +79,4 @@ def run_local_test(local_test: LocalTests) -> None:
 
 
 if __name__ == '__main__':
-    run_local_test(local_test=LocalTests.PREDICT_CORE_CONTRACTS)
+    run_local(local=Locals.PREDICT_CORE_CONTRACTS)

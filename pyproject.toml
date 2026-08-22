@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "trendfollowing"
-version = "1.1.0"
+version = "1.2.0"
 description = "trendfollowing — closed-form trend-following analytics, reference system implementations, and reproducible futures evidence in Python for quantitative researchers and practitioners."
 readme = "README.md"
 license = {text = "GPL-3.0-or-later"}
@@ -80,6 +80,12 @@ package-dir = {"" = "src"}
 [tool.setuptools.packages.find]
 where = ["src"]
 include = ["trendfollowing*"]
+exclude = [
+    "trendfollowing.run_local*",
+    "trendfollowing.*.run_local*",
+    "trendfollowing.*.*.run_local*",
+    "trendfollowing.*.*.*.run_local*",
+]
 
 [tool.setuptools.package-data]
 trendfollowing = ["settings.yaml", "resources/futures/*.csv"]

@@ -264,7 +264,7 @@ def plot_acf(time_period: da.TimePeriod = None):
         box.df_boxplot_by_hue_var(df=ac_acfs, x_index_var_name='ac', hue_var_name='lags', ax=axs)
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     DATA = 1
     ACF = 2
     INSTRUMENT_ACF = 3
@@ -272,7 +272,7 @@ class LocalTests(Enum):
     GROUP_TIME_SERIES_AUTOCORR = 5
 
 
-def run_local_test(local_test: LocalTests):
+def run_local(local: Locals):
     """Run local tests for development and debugging purposes.
 
     These are integration tests that download real data and generate reports.
@@ -286,24 +286,24 @@ def run_local_test(local_test: LocalTests):
     time_period = da.TimePeriod('31Dec1990', None)
     prices = time_period.locate(prices)
 
-    if local_test == LocalTests.DATA:
+    if local == Locals.DATA:
         get_prices()
 
-    elif local_test == LocalTests.ACF:
+    elif local == Locals.ACF:
         plot_acf(time_period=time_period)
 
-    elif local_test == LocalTests.INSTRUMENT_ACF:
+    elif local == Locals.INSTRUMENT_ACF:
         # price = prices['NI1 Index'].dropna()
         price = prices['ES1 Index'].dropna()
         plot_instrument_acf(price=price, is_ra_returns=False)
 
-    elif local_test == LocalTests.TIME_SERIES_AUTOCORR:
+    elif local == Locals.TIME_SERIES_AUTOCORR:
         # price = prices['NI1 Index'].dropna()
         # price = prices['ES1 Index'].dropna()
         price = prices['GC1 Comdty'].dropna()
         plot_instrument_acf_ewm(prices=price, is_ra_returns=True)
 
-    elif local_test == LocalTests.GROUP_TIME_SERIES_AUTOCORR:
+    elif local == Locals.GROUP_TIME_SERIES_AUTOCORR:
         group_data = universe_data.get_ac_data()
         dfs = qis.split_df_by_groups(df=prices, group_data=group_data)
         # plot_instrument_acf_ewm(prices=dfs['AcCom.EQ'], is_ra_returns=False)
@@ -318,6 +318,4 @@ def run_local_test(local_test: LocalTests):
 
 
 if __name__ == '__main__':
-    local_test = LocalTests.TIME_SERIES_AUTOCORR
-
-run_local_test(local_test=local_test)
+    run_local(local=Locals.TIME_SERIES_AUTOCORR)

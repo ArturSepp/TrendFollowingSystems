@@ -7,6 +7,8 @@ Run from any directory after installing the package:
 The calculation uses no data or network access, writes no files, and opens no GUI.
 """
 
+from enum import Enum
+
 import trendfollowing as tf
 
 
@@ -20,7 +22,13 @@ N_LAGS = 1000  # Population ACF truncation used by the closed forms.
 AF = float(tf.AF_DAILY)
 
 
-def main() -> None:
+class Locals(Enum):
+    """Runnable example cases."""
+
+    QUICKSTART = 1
+
+
+def run_local(local: Locals) -> None:
     """Compute and print two deterministic closed-form Sharpe ratios."""
 
     ar1_sharpe = tf.sharpe_ar1(
@@ -51,4 +59,4 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    run_local(local=Locals.QUICKSTART)

@@ -53,7 +53,7 @@ def sharpe_ratio(pnl: np.ndarray) -> np.ndarray:
     return np.sqrt(252) * mean / stdev
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     """
     runnable example cases
     """
@@ -64,7 +64,7 @@ class LocalTests(Enum):
     OU_DAILY_PATHS = 4
 
 
-def run_local_test(local_test: LocalTests):
+def run_local(local: Locals):
     """Run local tests for development and debugging purposes.
 
     These are integration tests that download real data and generate reports.
@@ -73,7 +73,7 @@ def run_local_test(local_test: LocalTests):
 
     set_seed(1)
 
-    if local_test == LocalTests.AR1:
+    if local == Locals.AR1:
         # phi = np.array([-0.5])
         # x0 = np.array([1.0])
         phi = np.array([-0.6, 0.3])
@@ -96,7 +96,7 @@ def run_local_test(local_test: LocalTests):
         qis.df_boxplot_by_index(df=acfs, ax=axs[1][1])
         print(pacf(paths.iloc[:, 0], nlags=10))
 
-    elif local_test == LocalTests.TRADE_AR1:
+    elif local == Locals.TRADE_AR1:
         # phi1 = -0.4
         # phi = np.array([-0.6, 0.3])
 
@@ -151,6 +151,4 @@ def run_local_test(local_test: LocalTests):
 
 
 if __name__ == '__main__':
-    local_test = LocalTests.TRADE_AR1
-
-    run_local_test(local_test=local_test)
+    run_local(local=Locals.TRADE_AR1)

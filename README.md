@@ -279,6 +279,8 @@ src/
         analytics/                          closed-form results of the paper
         systems/                            european.py, american.py, tsmom.py
         processes/                          simulation of return-generating processes
+            run_local/                      process development runners; not distributed
+        run_local/                          package development runners; not distributed
         resources/futures/                  84 futures series (1959-2026), benchmarks,
                                            volume-based costs, and metadata
         universe.py                         futures universe data layer
@@ -378,7 +380,7 @@ should also cite the version it ran:
   author  = {Sepp, Artur and Lucic, Vladimir},
   title   = {trendfollowing},
   year    = {2026},
-  version = {1.1.0},
+  version = {1.2.0},
   url     = {https://github.com/ArturSepp/TrendFollowingSystems}
 }
 ```

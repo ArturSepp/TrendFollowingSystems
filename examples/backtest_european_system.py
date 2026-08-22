@@ -37,12 +37,12 @@ def summarize_nav(nav: pd.Series) -> pd.Series:
     )
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     PORTFOLIO_BACKTEST = 1
 
 
-def run_local_test(local_test: LocalTests) -> None:
-    if local_test == LocalTests.PORTFOLIO_BACKTEST:
+def run_local(local: Locals) -> None:
+    if local == Locals.PORTFOLIO_BACKTEST:
         prices, volume_costs, benchmark_prices, descriptive_df, group_order = load_data()
         outputs = run_european_tf_system(
             prices=prices,
@@ -64,4 +64,4 @@ def run_local_test(local_test: LocalTests) -> None:
 
 
 if __name__ == '__main__':
-    run_local_test(local_test=LocalTests.PORTFOLIO_BACKTEST)
+    run_local(local=Locals.PORTFOLIO_BACKTEST)

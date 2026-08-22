@@ -152,7 +152,7 @@ def check_long_short_filters(returns: pd.DataFrame, long_span: int = 100, short_
         qis.plot_histogram(df=signal_2, title='ls', ax=axs[1])
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     PLOT_VOL_NORM_RETURNS = 1
     PLOT_SIGNAL = 2
     PLOT_SIGNAL_WEIGHT = 3
@@ -160,7 +160,7 @@ class LocalTests(Enum):
     CHECK_SIGNAL = 4
 
 
-def run_local_test(local_test: LocalTests):
+def run_local(local: Locals):
     """Run local tests for development and debugging purposes.
 
     These are integration tests that download real data and generate reports.
@@ -175,7 +175,7 @@ def run_local_test(local_test: LocalTests):
     prices = time_period.locate(prices)
     returns = qis.to_returns(prices=prices)
 
-    if local_test == LocalTests.PLOT_VOL_NORM_RETURNS:
+    if local == Locals.PLOT_VOL_NORM_RETURNS:
         returns_dict = {
             'S&P 500': returns['ES1 Index'].dropna(),
             'UST10Y': returns['TY1 Comdty'].dropna(),
@@ -183,7 +183,7 @@ def run_local_test(local_test: LocalTests):
         print(returns_dict)
         plot_vol_norm_returns(returns_dict=returns_dict)
 
-    elif local_test == LocalTests.PLOT_SIGNAL:
+    elif local == Locals.PLOT_SIGNAL:
         returns_dict = {
             'S&P 500': returns['ES1 Index'].dropna(),
             'UST10Y': returns['TY1 Comdty'].dropna(),
@@ -191,7 +191,7 @@ def run_local_test(local_test: LocalTests):
         print(returns_dict)
         plot_signal(returns_dict=returns_dict, long_span=100, short_span=None, vol_span=31)
 
-    elif local_test == LocalTests.PLOT_SIGNAL_WEIGHT:
+    elif local == Locals.PLOT_SIGNAL_WEIGHT:
         returns_dict = {
             'S&P 500': returns['ES1 Index'].dropna(),
             'UST10Y': returns['TY1 Comdty'].dropna(),
@@ -199,7 +199,7 @@ def run_local_test(local_test: LocalTests):
         print(returns_dict)
         plot_signal_weight(returns_dict=returns_dict, long_span=100, short_span=None, vol_span=31)
 
-    elif local_test == LocalTests.PLOT_PNL:
+    elif local == Locals.PLOT_PNL:
         returns_dict = {
             'S&P 500': returns['ES1 Index'].dropna(),
             'UST10Y': returns['TY1 Comdty'].dropna(),
@@ -207,7 +207,7 @@ def run_local_test(local_test: LocalTests):
         print(returns_dict)
         plot_strat_pnl(returns_dict=returns_dict, long_span=250, short_span=20, vol_span=31)
 
-    elif local_test == LocalTests.CHECK_SIGNAL:
+    elif local == Locals.CHECK_SIGNAL:
         # signals = compute_tf_signal(returns=returns.to_numpy(), tf_span=120)
         # signals = pd.DataFrame(signals, index=returns.index, columns=returns.columns)
         # qis.plot_histogram(df=signals)
@@ -221,6 +221,4 @@ def run_local_test(local_test: LocalTests):
 
 
 if __name__ == '__main__':
-    local_test = LocalTests.PLOT_PNL
-
-    run_local_test(local_test=local_test)
+    run_local(local=Locals.PLOT_PNL)
