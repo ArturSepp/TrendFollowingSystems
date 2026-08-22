@@ -39,6 +39,8 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering :: Mathematics",
     "Topic :: Scientific/Engineering :: Information Analysis",
     "Topic :: Office/Business :: Financial :: Investment",
@@ -55,15 +57,19 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = [
-    "pytest>=8.0",
-    "pytest-cov>=4.0",
-    "ruff>=0.4",
-]
 docs = [
     "sphinx>=7.2",
     "myst-parser>=2.0",
     "sphinx-sitemap>=2.9",
+]
+
+[dependency-groups]
+test = [
+    "pytest>=8.0",
+    "pytest-cov>=4.0",
+]
+lint = [
+    "ruff==0.16.2",
 ]
 
 [project.urls]

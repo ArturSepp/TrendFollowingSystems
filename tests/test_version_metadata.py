@@ -137,7 +137,9 @@ def test_primary_identity_surfaces_align():
     """README, package-index summary, and citation metadata describe one package."""
     readme = REPO_ROOT.joinpath('README.md').read_text(encoding='utf-8')
     citation = yaml.safe_load(REPO_ROOT.joinpath('CITATION.cff').read_text(encoding='utf-8'))
-    readme_intro = _collapse(readme.split('[![PyPI]', 1)[0])
+    intro_block = readme.split('**Paper:**', 1)[0]
+    readme_intro = _collapse('\n'.join(
+        line for line in intro_block.splitlines() if not line.startswith('[![')))
 
     assert _pyproject_description() == CANONICAL_ROLE
     assert readme_intro == _collapse(f'# trendfollowing {CANONICAL_ROLE} {BOUNDARY}')

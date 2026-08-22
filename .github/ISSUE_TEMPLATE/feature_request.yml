@@ -1,0 +1,50 @@
+name: Feature request
+description: Propose a focused addition within trendfollowing's research-library boundary.
+title: "[Feature]: "
+body:
+  - type: textarea
+    id: research_task
+    attributes:
+      label: Research or user task
+      description: Describe the trend-following task before proposing an API.
+    validations:
+      required: true
+
+  - type: textarea
+    id: current_gap
+    attributes:
+      label: Current limitation
+      description: Explain why the public API, examples, and qis do not already handle it.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Include timing, return, annualisation, signal, volatility, and data assumptions.
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Closed-form analytics
+        - Price process model
+        - Trend-following system or backtest
+        - Documentation or deterministic example
+        - Packaging or developer tooling
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: boundaries
+    attributes:
+      label: Project boundary
+      options:
+        - label: This does not require proprietary data, generated results, or changes to paper values.
+          required: true
+        - label: I considered whether the functionality belongs in qis rather than this package.
+          required: true

@@ -1,4 +1,8 @@
+# SHARED CI CORE v1.0 — T1 — synced 2026-08-22
 name: CI
+
+permissions:
+  contents: read
 
 on:
   push:
@@ -7,86 +11,148 @@ on:
     branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+  MPLBACKEND: Agg
+
 jobs:
-  tests:
+  test:
+    name: pytest (${{ matrix.os }}, py${{ matrix.python-version }})
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
-        python-version: ['3.10', '3.11', '3.12']
         include:
-          - os: windows-latest
-            python-version: '3.12'
-          - os: macos-latest
-            python-version: '3.12'
-
+          - {os: ubuntu-latest, python-version: "3.10"}
+          - {os: ubuntu-latest, python-version: "3.11"}
+          - {os: ubuntu-latest, python-version: "3.12", primary: true}
+          - {os: ubuntu-latest, python-version: "3.13"}
+          - {os: ubuntu-latest, python-version: "3.14"}
+          - {os: windows-latest, python-version: "3.12"}
+          - {os: macos-latest, python-version: "3.12"}
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
+    - name: Install uv and Python ${{ matrix.python-version }}
+      uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+      with:
+        python-version: ${{ matrix.python-version }}
 
-      - name: Install package with dev extras
-        run: |
-          python -m pip install --upgrade pip
-          pip install ".[dev]"
+    - name: Sync the test environment
+      # Primary cell installs uv.lock exactly; floating cells test today's resolution.
+      # Retried because observed failures here are transport failures, not test failures.
+      shell: bash
+      run: |
+        sync_cmd=(uv sync --group test ${{ matrix.primary && '--locked' || '--upgrade' }})
+        for attempt in 1 2 3; do
+          if "${sync_cmd[@]}"; then exit 0; fi
+          if [ "$attempt" -eq 3 ]; then echo "::error::uv sync failed after 3 attempts"; exit 1; fi
+          delay=$((attempt * 30 - 15))
+          echo "::warning::uv sync attempt $attempt failed; retrying in ${delay}s"
+          sleep "$delay"
+        done
 
-      - name: Run tests
-        # a public checkout has no papers/smart_diversification (untracked while
-        # in review): the companion test module skips itself in that state
-        run: pytest tests/ -q
+    - name: Run tests
+      # The unavailable smart-diversification companion module skips itself in public checkouts.
+      run: uv run --no-sync pytest
+
+  lint:
+    name: ruff
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+    - name: Install uv and Python
+      uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+      with:
+        python-version: "3.12"
+
+    - name: Check lint
+      run: uv run --locked --only-group lint ruff check src/trendfollowing/
 
   verification:
-    # the fast analytic gates behind the manuscript claims, plus a smoke
-    # re-render of one process figure from the committed Monte Carlo caches
+    # Preserve the fast analytic gates behind the manuscript claims.
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+    - name: Install uv and Python
+      uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+      with:
+        python-version: "3.12"
 
-      - name: Install package
-        run: |
-          python -m pip install --upgrade pip
-          pip install -e .
+    - name: Sync the locked runtime environment
+      run: uv sync --locked
 
-      - name: ARFIMA variance-scale gate
-        working-directory: papers/tf_systems/replication
-        run: PYTHONPATH=../../.. python verify_arfima_variance_scale.py
+    - name: ARFIMA variance-scale gate
+      working-directory: papers/tf_systems/replication
+      run: PYTHONPATH=../../.. uv run --no-sync python verify_arfima_variance_scale.py
 
-      - name: EWMA normalization gate
-        working-directory: papers/tf_systems/replication
-        run: PYTHONPATH=../../.. python ewma_variance_check.py
+    - name: EWMA normalization gate
+      working-directory: papers/tf_systems/replication
+      run: PYTHONPATH=../../.. uv run --no-sync python ewma_variance_check.py
 
-  artifact:
+  wheel:
+    name: built wheel (core install)
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+    - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
+    - name: Install uv and Python
+      uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+      with:
+        python-version: "3.12"
 
-      - name: Build and inspect distributions
-        run: |
-          python -m pip install --upgrade pip build twine
-          python -m build
-          python -m twine check dist/*
-          python -c "from pathlib import Path; from zipfile import ZipFile; wheel = next(Path('dist').glob('*.whl')); names = ZipFile(wheel).namelist(); assert sum(name.endswith('.csv') and '/resources/futures/' in name for name in names) == 8"
-          python -c "from pathlib import Path; import tarfile; sdist = next(Path('dist').glob('*.tar.gz')); names = tarfile.open(sdist).getnames(); assert sum(name.endswith('.csv') and '/resources/futures/' in name for name in names) == 8"
+    - name: Build the wheel from the source distribution
+      run: |
+        uv build --sdist --clear --out-dir dist
+        uv build --wheel dist/*.tar.gz --out-dir dist
 
-      - name: Install wheel
-        run: python -m pip install dist/*.whl
+    - name: Assert distribution contents
+      run: |
+        uv run --no-project python - <<'PY'
+        import glob
+        import tarfile
+        import zipfile
 
-      - name: Verify wheel import outside checkout
-        working-directory: ${{ runner.temp }}
-        run: |
-          python -c "from importlib.metadata import version; from pathlib import Path; import trendfollowing as tf; package_path = Path(tf.__file__).resolve(); checkout = Path(r'${{ github.workspace }}').resolve(); assert not package_path.is_relative_to(checkout), package_path; assert tf.__version__ == version('trendfollowing'); assert abs(tf.sharpe_ar1(phi=0.05, long_span=21) - 0.336) < 0.001"
-          python -c "from trendfollowing.universe import load_data; prices, costs, benchmarks, description, groups = load_data(); assert prices.shape == (17487, 84); assert costs.shape == prices.shape; assert list(benchmarks.columns) == ['60/40 Equity/Bond', 'SG Trend']; assert description.index.equals(prices.columns); assert groups[0] == 'Equities'"
+        wheels = glob.glob("dist/*.whl")
+        sdists = glob.glob("dist/*.tar.gz")
+        assert len(wheels) == 1, wheels
+        assert len(sdists) == 1, sdists
+
+        wheel_names = zipfile.ZipFile(wheels[0]).namelist()
+        sdist_names = tarfile.open(sdists[0]).getnames()
+        assert sum(
+            name.endswith(".csv") and "/resources/futures/" in name
+            for name in wheel_names
+        ) == 8
+        assert sum(
+            name.endswith(".csv") and "/resources/futures/" in name
+            for name in sdist_names
+        ) == 8
+        forbidden = {"run_local", "examples", "docs", "__pycache__"}
+        assert not any(forbidden.intersection(name.split("/")) for name in wheel_names)
+        assert not any("run_local" in name.split("/") for name in sdist_names)
+        assert not any(name.endswith((".pyc", ".pyo")) for name in wheel_names)
+        PY
+
+    - name: Install the wheel into a clean environment
+      run: |
+        uv venv --python 3.12 "$RUNNER_TEMP/wheelcheck-venv"
+        uv pip install --python "$RUNNER_TEMP/wheelcheck-venv/bin/python" \
+          "$(ls dist/*.whl)" pytest
+
+    - name: Verify the installed wheel outside the checkout
+      working-directory: ${{ runner.temp }}
+      run: |
+        source "$RUNNER_TEMP/wheelcheck-venv/bin/activate"
+        python -c "from importlib.metadata import version; from pathlib import Path; import trendfollowing as tf; package_path = Path(tf.__file__).resolve(); checkout = Path(r'${{ github.workspace }}').resolve(); assert not package_path.is_relative_to(checkout), package_path; assert tf.__version__ == version('trendfollowing'); assert abs(tf.sharpe_ar1(phi=0.05, long_span=21) - 0.336) < 0.001"
+        python -c "from trendfollowing.universe import load_data; prices, costs, benchmarks, description, groups = load_data(); assert prices.shape == (17487, 84); assert costs.shape == prices.shape; assert list(benchmarks.columns) == ['60/40 Equity/Bond', 'SG Trend']; assert description.index.equals(prices.columns); assert groups[0] == 'Equities'"

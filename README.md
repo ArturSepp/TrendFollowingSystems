@@ -1,18 +1,18 @@
 # trendfollowing
 
+[![PyPI](https://img.shields.io/pypi/v/trendfollowing?style=flat-square)](https://pypi.org/project/trendfollowing/)
+[![Python](https://img.shields.io/pypi/pyversions/trendfollowing?style=flat-square)](https://pypi.org/project/trendfollowing/)
+[![License](https://img.shields.io/github/license/ArturSepp/TrendFollowingSystems.svg?style=flat-square)](LICENSE)
+[![CI](https://github.com/ArturSepp/TrendFollowingSystems/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ArturSepp/TrendFollowingSystems/actions/workflows/ci.yml)
+[![Docs](https://readthedocs.org/projects/trendfollowingsystems/badge/?version=latest)](https://trendfollowingsystems.readthedocs.io/en/latest/)
+[![Downloads](https://static.pepy.tech/badge/trendfollowing)](https://pepy.tech/project/trendfollowing)
+[![Monthly](https://static.pepy.tech/badge/trendfollowing/month)](https://pepy.tech/project/trendfollowing)
+
 `trendfollowing` — closed-form trend-following analytics, reference system implementations,
 and reproducible futures evidence in Python for quantitative researchers and practitioners.
 
 It is a research and replication library, not a broker integration or general-purpose execution
 engine; portfolio analytics and reporting are delegated to `qis`.
-
-[![PyPI](https://img.shields.io/pypi/v/trendfollowing?style=flat-square)](https://pypi.org/project/trendfollowing/)
-[![Python](https://img.shields.io/pypi/pyversions/trendfollowing?style=flat-square)](https://pypi.org/project/trendfollowing/)
-[![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](LICENSE)
-[![CI](https://github.com/ArturSepp/TrendFollowingSystems/actions/workflows/ci.yml/badge.svg)](https://github.com/ArturSepp/TrendFollowingSystems/actions/workflows/ci.yml)
-[![Documentation](https://img.shields.io/badge/docs-Read%20the%20Docs-blue.svg)](https://trendfollowingsystems.readthedocs.io/en/latest/)
-[![Downloads](https://static.pepy.tech/badge/trendfollowing)](https://pepy.tech/project/trendfollowing)
-[![Monthly](https://static.pepy.tech/badge/trendfollowing/month)](https://pepy.tech/project/trendfollowing)
 
 **Paper:** Sepp, A. and Lucic, V., *The Science and Practice of Trend-Following
 Systems*. **Read and download the paper on SSRN:**

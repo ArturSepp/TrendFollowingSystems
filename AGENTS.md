@@ -58,20 +58,20 @@ docs/          Sphinx/MyST documentation source; generated output stays untracke
 ## Commands
 
 ```bash
-pip install -e ".[dev]"
-pytest tests/ -q                 # as CI runs it
-pytest tests/test_sharpe.py -v   # one module
-ruff check src/trendfollowing/   # lint
-pip install -e ".[docs]"         # documentation toolchain
-sphinx-build -W --keep-going -b html docs docs/_build/html
-sphinx-build -W --keep-going -b linkcheck docs docs/_build/linkcheck
+uv sync --locked --group test
+uv run --no-sync pytest                                  # as CI runs it
+uv run --no-sync pytest tests/test_sharpe.py -v          # one module
+uv run --locked --only-group lint ruff check src/trendfollowing/
+uv sync --locked --extra docs                            # documentation toolchain
+uv run --no-sync python -m sphinx -E -W --keep-going -b html docs docs/_build/html
+uv run --no-sync python -m sphinx -E -W -b linkcheck docs docs/_build/linkcheck
 ```
 
 `[tool.pytest.ini_options] pythonpath = ["."]` puts the repository root on `sys.path`
 only so tests can import the non-installed `papers.*` replication modules under a bare
 `pytest` invocation. `tests/test_src_layout.py` prevents that exception from masking a
-legacy root `trendfollowing/` package. Supported Python is >= 3.10; CI runs 3.10 - 3.12
-plus separate verification and built-artifact jobs.
+legacy root `trendfollowing/` package. Supported Python is >= 3.10; CI runs Linux 3.10–3.14
+plus Windows and macOS 3.12, separate verification, and built-artifact jobs.
 
 ## Conventions
 

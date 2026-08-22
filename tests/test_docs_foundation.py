@@ -122,12 +122,12 @@ def test_pages_workflow_builds_checks_and_deploys_documentation() -> None:
     ).read_text(encoding="utf-8")
 
     required_contract = (
-        'python -m pip install -e ".[docs]"',
-        "sphinx-build -W --keep-going -b html docs docs/_build/html",
-        "sphinx-build -W --keep-going -b linkcheck docs docs/_build/linkcheck",
-        "actions/configure-pages@v5",
-        "actions/upload-pages-artifact@v4",
-        "actions/deploy-pages@v4",
+        "uv sync --locked --extra docs",
+        "python -m sphinx -E -W --keep-going -b html docs docs/_build/html",
+        "python -m sphinx -E -W -b linkcheck docs docs/_build/linkcheck",
+        "actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b",
+        "actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b",
+        "actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e",
         "pages: read",
         "pages: write",
         "id-token: write",
