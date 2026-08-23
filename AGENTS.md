@@ -213,3 +213,11 @@ A release touches three version locations. All three must agree, and
 Then: commit, tag `v<version>`, build and publish to PyPI, and cut a GitHub Release
 with the same tag. Do not bump versions as part of an unrelated change, and do not
 publish without the maintainer explicitly asking for a release.
+
+## Python environment
+
+- Keep this repository's Python environment outside OneDrive at `C:\Python\TrendFollowingSystems312`.
+- Never create, use, or install packages into a repository-local `.venv`.
+- Use `C:\Python\TrendFollowingSystems312\Scripts\python.exe` for all Python commands.
+- Run tools through that interpreter, for example `C:\Python\TrendFollowingSystems312\Scripts\python.exe -m pytest` and `C:\Python\TrendFollowingSystems312\Scripts\python.exe -m pip`.
+- If the environment is missing, create it with `py -3.12 -m venv C:\Python\TrendFollowingSystems312`; do not create `.venv` under the repository.
