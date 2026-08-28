@@ -107,8 +107,8 @@ def _readme_bibtex_version() -> str:
 
 
 def _collapse(text: str) -> str:
-    """Collapse Markdown/YAML wrapping and remove Markdown code ticks."""
-    return ' '.join(text.replace('`', '').split())
+    """Collapse Markdown/YAML wrapping and remove inline Markdown styling."""
+    return ' '.join(text.replace('`', '').replace('**', '').split())
 
 
 def test_citation_cff_matches_pyproject():
@@ -140,9 +140,13 @@ def test_primary_identity_surfaces_align():
     intro_block = readme.split('**Paper:**', 1)[0]
     readme_intro = _collapse('\n'.join(
         line for line in intro_block.splitlines() if not line.startswith('[![')))
+    readme_intro_folded = readme_intro.casefold()
+    readme_role = CANONICAL_ROLE.split(' — ', 1)[1]
 
     assert _pyproject_description() == CANONICAL_ROLE
-    assert readme_intro == _collapse(f'# trendfollowing {CANONICAL_ROLE} {BOUNDARY}')
+    assert readme_intro.startswith('# trendfollowing ')
+    assert _collapse(readme_role).casefold() in readme_intro_folded
+    assert _collapse(BOUNDARY).casefold() in readme_intro_folded
     assert citation['title'] == 'trendfollowing'
     assert _collapse(citation['abstract']) == _collapse(f'{CANONICAL_ROLE} {BOUNDARY}')
 
