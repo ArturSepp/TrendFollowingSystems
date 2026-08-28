@@ -1,23 +1,26 @@
 # trendfollowing
 
-[![PyPI](https://img.shields.io/pypi/v/trendfollowing?style=flat-square)](https://pypi.org/project/trendfollowing/)
-[![Python](https://img.shields.io/pypi/pyversions/trendfollowing?style=flat-square)](https://pypi.org/project/trendfollowing/)
-[![License](https://img.shields.io/github/license/ArturSepp/TrendFollowingSystems.svg?style=flat-square)](LICENSE)
-[![CI](https://github.com/ArturSepp/TrendFollowingSystems/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ArturSepp/TrendFollowingSystems/actions/workflows/ci.yml)
-[![Docs](https://readthedocs.org/projects/trendfollowingsystems/badge/?version=latest)](https://trendfollowingsystems.readthedocs.io/en/latest/)
-[![Downloads](https://static.pepy.tech/badge/trendfollowing)](https://pepy.tech/project/trendfollowing)
-[![Monthly](https://static.pepy.tech/badge/trendfollowing/month)](https://pepy.tech/project/trendfollowing)
-
-`trendfollowing` — closed-form trend-following analytics, reference system implementations,
-and reproducible futures evidence in Python for quantitative researchers and practitioners.
+**Closed-form trend-following analytics, reference system implementations, and reproducible
+futures evidence in Python for quantitative researchers and practitioners.**
 
 It is a research and replication library, not a broker integration or general-purpose execution
 engine; portfolio analytics and reporting are delegated to `qis`.
 
+**Install:** `pip install trendfollowing` · **Import:** `trendfollowing` · **Status:** Beta
+
+[![PyPI](https://img.shields.io/pypi/v/trendfollowing?style=flat-square)](https://pypi.org/project/trendfollowing/)
+[![Python](https://img.shields.io/pypi/pyversions/trendfollowing?style=flat-square)](https://pypi.org/project/trendfollowing/)
+[![CI](https://github.com/ArturSepp/TrendFollowingSystems/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/ArturSepp/TrendFollowingSystems/actions/workflows/ci.yml)
+[![Docs](https://readthedocs.org/projects/trendfollowingsystems/badge/?version=latest)](https://trendfollowingsystems.readthedocs.io/en/latest/)
+[![License](https://img.shields.io/github/license/ArturSepp/TrendFollowingSystems.svg?style=flat-square)](LICENSE)
+[![Downloads](https://static.pepy.tech/badge/trendfollowing)](https://pepy.tech/project/trendfollowing)
+[![Monthly](https://static.pepy.tech/badge/trendfollowing/month)](https://pepy.tech/project/trendfollowing)
+
 **Paper:** Sepp, A. and Lucic, V., *The Science and Practice of Trend-Following
 Systems*. **Read and download the paper on SSRN:**
-[ssrn.com/abstract=3167787](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3167787)
-(doi:[10.2139/ssrn.3167787](https://dx.doi.org/10.2139/ssrn.3167787)).
+[ssrn.com/abstract=3167787](https://ssrn.com/abstract=3167787)
+(doi:[10.2139/ssrn.3167787](https://doi.org/10.2139/ssrn.3167787)); also available as
+[arXiv:2607.19497](https://arxiv.org/abs/2607.19497).
 See [Citation](#citation) for the BibTeX entry. The replication material for
 every figure and table is in [`papers/tf_systems/`](papers/tf_systems/).
 
@@ -31,13 +34,15 @@ and a squared-drift channel,
 \qquad h = l \sigma_{\mathrm{target}} \sqrt{a} \frac{1-\nu}{\nu}
 ```
 
-where $\rho(m)$ is the autocorrelation function of volatility-normalized
-returns, $\mu$ their annualized drift, and $\nu$ the filter smoothing parameter
-of the span. The annualized Sharpe ratio follows in closed form for any causal
+where $\rho(m)$ is the autocorrelation function of volatility-normalised
+returns, $\mu$ their annualised drift, and $\nu$ the filter smoothing parameter
+of the span. The annualised Sharpe ratio follows in closed form for any causal
 linear process, with the excess kurtosis of the innovations entering through a
 single loading. On 84 liquid futures contracts, the closed form applied to
-sample moments reproduces the realized Sharpe ratios of the European system
+sample moments reproduces the realised Sharpe ratios of the European system
 with a pooled correlation of 0.99 and a regression slope of 0.96.
+
+## Why trendfollowing
 
 The package is useful when three things matter:
 
@@ -48,7 +53,7 @@ The package is useful when three things matter:
   the closed forms separate cleanly.
 - You want to **predict a contract's trend-following Sharpe ratio from its
   autocorrelation function and drift** before running a backtest, and to
-  attribute realized performance to trend, mean reversion, and drift.
+  attribute realised performance to trend, mean reversion, and drift.
 - You want **three reference system implementations** — continuous EWMA-filter
   weights, binary crossover positions with ATR stops, and sign-based time
   series momentum — that run out of the box on the packaged dataset, net of
@@ -77,12 +82,12 @@ For an editable checkout with the test and lint tools:
 ```bash
 git clone https://github.com/ArturSepp/TrendFollowingSystems.git
 cd TrendFollowingSystems
-pip install -e ".[dev]"
+uv sync --locked --group test --group lint
 ```
 
 ## Quickstart
 
-The authoritative first-success script is
+The authoritative first-success script is repository-only, so run it from a cloned checkout:
 [`examples/quickstart.py`](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/examples/quickstart.py).
 It uses only the installed top-level API to compute deterministic AR(1) and ARFIMA closed forms:
 
@@ -115,14 +120,14 @@ nav = outputs.portfolio_pnl_net                                # compounded nav,
 ```
 
 Net of volume-based costs and gross of fees, this configuration delivers a
-Sharpe ratio of 1.10 at a 15.2% realized volatility over 1960–2026
+Sharpe ratio of 1.10 at a 15.2% realised volatility over 1960–2026
 ([`examples/backtest_european_system.py`](examples/backtest_european_system.py)).
 
 ## The three systems
 
 **European** ([`systems/european.py`](src/trendfollowing/systems/european.py)):
 continuous weights from a variance-preserving EWMA filter, single or
-long-short, applied to volatility-normalized returns, with volatility-targeted
+long-short, applied to volatility-normalised returns, with volatility-targeted
 position sizing. The system of the closed forms.
 
 **American** ([`systems/american.py`](src/trendfollowing/systems/american.py)):
@@ -131,7 +136,7 @@ entry buffer and ATR trailing stop-losses, in the tradition of the turtle
 systems. Position size is fixed at trade inception.
 
 **TSMOM** ([`systems/tsmom.py`](src/trendfollowing/systems/tsmom.py)): the
-normalized sum of signs of volatility-normalized period returns, generalizing
+normalised sum of signs of volatility-normalised period returns, generalising
 Moskowitz–Ooi–Pedersen time series momentum to a period length L and lookback
 of M periods.
 
@@ -143,8 +148,8 @@ ranks the performance of all three designs.
 
 ## Closed-form results
 
-For volatility-normalized returns with autocorrelation function $\rho(m)$ and
-annualized drift $\mu$, the annualized Sharpe ratio of the European system is
+For volatility-normalised returns with autocorrelation function $\rho(m)$ and
+annualised drift $\mu$, the annualised Sharpe ratio of the European system is
 
 ```math
 SR = \frac{\sqrt{a} A_{\nu} + \mu^{2}/\sqrt{a}}
@@ -153,7 +158,7 @@ SR = \frac{\sqrt{a} A_{\nu} + \mu^{2}/\sqrt{a}}
 
 closed-form under any causal linear process, with the excess kurtosis $\kappa$
 of the innovations entering through the single loading $K_{\nu}$. Under trading
-costs per unit of volatility-normalized turnover, the net Sharpe ratio follows
+costs per unit of volatility-normalised turnover, the net Sharpe ratio follows
 at leading order from an independence-based signal-turnover proxy, and the
 ARFIMA autocorrelation generating function is the Gauss hypergeometric
 function $F(d, 1, 1-d; \nu)$. `trendfollowing.analytics` implements all of the
@@ -183,9 +188,9 @@ break-even cost.
 
 Trend-following returns acquire positive skewness under time aggregation with no
 drift and no predictability. The daily return multiplies the lagged signal by the
-current return, so the $T$-day cumulative return loads on the realized
-autocovariance of the volatility-normalized returns, which makes it a convex
-payoff on the realized trend. Under white noise the skewness is available in
+current return, so the $T$-day cumulative return loads on the realised
+autocovariance of the volatility-normalised returns, which makes it a convex
+payoff on the realised trend. Under white noise the skewness is available in
 closed form,
 
 ```math
@@ -211,26 +216,26 @@ forecasting skill, because it holds exactly where the expected return is zero.
 
 The figure below is Figure 7.3 of the paper: the Sharpe ratio of the European
 system predicted from each contract's sample autocorrelation function and
-drift, against the realized backtest Sharpe ratio, across 84 futures contracts
+drift, against the realised backtest Sharpe ratio, across 84 futures contracts
 and the paper's span grid.
 
-![Predicted versus realized Sharpe ratios across 84 futures contracts](papers/tf_systems/paper/figures/tf_prediction_scatter.png)
+![Predicted versus realised Sharpe ratios across 84 futures contracts](papers/tf_systems/paper/figures/tf_prediction_scatter.png)
 
 The pooled correlation is 0.99 and the regression slope 0.96 for the European
 system, 0.89 and 0.73 for TSMOM, and 0.92 and 0.61 for the American system at
 spans above one month. The practical content: two sample moments of a
-contract's volatility-normalized returns — its autocorrelation function and
+contract's volatility-normalised returns — its autocorrelation function and
 its drift — carry nearly all the information a trend-following backtest on
 that contract produces. Span selection, contract screening, and performance
 attribution can run on the closed form directly, and the same formula prices
 the trade-off that costs impose: at realistic futures costs of 40–60bp per
-unit of volatility-normalized turnover, a short-memory AR-1 alpha at
+unit of volatility-normalised turnover, a short-memory AR-1 alpha at
 $\phi = 0.05$ sits below its 37–41bp break-even at every span, while long-memory
 alpha survives at the one-to-three-month cost-optimal spans.
 
 You can reproduce the per-contract exercise in three lines
 ([`examples/predict_sharpe_from_acf.py`](examples/predict_sharpe_from_acf.py)):
-ES1 predicts 0.227 against a realized 0.206, and Corn predicts 0.625 against
+ES1 predicts 0.227 against a realised 0.206, and Corn predicts 0.625 against
 0.620.
 
 The three systems also run out of the box on the packaged dataset. The figure
@@ -254,7 +259,7 @@ Self-contained usage cases in [`examples/`](examples/), each runnable directly:
 - [`predict_sharpe_from_acf.py`](examples/predict_sharpe_from_acf.py) — the
   attribution exercise in miniature: predict the per-contract Sharpe ratio
   from the sample autocorrelation function and drift, and compare with the
-  realized backtest on the same sample.
+  realised backtest on the same sample.
 
 ## Reproducing the paper exhibits
 
@@ -310,7 +315,7 @@ resources; set `TF_RESOURCE_PATH` to override them with an external folder.
 ## Sharpe convention
 
 All Sharpe ratios of the theory, the attribution, and the report exhibits are
-annualized arithmetic means over annualized volatility of periodic simple
+annualised arithmetic means over annualised volatility of periodic simple
 excess returns, $SR = \sqrt{a}\cdot\text{mean}/\text{std}$ — the convention of
 equation (5.1) of the paper, computed by the shared estimator
 `trendfollowing.compute_realized_sharpe`. The regime-conditional Sharpe ratios
@@ -324,7 +329,7 @@ decision record.
 `papers/tf_systems/replication/` carries the verification scripts behind the
 manuscript's claims: the boundary term of the sample-path identity, the
 Appendix C asymptotics, the GARCH pipeline and ARFIMA truncation checks, and a
-Monte Carlo regression test of the long-short normalization and the turnover
+Monte Carlo regression test of the long-short normalisation and the turnover
 closed form.
 
 ```bash
@@ -334,12 +339,13 @@ cd papers/tf_systems/replication && PYTHONPATH=../../.. python verify_ls_normali
 ## Tests
 
 ```bash
-pytest tests/
+uv run --no-sync pytest
 ```
 
 ## Ecosystem
 
-This package is part of an open-source Python stack for quantitative finance — full catalogue at [github.com/ArturSepp](https://github.com/ArturSepp):
+This package is part of Artur Sepp's open-source Python stack for quantitative finance. The
+[maintainer profile](https://github.com/ArturSepp) is the canonical ten-package catalogue.
 
 | Package | Purpose |
 |---|---|
@@ -347,17 +353,35 @@ This package is part of an open-source Python stack for quantitative finance —
 | [`optimalportfolios`](https://github.com/ArturSepp/OptimalPortfolios) | Portfolio construction and backtesting |
 | [`factorlasso`](https://github.com/ArturSepp/factorlasso) | Sparse factor models and factor covariance estimation |
 | [`bbg-fetch`](https://github.com/ArturSepp/BloombergFetch) | Bloomberg data fetching |
+| [`option-chain-analytics`](https://github.com/ArturSepp/OptionChainAnalytics) | Point-in-time option-chain normalisation, reconstruction, queries, and visualisation |
 | [`trendfollowing`](https://github.com/ArturSepp/TrendFollowingSystems) *(this package)* | Trend-following systems: closed-form theory and replication |
+| [`privateassets`](https://github.com/ArturSepp/privateassets) | Money-weighted multi-factor alpha from private-asset cash flows |
 | [`goal-based-allocation`](https://github.com/ArturSepp/GoalBasedAllocation) | Dynamic MV allocation under regime-switching jump-diffusions |
 | [`stochvolmodels`](https://github.com/ArturSepp/StochVolModels) | Stochastic volatility pricing analytics |
 | [`vanilla-option-pricers`](https://github.com/ArturSepp/VanillaOptionPricers) | Vectorised vanilla option pricers and implied volatility fitters |
 
-Dependency links within the stack: `optimalportfolios` builds on `qis` and `factorlasso`; `trendfollowing` builds on `qis`.
+`trendfollowing` depends on `qis` for portfolio analytics, backtesting, and reporting. The
+closed-form trend analytics and paper replication remain this package's distinct job; option-chain
+workflows belong to `option-chain-analytics` and pricing under stochastic volatility belongs to
+`stochvolmodels`.
+
+## Feedback & contributing
+
+- **Bug or replication mismatch:** [open the bug-report form](https://github.com/ArturSepp/TrendFollowingSystems/issues/new?template=bug_report.yml)
+  with the package/Python versions, platform, parameters, minimal reproducer, and expected and
+  actual result.
+- **Feature or methodology:** [open the feature-request form](https://github.com/ArturSepp/TrendFollowingSystems/issues/new?template=feature_request.yml)
+  with the replication result or parameterisation that is unclear, your current workaround, and
+  the smallest useful API or documentation change.
+- **Contribution:** read [`CONTRIBUTING.md`](CONTRIBUTING.md), then browse
+  [`good first issue`](https://github.com/ArturSepp/TrendFollowingSystems/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22good%20first%20issue%22)
+  or [`help wanted`](https://github.com/ArturSepp/TrendFollowingSystems/issues?q=is%3Aissue%20state%3Aopen%20label%3A%22help%20wanted%22)
+  work.
 
 ## Citation
 
-If you use `trendfollowing` in academic work, please cite the paper and the
-software (see also `CITATION.cff`):
+If you use `trendfollowing` in academic work, please cite the paper and the software (see also
+[`CITATION.cff`](CITATION.cff)):
 
 ```bibtex
 @article{SeppLucic2026trendfollowing,
