@@ -1,13 +1,14 @@
 [build-system]
-requires = ["setuptools>=68.0", "wheel"]
+requires = ["setuptools>=77", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "trendfollowing"
 version = "1.2.0"
-description = "trendfollowing — closed-form trend-following analytics, reference system implementations, and reproducible futures evidence in Python for quantitative researchers and practitioners."
+description = "Closed-form trend-following analytics, reference system implementations, and reproducible futures evidence in Python for quantitative researchers and practitioners"
 readme = "README.md"
-license = {text = "GPL-3.0-or-later"}
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
 requires-python = ">=3.10"
 authors = [
     {name = "Artur Sepp", email = "artursepp@gmail.com"},
@@ -33,7 +34,6 @@ classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Science/Research",
     "Intended Audience :: Financial and Insurance Industry",
-    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
@@ -48,7 +48,7 @@ classifiers = [
 
 dependencies = [
     "numpy>=2.0",
-    "pandas>=2.0",
+    "pandas>=2.2.0",
     "scipy>=1.11",
     "numba>=0.59",
     "matplotlib>=3.8",
@@ -111,6 +111,28 @@ line-length = 100
 # "I" is not selected anywhere in this stack: the import convention groups the scientific
 # stack before the project packages, which isort reorders.
 select = ["E", "F", "W"]
+extend-select = ["TID251", "TID253", "ICN"]
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+"privateassets".msg = "A1: subject packages never import each other."
+"stochvolmodels".msg = "A1: subject packages never import each other."
+"goal_based_allocation".msg = "A1: subject packages never import each other."
+"vanilla_option_pricers".msg = "A1: subject packages never import each other."
+
+[tool.ruff.lint.flake8-tidy-imports]
+banned-module-level-imports = [
+    "yfinance",
+    "pandas_datareader",
+    "pybloqs",
+    "plotly",
+    "pyarrow",
+    "psycopg2",
+    "sqlalchemy",
+]
+
+[tool.ruff.lint.flake8-import-conventions.aliases]
+numpy = "np"
+pandas = "pd"
 
 [tool.ruff.lint.per-file-ignores]
 # These modules exist to re-export their imported symbols as the documented public API.

@@ -2497,7 +2497,7 @@ requires-dist = [
     { name = "myst-parser", marker = "extra == 'docs'", specifier = ">=2.0" },
     { name = "numba", specifier = ">=0.59" },
     { name = "numpy", specifier = ">=2.0" },
-    { name = "pandas", specifier = ">=2.0" },
+    { name = "pandas", specifier = ">=2.2.0" },
     { name = "qis", specifier = ">=5.0.9" },
     { name = "scipy", specifier = ">=1.11" },
     { name = "sphinx", marker = "extra == 'docs'", specifier = ">=7.2" },

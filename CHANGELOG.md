@@ -7,6 +7,12 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Changed
+
+- Migrated project licence metadata to the PEP 639 SPDX expression
+  `GPL-3.0-or-later` and declared the repository's `LICENSE` file.
+- Raised the pandas runtime floor from 2.0 to 2.2.0.
+
 ### Removed
 
 - Retired the development-only `dev` extra. Repository tests now use the PEP 735 `test`
