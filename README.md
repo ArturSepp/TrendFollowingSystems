@@ -1,7 +1,7 @@
 # trendfollowing
 
 **Closed-form trend-following analytics, reference system implementations, and reproducible
-futures evidence in Python for quantitative researchers and practitioners.**
+futures evidence in Python for quantitative researchers and practitioners**
 
 It is a research and replication library, not a broker integration or general-purpose execution
 engine; portfolio analytics and reporting are delegated to `qis`.
@@ -44,6 +44,8 @@ with a pooled correlation of 0.99 and a regression slope of 0.96.
 
 ## Why trendfollowing
 
+### Key differentiators
+
 The package is useful when three things matter:
 
 - You want to **select the filter span analytically** rather than by grid
@@ -61,6 +63,15 @@ The package is useful when three things matter:
 
 The analytics layer is pure numpy/scipy: every formula is a function you can
 read. The backtest layer builds on [`qis`](https://github.com/ArturSepp/QuantInvestStrats).
+
+## When to use it — and when not
+
+The package is useful when selecting the filter span analytically rather than by grid search,
+predicting a contract's trend-following Sharpe ratio from its autocorrelation function and drift
+before running a backtest, or using the three reference system implementations.
+
+It is a research and replication library, not a broker integration or general-purpose execution
+engine; portfolio analytics and reporting are delegated to `qis`.
 
 ---
 
