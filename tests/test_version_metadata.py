@@ -28,6 +28,10 @@ SOFTWARE_ENTRY = re.compile(r'@software\{.*?\n\}', flags=re.S)
 BIBTEX_VERSION = re.compile(r'version\s*=\s*\{([^}]+)\}')
 BIBTEX_TITLE = re.compile(r'title\s*=\s*\{([^}]+)\}')
 
+PACKAGE_SUMMARY = (
+    'Closed-form trend-following analytics, reference system implementations, and '
+    'reproducible futures evidence in Python for quantitative researchers and practitioners'
+)
 CANONICAL_ROLE = (
     'trendfollowing — closed-form trend-following analytics, reference system implementations, '
     'and reproducible futures evidence in Python for quantitative researchers and practitioners.'
@@ -141,13 +145,12 @@ def test_primary_identity_surfaces_align():
     readme_intro = _collapse('\n'.join(
         line for line in intro_block.splitlines() if not line.startswith('[![')))
     readme_intro_folded = readme_intro.casefold()
-    readme_role = CANONICAL_ROLE.split(' — ', 1)[1]
 
-    assert _pyproject_description() == CANONICAL_ROLE
+    assert _pyproject_description() == PACKAGE_SUMMARY
     assert readme_intro.startswith('# trendfollowing ')
-    assert _collapse(readme_role).casefold() in readme_intro_folded
+    assert _collapse(PACKAGE_SUMMARY).casefold() in readme_intro_folded
     assert _collapse(BOUNDARY).casefold() in readme_intro_folded
-    assert citation['title'] == 'trendfollowing'
+    assert citation['title'] == f'trendfollowing: {PACKAGE_SUMMARY}'
     assert _collapse(citation['abstract']) == _collapse(f'{CANONICAL_ROLE} {BOUNDARY}')
 
     bibtex_title = BIBTEX_TITLE.search(_readme_software_entry())
