@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite this package version and the paper below."
 type: software
-title: "trendfollowing"
+title: "trendfollowing: Closed-form trend-following analytics, reference system implementations, and reproducible futures evidence in Python for quantitative researchers and practitioners"
 abstract: >-
   trendfollowing — closed-form trend-following analytics, reference system
   implementations, and reproducible futures evidence in Python for quantitative
