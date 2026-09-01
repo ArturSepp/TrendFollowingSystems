@@ -21,8 +21,8 @@ language = "en"
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 nitpicky = True
 
-html_theme = "alabaster"
-html_title = "trendfollowing documentation"
+html_theme = "furo"
+html_title = "trendfollowing - closed-form trend-following analytics"
 html_short_title = "trendfollowing"
 html_baseurl = os.environ.get(
     "READTHEDOCS_CANONICAL_URL",
@@ -30,13 +30,9 @@ html_baseurl = os.environ.get(
 )
 html_extra_path = ["robots.txt"]
 html_theme_options = {
-    "description": "Closed-form trend-following analytics and reproducible futures evidence",
-    "github_button": True,
-    "github_repo": "TrendFollowingSystems",
-    "github_type": "star",
-    "github_user": "ArturSepp",
-    "page_width": "1100px",
-    "sidebar_width": "270px",
+    "source_repository": "https://github.com/ArturSepp/TrendFollowingSystems/",
+    "source_branch": "main",
+    "source_directory": "docs/",
 }
 
 myst_heading_anchors = 3
