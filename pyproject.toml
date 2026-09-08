@@ -52,7 +52,7 @@ dependencies = [
     "scipy>=1.11",
     "numba>=0.59",
     "matplotlib>=3.8",
-    "statsmodels>=0.14",
+    "statsmodels>=0.14.2",
     "qis>=5.0.9",
 ]
 

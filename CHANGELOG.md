@@ -38,6 +38,11 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Retired the development-only `dev` extra. Repository tests now use the PEP 735 `test`
   dependency group, lint uses `lint`, and the user-facing `docs` extra is unchanged.
 
+### Fixed
+
+- Raised the statsmodels runtime floor to 0.14.2 to exclude the 0.14.0 wheel's reproduced
+  binary incompatibility with the required NumPy 2.0.
+
 ## [1.1.0] - 2026-08-17
 
 ### Changed
