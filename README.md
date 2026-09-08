@@ -96,7 +96,9 @@ cd TrendFollowingSystems
 uv sync --locked --group test --group lint
 ```
 
-## Quickstart
+<a id="quickstart"></a>
+
+## Five-minute quickstart
 
 The authoritative first-success script is repository-only, so run it from a cloned checkout:
 [`examples/quickstart.py`](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/examples/quickstart.py).

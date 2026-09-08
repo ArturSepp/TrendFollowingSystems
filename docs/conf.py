@@ -1,17 +1,21 @@
 """Sphinx configuration for the trendfollowing documentation site."""
 
 import os
-from importlib.metadata import PackageNotFoundError, version as distribution_version
+
+try:
+    import tomllib
+except ModuleNotFoundError:  # Python 3.10 metadata tests use the compatible parser.
+    import tomli as tomllib
+from pathlib import Path
 
 
 project = "trendfollowing"
 author = "Artur Sepp and Vladimir Lucic"
 copyright = "2026, Artur Sepp and Vladimir Lucic"
 
-try:
-    release = distribution_version("trendfollowing")
-except PackageNotFoundError:
-    release = "development"
+release = tomllib.loads(
+    (Path(__file__).resolve().parents[1] / "pyproject.toml").read_text(encoding="utf-8")
+)["project"]["version"]
 version = release
 
 extensions = ["myst_parser", "sphinx_sitemap"]

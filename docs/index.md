@@ -1,8 +1,7 @@
 # trendfollowing
 
-`trendfollowing` provides closed-form trend-following analytics, reference system
-implementations, and reproducible futures evidence in Python for quantitative researchers
-and practitioners.
+Closed-form trend-following analytics, reference system implementations, and reproducible
+futures evidence in Python for quantitative researchers and practitioners.
 
 It is a research and replication library—not a broker integration or general-purpose
 execution engine. Portfolio analytics and reporting are delegated to

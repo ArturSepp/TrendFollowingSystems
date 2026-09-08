@@ -2556,6 +2556,7 @@ lint = [
 test = [
     { name = "pytest" },
     { name = "pytest-cov" },
+    { name = "tomli", marker = "python_full_version < '3.11'" },
 ]
 
 [package.metadata]
@@ -2570,7 +2571,7 @@ requires-dist = [
     { name = "scipy", specifier = ">=1.11" },
     { name = "sphinx", marker = "extra == 'docs'", specifier = ">=7.2" },
     { name = "sphinx-sitemap", marker = "extra == 'docs'", specifier = ">=2.9" },
-    { name = "statsmodels", specifier = ">=0.14" },
+    { name = "statsmodels", specifier = ">=0.14.2" },
 ]
 provides-extras = ["docs"]
 
@@ -2579,6 +2580,7 @@ lint = [{ name = "ruff", specifier = "==0.16.2" }]
 test = [
     { name = "pytest", specifier = ">=8.0" },
     { name = "pytest-cov", specifier = ">=4.0" },
+    { name = "tomli", marker = "python_full_version < '3.11'", specifier = ">=2.0.1" },
 ]
 
 [[package]]
