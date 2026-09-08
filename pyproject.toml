@@ -66,6 +66,7 @@ docs = [
 
 [dependency-groups]
 test = [
+    "tomli>=2.0.1; python_version < '3.11'",
     "pytest>=8.0",
     "pytest-cov>=4.0",
 ]
@@ -119,6 +120,10 @@ extend-select = ["TID251", "TID253", "ICN"]
 "stochvolmodels".msg = "A1: subject packages never import each other."
 "goal_based_allocation".msg = "A1: subject packages never import each other."
 "vanilla_option_pricers".msg = "A1: subject packages never import each other."
+"bbg_fetch".msg = "A1: trendfollowing has no declared dependency on bbg_fetch."
+"factorlasso".msg = "A1: trendfollowing has no declared dependency on factorlasso."
+"optimalportfolios".msg = "A1: trendfollowing has no declared dependency on optimalportfolios."
+"option_chain_analytics".msg = "A1: trendfollowing has no declared dependency on option_chain_analytics."
 
 [tool.ruff.lint.flake8-tidy-imports]
 banned-module-level-imports = [
@@ -136,6 +141,10 @@ numpy = "np"
 pandas = "pd"
 
 [tool.ruff.lint.per-file-ignores]
+# Named maintainer paths; the AST policy restricts these waivers by module/function.
+"src/trendfollowing/run_local/tf_signal_screener_run.py" = ["TID251"]
+"src/trendfollowing/universe.py" = ["TID251"]
+
 # These modules exist to re-export their imported symbols as the documented public API.
 "src/trendfollowing/__init__.py" = ["F401"]
 "src/trendfollowing/analytics/__init__.py" = ["F401"]

@@ -7,24 +7,36 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [1.2.0] - 2026-09-08
+
+### Added
+
+- Added explicit stack dependency and optional-import boundary checks, including
+  isolated maintainer adapters, plus a fresh Python 3.10 lowest-direct dependency CI lane.
+
+- Added tag-driven PyPI Trusted Publishing with release-identity and distribution
+  validation; creating a GitHub Release remains optional.
+
 ### Changed
 
 - Migrated project licence metadata to the PEP 639 SPDX expression
   `GPL-3.0-or-later` and declared the repository's `LICENSE` file.
 - Raised the pandas runtime floor from 2.0 to 2.2.0.
 
-### Removed
-
-- Retired the development-only `dev` extra. Repository tests now use the PEP 735 `test`
-  dependency group, lint uses `lint`, and the user-facing `docs` extra is unchanged.
-
-## [1.2.0] - 2026-08-22
-
-### Changed
 - Separated development runners from automated pytest modules: source-adjacent workflows now
   live in no-init `run_local/*_run.py` folders with `Locals` / `run_local(local=...)`, while
   root examples use the same dispatcher names and published paper replication scripts retain
   their existing orchestration contract. Development runners are excluded from distributions.
+
+- Aligned package summaries, software citations, README navigation, and documentation
+  landing pages with the canonical package identity and Read the Docs documentation.
+
+- Replaced the legacy GitHub Pages documentation build with redirects to Read the Docs.
+
+### Removed
+
+- Retired the development-only `dev` extra. Repository tests now use the PEP 735 `test`
+  dependency group, lint uses `lint`, and the user-facing `docs` extra is unchanged.
 
 ## [1.1.0] - 2026-08-17
 
