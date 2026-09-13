@@ -173,12 +173,12 @@ def empirical_skew_panel(span: float,
     return pd.DataFrame(rows, index=horizons).T
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     PAPER_FIGURE = 1
 
 
-def run_local_test(local_test: LocalTests) -> None:
-    if local_test == LocalTests.PAPER_FIGURE:
+def run_local(local: Locals) -> None:
+    if local == Locals.PAPER_FIGURE:
         fig, axs = plt.subplots(1, 3, figsize=(18.5, 4.6), tight_layout=True)
         horizons_grid = np.unique(np.round(np.logspace(0.0, np.log10(1500), 200)).astype(int))
         for span, color in zip(SPANS, COLORS):
@@ -240,4 +240,4 @@ def run_local_test(local_test: LocalTests) -> None:
 
 
 if __name__ == '__main__':
-    run_local_test(local_test=LocalTests.PAPER_FIGURE)
+    run_local(local=Locals.PAPER_FIGURE)

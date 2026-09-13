@@ -43,16 +43,16 @@ def plot_filter_weights(local_path: Optional[str] = None) -> plt.Figure:
     return fig
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     FILTER_WEIGHTS = 1
 
 
-def run_local_test(local_test: LocalTests):
+def run_local(local: Locals):
     local_path = os.environ.get("TF_FIGURE_PATH", qis.local_path.get_output_path())  # set TF_FIGURE_PATH to the paper figures folder
-    if local_test == LocalTests.FILTER_WEIGHTS:
+    if local == Locals.FILTER_WEIGHTS:
         plot_filter_weights(local_path=local_path)
         plt.show()
 
 
 if __name__ == '__main__':
-    run_local_test(local_test=LocalTests.FILTER_WEIGHTS)
+    run_local(local=Locals.FILTER_WEIGHTS)

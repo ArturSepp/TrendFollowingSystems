@@ -130,7 +130,7 @@ cd replication && PYTHONPATH=../../.. python sg_sharpe_test.py
 ## Caches
 - `grid_cache.pkl` — predicted/realized Sharpe tables for all systems and the grid-search results.
 - `expected_return_*_part_*.pkl` — per-configuration Monte Carlo aggregates (seed 8) behind the
-  three process figures; `mc_net_sharpe_paper_figs.LocalTests.PLOT` renders from these directly.
+  three process figures; `mc_net_sharpe_paper_figs.Locals.PLOT` renders from these directly.
 - `verify_ls_normalization.py` — unit test of the long-short normalization (unit signal variance)
 - `verify_skewness_directions.py` — MC direction checks behind the skewness subsection:
   positive autocorrelation and long memory raise the aggregated profile, mean reversion

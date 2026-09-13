@@ -9,8 +9,12 @@ estimators: pooled sr = sqrt(af)*mean(f)/std(f) over all paths, and the mean of 
 import numpy as np
 import pandas as pd
 from enum import Enum
-from typing import Optional, Tuple, List, Dict
+from typing import TYPE_CHECKING, Optional, Tuple, List, Dict
 from scipy.signal import fftconvolve
+
+if TYPE_CHECKING:
+    from matplotlib.figure import Figure
+
 # project
 from trendfollowing.analytics.filters import span_to_nu, compute_ewm_long_short_weights
 from trendfollowing.analytics.autocorrelation import population_acf, ma_weights
@@ -258,12 +262,12 @@ def run_verification(spans: List[float],
     return pd.DataFrame(rows)
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     VERIFY_SHARPE = 1
 
 
-def run_local_test(local_test: LocalTests):
-    if local_test == LocalTests.VERIFY_SHARPE:
+def run_local(local: Locals):
+    if local == Locals.VERIFY_SHARPE:
         spans = [5.0, 10.0, 21.0, 63.0, 125.0, 250.0, 500.0]
         process_configs = [dict(name='white_noise', mu_an=0.5),
                            dict(name='white_noise', mu_an=0.25),
@@ -279,12 +283,12 @@ def run_local_test(local_test: LocalTests):
 
 
 if __name__ == '__main__':
-    run_local_test(local_test=LocalTests.VERIFY_SHARPE)
+    run_local(local=Locals.VERIFY_SHARPE)
 
 
 def plot_verification(df: pd.DataFrame,
                       file_name: Optional[str] = None
-                      ) -> 'plt.Figure':
+                      ) -> 'Figure':
     """
     sr vs filter span: analytic curves and mc pooled estimates with 95% cis, one panel per process family
     """

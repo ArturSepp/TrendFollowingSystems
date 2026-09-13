@@ -29,6 +29,8 @@ def fit_arfima(data: pd.Series) -> pd.DataFrame:
     """
     wrapper for r function
     """
+    import rpy2.robjects as ro
+
     print(f"arifma fit for {data.name}")
     r = ro.r
     r.source(R_SOURCE_PATH)
@@ -48,10 +50,12 @@ def rlist_to_array(r):
     """
     Returns a R named list as a Python dictionary
     """
+    from rpy2.robjects import NULL
+
     # In case `r` is not a named list
     try:
         # No more names, just return the value!
-        if r.names == ro.NULL:
+        if r.names == NULL:
             # If more than one value, return numpy array (or list)
             if len(list(r)) > 1:
                 return np.array(r)
@@ -210,14 +214,14 @@ def plot_params_vs_pnl(prices: pd.DataFrame,
     return fig
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     ESTIMATE1 = 1
     MULTI_ESTIMATE = 2
     PARAMS_BOXPLOT = 3
     PARAMS_VS_PNL = 4
 
 
-def run_local_test(local_test: LocalTests):
+def run_local(local: Locals):
     """Run local tests for development and debugging purposes.
 
     These are integration tests that download real data and generate reports.
@@ -245,12 +249,12 @@ def run_local_test(local_test: LocalTests):
     ra_returns, _, _ = qis.compute_ra_returns(returns=returns, span=33, vol_target=0.15, is_log_returns_to_arithmetic=True)
     ra_returns.index.name = 'Date'
 
-    if local_test == LocalTests.ESTIMATE1:
+    if local == Locals.ESTIMATE1:
         data = ra_returns['ES1 Index'].dropna().to_frame('Close')
         df = fit_arfima(data)  # calling the function with passing arguments
         print(df)
 
-    elif local_test == LocalTests.MULTI_ESTIMATE:
+    elif local == Locals.MULTI_ESTIMATE:
         # ra_returns = ra_returns.drop(['XU1 Index', 'WN1 Comdty'], axis=1)
         df = estimate_universe(returns=ra_returns) # .iloc[:, :20])
         df = df.reset_index(names='params')
@@ -267,12 +271,12 @@ def run_local_test(local_test: LocalTests):
         df1 = gr_data.get_group('phi(1)').set_index('asset', drop=True)['Estimate']
         qis.plot_bars(df=df1)
 
-    elif local_test == LocalTests.PARAMS_BOXPLOT:
+    elif local == Locals.PARAMS_BOXPLOT:
 
         fig = plot_params_boxplot(descriptive_df=descriptive_df, local_path=local_path, group_order=group_order)
         qis.save_fig(fig, file_name=f"param_boxplot", local_path=f"{local_path}new_figures//")
 
-    elif local_test == LocalTests.PARAMS_VS_PNL:
+    elif local == Locals.PARAMS_VS_PNL:
 
         fig = plot_params_vs_pnl(prices=prices, volume_costs=volume_costs, local_path=local_path)
         #for idx, fig in enumerate(figs):
@@ -283,7 +287,4 @@ def run_local_test(local_test: LocalTests):
 
 
 if __name__ == '__main__':
-
-    local_test = LocalTests.PARAMS_VS_PNL
-
-    run_local_test(local_test=local_test)
+    run_local(local=Locals.PARAMS_VS_PNL)

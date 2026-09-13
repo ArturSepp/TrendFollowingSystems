@@ -666,7 +666,7 @@ def plot_convexity(process_type: pe.ProcessType = pe.ProcessType.AR_P,
         return fig
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     ARTICLE_FIGURES = 1
     FIGURE_AUTOCORRELATION = 2
     FIGURE_CONVEXITY = 3
@@ -677,7 +677,7 @@ class LocalTests(Enum):
     CHECK_AUTO_CORR = 8
 
 
-def run_local_test(local_test: LocalTests):
+def run_local(local: Locals):
     """Run local tests for development and debugging purposes.
 
     These are integration tests that download real data and generate reports.
@@ -692,7 +692,7 @@ def run_local_test(local_test: LocalTests):
 
     local_path = os.environ.get("TF_FIGURE_PATH", qis.local_path.get_output_path())  # set TF_FIGURE_PATH to the paper figures folder
 
-    if local_test == LocalTests.ARTICLE_FIGURES:
+    if local == Locals.ARTICLE_FIGURES:
         # phis = [0.1, 0.05, -0.05, -0.1]
         phis = [0.05, -0.05]
         arfima_phis = [0.05, 0.0, -0.05]
@@ -735,34 +735,34 @@ def run_local_test(local_test: LocalTests):
                                      figure_type=figure_type)
         qis.save_fig(fig, file_name='expected_return_arfima4', local_path=local_path)
 
-    elif local_test == LocalTests.FIGURE_AUTOCORRELATION:
+    elif local == Locals.FIGURE_AUTOCORRELATION:
         fig = plot_autoccorrelations(n=51)
         qis.save_fig(fig, file_name='autoccorrelations', local_path=local_path)
 
-    elif local_test == LocalTests.FIGURE_CONVEXITY:
+    elif local == Locals.FIGURE_CONVEXITY:
         fig = plot_convexity(process_type=pe.ProcessType.WHITE_NOISE, phi=-0.03, delta=0.03, long_span=60, annualization_factor=260)
         #qis.save_fig(fig, file_name='white_noise_convexity', local_path=local_path)
         # fig = plot_convexity(process_type=pe.ProcessType.ARFIMA, phi=-0.03, delta=0.03, long_span=30, annualization_factor=260)
         # qis.save_fig(fig, file_name='arfima_convexity', local_path=local_path)
 
-    elif local_test == LocalTests.REPORT_PNL:
+    elif local == Locals.REPORT_PNL:
         report_process_pnl(process_type=pe.ProcessType.AR_P, phi=0.015, long_spans=long_spans, short_span=None, n_path=1000, tr_costs=0.0000)
         #  report_process_pnl(process_type=pe.ProcessType.MA_Q, phi=0.2, long_spans=long_spans, short_span=5, n_path=100)
         # report_process_pnl(process_type=pe.ProcessType.ARFIMA, ar_params=[-0.038], delta=0.016, long_spans=long_spans, short_span=None, n_path=100, tr_costs=0.0*0.001)
         # report_process_pnl(process_type=pe.ProcessType.ARFIMA, ar_params=[0.088], delta=-0.007, long_spans=long_spans, short_span=5, n_path=100, tr_costs=0.0*0.001)
 
-    elif local_test == LocalTests.GRID_PNL:
+    elif local == Locals.GRID_PNL:
         plot_pnl_grid(process_type=pe.ProcessType.AR_P,
                       phis=[-0.015, 0.0, 0.015],
                       long_spans=long_spans, tr_costs=0.0005)
 
-    elif local_test == LocalTests.GRID_PNL_LONG_SHORT:
+    elif local == Locals.GRID_PNL_LONG_SHORT:
         plot_pnl_grid_long_short(process_type=pe.ProcessType.ARFIMA,
                                  phi=-0.03,
                                  delta=0.0075,
                                  tr_costs=0.0005)
 
-    elif local_test == LocalTests.WEIGHT:
+    elif local == Locals.WEIGHT:
         weight_long, weight_short = compute_ewm_long_short_weights(long_span=250, short_span=100)
         print(weight_long)
         print(weight_short)
@@ -781,7 +781,7 @@ def run_local_test(local_test: LocalTests):
                                  var_format='{:,.2%}',
                                  var_format_yax2='{:,.2%}')
 
-    elif local_test == LocalTests.CHECK_AUTO_CORR:
+    elif local == Locals.CHECK_AUTO_CORR:
         index = qis.TimePeriod('31Dec1925', '31Dec2025').to_pd_datetime_index(freq='B')
         n_path = 100
         returns = pe.generate_paths(process_type=pe.ProcessType.ARFIMA,
@@ -830,4 +830,4 @@ def run_local_test(local_test: LocalTests):
 
 if __name__ == '__main__':
 
-    run_local_test(local_test=LocalTests.FIGURE_CONVEXITY)
+    run_local(local=Locals.FIGURE_CONVEXITY)

@@ -62,66 +62,66 @@ def reproduce_figure(figure: PaperFigure) -> None:
     imports are local so that missing private data packages fail only the figures that need them
     """
     if figure == PaperFigure.SIGNAL_WEIGHT:
-        from papers.tf_systems.replication.filter_figs import run_local_test, LocalTests
-        run_local_test(local_test=LocalTests.FILTER_WEIGHTS)
+        from papers.tf_systems.replication.filter_figs import run_local, Locals
+        run_local(local=Locals.FILTER_WEIGHTS)
     elif figure == PaperFigure.MC_EXPECTED_RETURN:
-        from papers.tf_systems.replication.mc_expected_return_figs import run_local_test, LocalTests
-        run_local_test(local_test=LocalTests.ARTICLE_FIGURES)
+        from papers.tf_systems.replication.mc_expected_return_figs import run_local, Locals
+        run_local(local=Locals.ARTICLE_FIGURES)
     elif figure == PaperFigure.AUTOCORRELATIONS:
-        from papers.tf_systems.replication.mc_expected_return_figs import run_local_test, LocalTests
-        run_local_test(local_test=LocalTests.FIGURE_AUTOCORRELATION)
+        from papers.tf_systems.replication.mc_expected_return_figs import run_local, Locals
+        run_local(local=Locals.FIGURE_AUTOCORRELATION)
     elif figure == PaperFigure.MC_SHARPE_VERIFICATION:
-        from papers.tf_systems.replication.mc_sharpe_figs import run_local_test, LocalTests
-        run_local_test(local_test=LocalTests.SHARPE_VERIFICATION)
+        from papers.tf_systems.replication.mc_sharpe_figs import run_local, Locals
+        run_local(local=Locals.SHARPE_VERIFICATION)
     elif figure == PaperFigure.TF_ILLUSTRATIONS:
-        from papers.tf_systems.replication.illustrate_systems import run_local_test, LocalTests
-        for local_test in [LocalTests.EUROPEAN_SHORT, LocalTests.AMERICAN, LocalTests.TSMOM]:
-            run_local_test(local_test=local_test)
+        from papers.tf_systems.replication.illustrate_systems import run_local, Locals
+        for local in [Locals.EUROPEAN_SHORT, Locals.AMERICAN, Locals.TSMOM]:
+            run_local(local=local)
     elif figure == PaperFigure.AGGREGATED_SKEWNESS:
-        from papers.tf_systems.replication.aggregated_skewness_fig import run_local_test, LocalTests
-        run_local_test(local_test=LocalTests.PAPER_FIGURE)
+        from papers.tf_systems.replication.aggregated_skewness_fig import run_local, Locals
+        run_local(local=Locals.PAPER_FIGURE)
     elif figure == PaperFigure.ATR_VS_VOL:
-        from papers.tf_systems.replication.atr_vs_vol import run_local_test, LocalTests
-        for local_test in [LocalTests.SCATTER_FIGURE, LocalTests.TIME_SERIES_FIGURE]:
-            run_local_test(local_test=local_test)
+        from papers.tf_systems.replication.atr_vs_vol import run_local, Locals
+        for local in [Locals.SCATTER_FIGURE, Locals.TIME_SERIES_FIGURE]:
+            run_local(local=local)
     elif figure == PaperFigure.UNIVERSE_TABLE:
-        from papers.tf_systems.replication.backtest_figs import run_local_test, LocalTests
-        run_local_test(local_test=LocalTests.UNIVERSE_TABLE)
+        from papers.tf_systems.replication.backtest_figs import run_local, Locals
+        run_local(local=Locals.UNIVERSE_TABLE)
     elif figure == PaperFigure.COST_ASSUMPTIONS:
-        from papers.tf_systems.replication.backtest_figs import run_local_test, LocalTests
-        run_local_test(local_test=LocalTests.COST_ASSUMPTIONS)
+        from papers.tf_systems.replication.backtest_figs import run_local, Locals
+        run_local(local=Locals.COST_ASSUMPTIONS)
     elif figure == PaperFigure.AUTOCORR_ATTRIBUTION:
-        from papers.tf_systems.replication.autocorr_attribution import run_local_test, LocalTests
-        run_local_test(local_test=LocalTests.ATTRIBUTION_FIGURE)
+        from papers.tf_systems.replication.autocorr_attribution import run_local, Locals
+        run_local(local=Locals.ATTRIBUTION_FIGURE)
     elif figure == PaperFigure.STUDENT_T_MC:
-        from papers.tf_systems.replication.mc_sharpe_figs import run_local_test, LocalTests
-        run_local_test(local_test=LocalTests.STUDENT_T_ROBUSTNESS)
+        from papers.tf_systems.replication.mc_sharpe_figs import run_local, Locals
+        run_local(local=Locals.STUDENT_T_ROBUSTNESS)
     elif figure == PaperFigure.MC_EXPECTED_RETURN_PAPER:
         from papers.tf_systems.replication import mc_net_sharpe_paper_figs as mnf
-        for case in [mnf.LocalTests.COMPUTE_WHITE_NOISE, mnf.LocalTests.COMPUTE_AR,
-                     mnf.LocalTests.COMPUTE_ARFIMA, mnf.LocalTests.PLOT]:
-            mnf.run_local_test(case)
+        for case in [mnf.Locals.COMPUTE_WHITE_NOISE, mnf.Locals.COMPUTE_AR,
+                     mnf.Locals.COMPUTE_ARFIMA, mnf.Locals.PLOT]:
+            mnf.run_local(local=case)
 
     elif figure == PaperFigure.CROSS_SYSTEM_ATTRIBUTION:
         from papers.tf_systems.replication import cross_system_attribution_figs as csf
-        csf.run_local_test(csf.LocalTests.COMPUTE_AND_PLOT)
+        csf.run_local(local=csf.Locals.COMPUTE_AND_PLOT)
 
     elif figure == PaperFigure.GRID_BACKTESTS:
         # [TODO: regenerate the grid figures with the turnover panel replacing the Bear-Sharpe panel]
-        from papers.tf_systems.replication.backtest_figs import run_local_test, LocalTests
-        run_local_test(local_test=LocalTests.GRID_BACKTEST)
+        from papers.tf_systems.replication.backtest_figs import run_local, Locals
+        run_local(local=Locals.GRID_BACKTEST)
     elif figure == PaperFigure.SG_BACKTEST:
-        from papers.tf_systems.replication.backtest_figs import run_local_test, LocalTests
-        run_local_test(local_test=LocalTests.JOINT_BACKTEST_CG)
+        from papers.tf_systems.replication.backtest_figs import run_local, Locals
+        run_local(local=Locals.JOINT_BACKTEST_CG)
     elif figure == PaperFigure.LONG_TERM_BACKTEST:
-        from papers.tf_systems.replication.backtest_figs import run_local_test, LocalTests
-        run_local_test(local_test=LocalTests.LONG_TERM_BACKTEST)
+        from papers.tf_systems.replication.backtest_figs import run_local, Locals
+        run_local(local=Locals.LONG_TERM_BACKTEST)
     elif figure == PaperFigure.SHARPE_SKEWNESS:
-        from papers.tf_systems.replication.backtest_figs import run_local_test, LocalTests
-        run_local_test(local_test=LocalTests.SKEWENESS_VOL_TARGET)
+        from papers.tf_systems.replication.backtest_figs import run_local, Locals
+        run_local(local=Locals.SKEWENESS_VOL_TARGET)
     elif figure == PaperFigure.ARFIMA_ESTIMATION:
-        from papers.tf_systems.replication.estimate_arfima import run_local_test, LocalTests
-        run_local_test(local_test=LocalTests.UNIVERSE)
+        from papers.tf_systems.replication.estimate_arfima import run_local, Locals
+        run_local(local=Locals.UNIVERSE)
     else:
         raise ValueError(f"unmapped figure, got {figure!r}")
 
@@ -151,17 +151,17 @@ def reproduce_all_figures(figures: Optional[List[PaperFigure]] = None,
     return completed, skipped
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     SIMULATION_ONLY = 1
     ALL_FIGURES = 2
 
 
-def run_local_test(local_test: LocalTests):
-    if local_test == LocalTests.SIMULATION_ONLY:
+def run_local(local: Locals):
+    if local == Locals.SIMULATION_ONLY:
         reproduce_all_figures(include_data_dependent=False)
-    elif local_test == LocalTests.ALL_FIGURES:
+    elif local == Locals.ALL_FIGURES:
         reproduce_all_figures(include_data_dependent=True)
 
 
 if __name__ == '__main__':
-    run_local_test(local_test=LocalTests.SIMULATION_ONLY)
+    run_local(local=Locals.SIMULATION_ONLY)

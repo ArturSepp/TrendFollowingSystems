@@ -203,14 +203,14 @@ def plot_attribution_figure(predicted_total: pd.DataFrame,
     return fig
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     ATTRIBUTION_FIGURE = 1
     SMOKE_TEST = 2
 
 
-def run_local_test(local_test: LocalTests):
+def run_local(local: Locals):
     local_path = os.environ.get("TF_FIGURE_PATH", qis.local_path.get_output_path())
-    if local_test == LocalTests.ATTRIBUTION_FIGURE:
+    if local == Locals.ATTRIBUTION_FIGURE:
         prices, _, _, descriptive_df, _ = load_data()
         predicted_total, predicted_ac, realised, stats = compute_attribution_tables(prices=prices)
         autocorr_df = compute_ewm_lag1_autocorr(prices=prices)
@@ -234,7 +234,7 @@ def run_local_test(local_test: LocalTests):
         print(f"medians by span:\npred_ac:\n{predicted_ac.median(axis=0)}\n"
               f"pred_total:\n{predicted_total.median(axis=0)}\nrealised:\n{realised.median(axis=0)}")
 
-    elif local_test == LocalTests.SMOKE_TEST:
+    elif local == Locals.SMOKE_TEST:
         prices, _, _, _, _ = load_data()
         prices = prices.iloc[:, :6]
         predicted_total, predicted_ac, realised, stats = compute_attribution_tables(
@@ -246,4 +246,4 @@ def run_local_test(local_test: LocalTests):
 
 
 if __name__ == '__main__':
-    run_local_test(local_test=LocalTests.ATTRIBUTION_FIGURE)
+    run_local(local=Locals.ATTRIBUTION_FIGURE)

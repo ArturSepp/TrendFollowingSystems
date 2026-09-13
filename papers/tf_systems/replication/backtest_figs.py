@@ -765,7 +765,7 @@ def log_sharpes(prices: pd.DataFrame):
     return np.sqrt(260) * returns.divide(vols)
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     UNIVERSE_TABLE = 2
     COST_ASSUMPTIONS = 13
     GRID_BACKTEST = 3
@@ -779,7 +779,7 @@ class LocalTests(Enum):
     JOINT_INSTRUMENT_SHARPE_VS_TF_SHARPE = 12
 
 
-def run_local_test(local_test: LocalTests):
+def run_local(local: Locals):
     """Run local tests for development and debugging purposes.
 
     These are integration tests that download real data and generate reports.
@@ -793,7 +793,7 @@ def run_local_test(local_test: LocalTests):
     end_date = '30Jun2026'
     time_period_2000 = qis.TimePeriod(start='31Dec1999', end=end_date)
 
-    if local_test == LocalTests.UNIVERSE_TABLE:
+    if local == Locals.UNIVERSE_TABLE:
         #print(group_data)
         df = convert_df_column_to_df_by_groups(df=descriptive_df,
                                                    group_data=descriptive_df['group_data'],
@@ -804,7 +804,7 @@ def run_local_test(local_test: LocalTests):
         qis.plot_df_table(df=df.replace({np.nan: ''}), ax=ax)
         qis.save_fig(fig, file_name=f"universe_table", local_path=local_path)
 
-    elif local_test == LocalTests.COST_ASSUMPTIONS:
+    elif local == Locals.COST_ASSUMPTIONS:
         from trendfollowing.universe import COST_STRUCTURE
         periods = {'Until Dec 1992': list(COST_STRUCTURE.values())[0],
                    'Jan 1993 to Dec 2002': list(COST_STRUCTURE.values())[1],
@@ -815,7 +815,7 @@ def run_local_test(local_test: LocalTests):
         qis.plot_df_table(df=df, ax=ax)
         qis.save_fig(fig, file_name=f"cost_assumptions", local_path=local_path)
 
-    elif local_test == LocalTests.GRID_BACKTEST:
+    elif local == Locals.GRID_BACKTEST:
         time_period = qis.TimePeriod(start='31Dec1997', end=end_date)
         prices = time_period.locate(prices)
         volume_costs = time_period.locate(volume_costs)
@@ -851,7 +851,7 @@ def run_local_test(local_test: LocalTests):
         fig = plot_grid_backtest_table(net_sharpes=net_sharpes, bear_sharpes=bear_sharpes, costs=costs, row_title='TSMOM')
         qis.save_fig(fig, file_name=f"tsmom_grid", local_path=local_path)
 
-    elif local_test == LocalTests.JOINT_BACKTEST_CG:
+    elif local == Locals.JOINT_BACKTEST_CG:
         is_22_figure = False
         fig = plot_joint_backtest(prices=prices,
                                   volume_costs=volume_costs,
@@ -864,7 +864,7 @@ def run_local_test(local_test: LocalTests):
         else:
             qis.save_fig(fig, file_name=f"tf_sg_backtest_paper", local_path=local_path)
 
-    elif local_test == LocalTests.LONG_TERM_BACKTEST:
+    elif local == Locals.LONG_TERM_BACKTEST:
         # both paper variants: unit notional and portfolio vol targeting
         fig = longterm_backtest(prices=prices,
                                 volume_costs=volume_costs,
@@ -879,7 +879,7 @@ def run_local_test(local_test: LocalTests):
                                 time_period=qis.TimePeriod(start='01Jan1965', end=end_date))
         qis.save_fig(fig, file_name=f"lt_backtest_vol_target", local_path=local_path)
 
-    elif local_test == LocalTests.SHARPE_VOL_TARGET:
+    elif local == Locals.SHARPE_VOL_TARGET:
         fig = plot_sharpe_for_portfolio_vol_target(prices=prices,
                                                    volume_costs=volume_costs,
                                                    long_span=250,
@@ -892,7 +892,7 @@ def run_local_test(local_test: LocalTests):
                                                    time_period=time_period_2000)
         qis.save_fig(fig, file_name=f"sharpe_vol_target", local_path=local_path)
 
-    elif local_test == LocalTests.SKEWENESS_VOL_TARGET:
+    elif local == Locals.SKEWENESS_VOL_TARGET:
         # sharpe_skeweness is the paper exhibit; the bear-sharpe variant supports the companion paper
         for is_bear_sharpe in [False, True]:
             fig = plot_sharpe_skeweness(prices=prices,
@@ -907,7 +907,7 @@ def run_local_test(local_test: LocalTests):
             file_name = f"sharpe_bearsharpe" if is_bear_sharpe else f"sharpe_skeweness"
             qis.save_fig(fig, file_name=file_name, local_path=local_path)
 
-    elif local_test == LocalTests.REGIME_DIVERSIFICATION:
+    elif local == Locals.REGIME_DIVERSIFICATION:
         fig = plot_regime_diversification(prices=prices,
                                           volume_costs=volume_costs,
                                           benchmark_prices=benchmark_prices,
@@ -915,7 +915,7 @@ def run_local_test(local_test: LocalTests):
                                           is_net=True)
         qis.save_fig(fig, file_name=f"regime_diversification", local_path=local_path)
 
-    elif local_test == LocalTests.PLOT_SMART_DIVERSIFICATION:
+    elif local == Locals.PLOT_SMART_DIVERSIFICATION:
         fig = plot_smart_diversification(prices=prices,
                                          volume_costs=volume_costs,
                                          benchmark_prices=benchmark_prices,
@@ -924,7 +924,7 @@ def run_local_test(local_test: LocalTests):
                                          is_principal_weight_fixed=True)
         # qis.save_fig(fig, file_name=f"smart_diversification", local_path=local_path)
 
-    elif local_test == LocalTests.TF_OVERLAY:
+    elif local == Locals.TF_OVERLAY:
         fig = plot_backtest_overlay(prices=prices,
                                     volume_costs=volume_costs,
                                     benchmark_prices=benchmark_prices,
@@ -932,7 +932,7 @@ def run_local_test(local_test: LocalTests):
                                     time_period=time_period_2000)
         # qis.save_fig(fig, file_name=f"lt_backtest_overlay", local_path=local_path)
 
-    elif local_test == LocalTests.JOINT_INSTRUMENT_SHARPE_VS_TF_SHARPE:
+    elif local == Locals.JOINT_INSTRUMENT_SHARPE_VS_TF_SHARPE:
         compute_sharpe_ratios(prices=prices,
                               volume_costs=volume_costs)
 
@@ -941,4 +941,4 @@ def run_local_test(local_test: LocalTests):
 
 if __name__ == '__main__':
 
-    run_local_test(local_test=LocalTests.PLOT_SMART_DIVERSIFICATION)
+    run_local(local=Locals.PLOT_SMART_DIVERSIFICATION)

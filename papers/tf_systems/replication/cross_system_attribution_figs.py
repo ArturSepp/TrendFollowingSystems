@@ -154,14 +154,14 @@ def plot_prediction_medians(tables: Dict[str, pd.DataFrame]) -> plt.Figure:
     return fig
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     COMPUTE_AND_PLOT = 1   # full computation from the packaged dataset (~15 minutes)
     PLOT_FROM_CACHE = 2    # plot from papers/tf_systems/replication/results/grid_cache.pkl if present
 
 
-def run_local_test(local_test: LocalTests) -> None:
+def run_local(local: Locals) -> None:
     local_path = qis.local_path.get_output_path()
-    if local_test == LocalTests.PLOT_FROM_CACHE:
+    if local == Locals.PLOT_FROM_CACHE:
         tables = compute_cross_system_tables(prices=None, cache_file='papers/tf_systems/replication/results/grid_cache.pkl')
     else:
         prices = load_data()[0]
@@ -174,4 +174,4 @@ def run_local_test(local_test: LocalTests) -> None:
 
 
 if __name__ == '__main__':
-    run_local_test(LocalTests.PLOT_FROM_CACHE)
+    run_local(local=Locals.PLOT_FROM_CACHE)

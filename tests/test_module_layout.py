@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import ast
+import re
 from pathlib import Path
 
 
@@ -10,6 +11,7 @@ REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
 PACKAGE_ROOT = REPOSITORY_ROOT / "src" / "trendfollowing"
 TESTS_ROOT = REPOSITORY_ROOT / "tests"
 EXAMPLES_ROOT = REPOSITORY_ROOT / "examples"
+PAPER_REPLICATION_ROOT = REPOSITORY_ROOT / "papers" / "tf_systems" / "replication"
 EXPECTED_RUNNERS = {
     "processes/run_local/path_engine_run.py",
     "run_local/autocorr_analysis_run.py",
@@ -29,6 +31,7 @@ LEGACY_DISPATCHERS = {
     "run_unit_test",
     "unit_test",
 }
+PAPER_LEGACY_DISPATCHERS = {"LocalTest", "LocalTests", "local_test", "run_local_test"}
 
 
 def _tree(path: Path) -> ast.Module:
@@ -203,6 +206,33 @@ def test_examples_use_the_shared_dispatcher_contract() -> None:
         if not _main_calls_run_local_directly(path):
             failures.append(f"{path.name}: main guard must contain only run_local(local=Locals.*)")
     assert len(examples) == 4
+    assert not failures, failures
+
+
+def test_paper_replication_uses_the_shared_dispatcher_contract() -> None:
+    """Paper development dispatchers use ``Locals`` and ``run_local(local=...)``."""
+    dispatcher_modules = []
+    failures = []
+    for path in sorted(PAPER_REPLICATION_ROOT.glob("*.py")):
+        source = path.read_text(encoding="utf-8-sig")
+        definitions = _definitions(path)
+        legacy_names = sorted(
+            name
+            for name in PAPER_LEGACY_DISPATCHERS
+            if re.search(rf"\b{re.escape(name)}\b", source)
+        )
+        if not (legacy_names or {"Locals", "run_local"} & definitions):
+            continue
+        dispatcher_modules.append(path.name)
+        if legacy_names:
+            failures.append(f"{path.name}: retains {', '.join(legacy_names)}")
+            continue
+        if not {"Locals", "run_local"} <= definitions:
+            failures.append(f"{path.name}: expected Locals plus run_local")
+        if not _main_calls_run_local_directly(path):
+            failures.append(f"{path.name}: main guard must contain only run_local(local=Locals.*)")
+
+    assert len(dispatcher_modules) == 14
     assert not failures, failures
 
 

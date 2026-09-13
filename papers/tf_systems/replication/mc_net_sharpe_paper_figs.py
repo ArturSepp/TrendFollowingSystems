@@ -3,7 +3,8 @@ paper figures expected_return_{white_noise, ar, arfima1} in the print style of t
 okabe-ito colorblind-safe palette, enlarged fonts, seaborn darkgrid, darkblue titles
 data are computed in resumable per-configuration parts with the identical rng stream (seed 8)
 as the original module mc_expected_return_figs.py, so all values reproduce the manuscript
-usage: run_local_test(COMPUTE_<FIG>) to build the parts, then run_local_test(PLOT) to render
+usage: run_local(local=Locals.COMPUTE_<FIG>) to build the parts, then
+run_local(local=Locals.PLOT) to render
 """
 # packages
 import gc
@@ -183,22 +184,22 @@ def plot_paper_figure(fig_name: str, parts_path: str) -> plt.Figure:
     return fig
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     COMPUTE_WHITE_NOISE = 1
     COMPUTE_AR = 2
     COMPUTE_ARFIMA = 3   # slowest generation, ~15 minutes
     PLOT = 4             # renders all three figures from the parts
 
 
-def run_local_test(local_test: LocalTests, parts_path: str = 'papers/tf_systems/replication/results') -> None:
+def run_local(local: Locals, parts_path: str = 'papers/tf_systems/replication/results') -> None:
     local_path = qis.local_path.get_output_path()
-    if local_test == LocalTests.COMPUTE_WHITE_NOISE:
+    if local == Locals.COMPUTE_WHITE_NOISE:
         compute_parts('expected_return_white_noise', parts_path=parts_path)
-    elif local_test == LocalTests.COMPUTE_AR:
+    elif local == Locals.COMPUTE_AR:
         compute_parts('expected_return_ar', parts_path=parts_path)
-    elif local_test == LocalTests.COMPUTE_ARFIMA:
+    elif local == Locals.COMPUTE_ARFIMA:
         compute_parts('expected_return_arfima1', parts_path=parts_path)
-    elif local_test == LocalTests.PLOT:
+    elif local == Locals.PLOT:
         for fig_name in FIGS.keys():
             fig = plot_paper_figure(fig_name, parts_path=parts_path)
             qis.save_fig(fig, file_name=fig_name, local_path=local_path)
@@ -207,4 +208,4 @@ def run_local_test(local_test: LocalTests, parts_path: str = 'papers/tf_systems/
 
 
 if __name__ == '__main__':
-    run_local_test(LocalTests.PLOT)
+    run_local(local=Locals.PLOT)

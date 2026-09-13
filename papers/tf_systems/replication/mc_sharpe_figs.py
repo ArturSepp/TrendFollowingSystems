@@ -170,14 +170,14 @@ def plot_sharpe_verification_figure(df: pd.DataFrame,
     return fig
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     SHARPE_VERIFICATION = 1
     STUDENT_T_ROBUSTNESS = 2
 
 
-def run_local_test(local_test: LocalTests):
+def run_local(local: Locals):
     local_path = os.environ.get("TF_FIGURE_PATH", qis.local_path.get_output_path())  # set TF_FIGURE_PATH to the paper figures folder
-    if local_test == LocalTests.SHARPE_VERIFICATION:
+    if local == Locals.SHARPE_VERIFICATION:
         df = compute_sharpe_verification()
         df.to_csv(f"{local_path}sharpe_verification.csv", index=False)
         tables = build_comparison_tables(df=df)
@@ -188,7 +188,7 @@ def run_local_test(local_test: LocalTests):
         fig = plot_sharpe_verification_figure(df=df)
         qis.save_fig(fig, file_name='sharpe_mc_verification', local_path=local_path)
 
-    elif local_test == LocalTests.STUDENT_T_ROBUSTNESS:
+    elif local == Locals.STUDENT_T_ROBUSTNESS:
         df_gauss = compute_sharpe_verification()
         df_t = compute_sharpe_verification(t_dof=6.0)
         keys = ['process', 'mu_an', 'phi', 'd', 'long_span', 'short_span']
@@ -205,4 +205,4 @@ def run_local_test(local_test: LocalTests):
 
 
 if __name__ == '__main__':
-    run_local_test(local_test=LocalTests.SHARPE_VERIFICATION)
+    run_local(local=Locals.SHARPE_VERIFICATION)

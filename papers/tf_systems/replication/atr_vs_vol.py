@@ -152,13 +152,13 @@ def plot_timeseries_figure(ticker: str,
     return fig
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     ONE_PLOT = 1
     SCATTER_FIGURE = 2
     TIME_SERIES_FIGURE = 3
 
 
-def run_local_test(local_test: LocalTests):
+def run_local(local: Locals):
     """Run local tests for development and debugging purposes.
 
     These are integration tests that download real data and generate reports.
@@ -171,19 +171,19 @@ def run_local_test(local_test: LocalTests):
 
     local_path = os.environ.get("TF_FIGURE_PATH", qis.local_path.get_output_path())  # set TF_FIGURE_PATH to the paper figures folder
 
-    if local_test == LocalTests.ONE_PLOT:
+    if local == Locals.ONE_PLOT:
         ohlc_data = get_ohlc_data(ticker='GC1 Comdty')
         samples = split_to_samples(data=ohlc_data, sample_freq='ME')
         df = estimate_atr_vol(samples=samples)
         print(df)
         qis.plot_scatter(df, full_sample_order=1)
 
-    elif local_test == LocalTests.SCATTER_FIGURE:
+    elif local == Locals.SCATTER_FIGURE:
         tickers = {'ES1 Index': '(A) S&P 500', 'TY1 Comdty': '(B) UST 10Y', 'GC1 Comdty': '(C) Gold'}
         fig = plot_scatter_figure(tickers=tickers, time_period=qis.TimePeriod('31Dec1997', None))
         qis.save_fig(fig, file_name='atr_vs_vol', local_path=local_path)
 
-    elif local_test == LocalTests.TIME_SERIES_FIGURE:
+    elif local == Locals.TIME_SERIES_FIGURE:
         ticker = 'ES1 Index'
         fig = plot_timeseries_figure(ticker=ticker, time_period=qis.TimePeriod('31Dec1997', '30Jun2026'))
         qis.save_fig(fig, file_name='atr_vs_vol_ts', local_path=local_path)
@@ -192,4 +192,4 @@ def run_local_test(local_test: LocalTests):
 
 
 if __name__ == '__main__':
-    run_local_test(local_test=LocalTests.SCATTER_FIGURE)
+    run_local(local=Locals.SCATTER_FIGURE)

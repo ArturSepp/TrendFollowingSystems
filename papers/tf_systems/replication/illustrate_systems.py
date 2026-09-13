@@ -277,14 +277,14 @@ def plot_tsmom_signal_weight(price: pd.Series,
     return fig
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     EUROPEAN_LONG = 1
     EUROPEAN_SHORT = 2
     AMERICAN = 3
     TSMOM = 4
 
 
-def run_local_test(local_test: LocalTests):
+def run_local(local: Locals):
     """Run local tests for development and debugging purposes.
 
     These are integration tests that download real data and generate reports.
@@ -306,19 +306,19 @@ def run_local_test(local_test: LocalTests):
 
     price = prices[ticker].dropna()
 
-    if local_test == LocalTests.EUROPEAN_LONG:
+    if local == Locals.EUROPEAN_LONG:
         fig = plot_european_signals_long(price=price)
         qis.save_fig(fig, file_name=f"{ticker.split(' ')[0]}_signals", local_path=local_path)
 
-    elif local_test == LocalTests.EUROPEAN_SHORT:
+    elif local == Locals.EUROPEAN_SHORT:
         fig = plot_european_signals_short(price=price)
         qis.save_fig(fig, file_name=f"{ticker.split(' ')[0]}_short_signals", local_path=local_path)
 
-    elif local_test == LocalTests.AMERICAN:
+    elif local == Locals.AMERICAN:
         fig = plot_american_signals(price=price)
         qis.save_fig(fig, file_name=f"{ticker.split(' ')[0]}_am_signal", local_path=local_path)
 
-    elif local_test == LocalTests.TSMOM:
+    elif local == Locals.TSMOM:
         fig = plot_tsmom_signal_weight(price=price)
         qis.save_fig(fig, file_name=f"{ticker.split(' ')[0]}_tsmom_signal", local_path=local_path)
 
@@ -327,5 +327,4 @@ def run_local_test(local_test: LocalTests):
 
 if __name__ == '__main__':
 
-    run_local_test(local_test=LocalTests.EUROPEAN_SHORT)
-
+    run_local(local=Locals.EUROPEAN_SHORT)

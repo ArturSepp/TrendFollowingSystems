@@ -67,14 +67,14 @@ def argmax_span(rho: np.ndarray,
     return float(spans[i]), float(vals[i])
 
 
-class LocalTests(Enum):
+class Locals(Enum):
     SPAN_COST_GRID = 1
     AR1_OPTIMAL_SPAN = 2
     ARFIMA_SCALING = 3
 
 
-def run_local_test(local_test: LocalTests) -> None:
-    if local_test == LocalTests.SPAN_COST_GRID:
+def run_local(local: Locals) -> None:
+    if local == Locals.SPAN_COST_GRID:
         # the net sharpe grids behind the figures and the section 6 discussion
         for name, phi, d in [('AR-1 phi=0.05', 0.05, 0.0), ('ARFIMA d=0.02', 0.0, 0.02)]:
             rho = population_acf(n_lags=2000, phi=phi, d=d)
@@ -83,7 +83,7 @@ def run_local_test(local_test: LocalTests) -> None:
                 net, gross, drag = sr_net_analytic(rho=rho, long_span=span, cost=0.0020)
                 print(f"span {span:>5.0f}: gross {gross:7.3f}, net {net:7.3f}")
 
-    elif local_test == LocalTests.AR1_OPTIMAL_SPAN:
+    elif local == Locals.AR1_OPTIMAL_SPAN:
         # validation of equation eq:sr_net_span against the exact optimum
         phi = 0.05
         c_star = break_even_cost_ar1(phi=phi)
@@ -94,7 +94,7 @@ def run_local_test(local_test: LocalTests) -> None:
             s_formula = optimal_span_ar1(phi=phi, cost=x * c_star)
             print(f"x={x:.2f}: exact span* {s_exact:7.1f}, formula {s_formula:7.1f}, ratio {s_exact / s_formula:.2f}")
 
-    elif local_test == LocalTests.ARFIMA_SCALING:
+    elif local == Locals.ARFIMA_SCALING:
         # the scaling-regime invariant of the arfima footnote: drag/gross -> (1-2d)/(1+2d) at the optimum
         d = 0.2
         rho = rho_arfima0d0(d=d, n_lags=2000000)
@@ -106,4 +106,4 @@ def run_local_test(local_test: LocalTests) -> None:
 
 
 if __name__ == '__main__':
-    run_local_test(local_test=LocalTests.AR1_OPTIMAL_SPAN)
+    run_local(local=Locals.AR1_OPTIMAL_SPAN)
