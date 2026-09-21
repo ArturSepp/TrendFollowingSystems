@@ -41,7 +41,8 @@
   "required_jobs": [
     "preflight",
     "ci",
-    "docs"
+    "docs",
+    "references"
   ],
   "workflow_inventory": {
     "ci": {
@@ -103,5 +104,7 @@
         "Deploy GitHub Pages"
       ]
     }
-  }
+  },
+  "audit": false,
+  "consumers": []
 }
