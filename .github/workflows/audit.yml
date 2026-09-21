@@ -1,0 +1,68 @@
+name: Audit
+
+permissions:
+  contents: read
+
+on:
+  schedule:
+    - cron: "17 4 * * 1"
+  push:
+    branches: [main]
+    paths: [pyproject.toml, uv.lock, .github/workflows/audit.yml]
+  pull_request:
+    branches: [main]
+    paths: [pyproject.toml, uv.lock, .github/workflows/audit.yml]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  core:
+    name: Core dependencies (blocking)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: "3.12"
+      - name: Resolve latest and locked core trees
+        run: |
+          uv pip compile --python-version 3.12 --quiet \
+            pyproject.toml -o "$RUNNER_TEMP/core-latest.txt"
+          uv export --locked --no-default-groups --no-emit-project --quiet \
+            --format requirements-txt -o "$RUNNER_TEMP/core-locked.txt"
+      - name: Audit latest core tree
+        run: uv run --locked --only-group audit pip-audit -r "$RUNNER_TEMP/core-latest.txt"
+      - name: Audit locked core tree
+        if: ${{ !cancelled() }}
+        run: uv run --locked --only-group audit pip-audit -r "$RUNNER_TEMP/core-locked.txt"
+
+  optional:
+    name: Optional extras (advisory)
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Install uv and Python
+        uses: astral-sh/setup-uv@bec219d24cd3e171d82865faccec33120bb574f4 # v10.1.0
+        with:
+          python-version: "3.12"
+      - name: Resolve latest and locked optional-extra trees
+        run: |
+          uv pip compile --all-extras --python-version 3.12 --quiet \
+            pyproject.toml -o "$RUNNER_TEMP/optional-latest.txt"
+          uv export --locked --all-extras --no-default-groups --no-emit-project --quiet \
+            --format requirements-txt -o "$RUNNER_TEMP/optional-locked.txt"
+      - name: Audit latest optional-extra tree
+        run: uv run --locked --only-group audit pip-audit -r "$RUNNER_TEMP/optional-latest.txt"
+      - name: Audit locked optional-extra tree
+        if: ${{ !cancelled() }}
+        run: uv run --locked --only-group audit pip-audit -r "$RUNNER_TEMP/optional-locked.txt"

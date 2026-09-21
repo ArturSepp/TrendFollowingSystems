@@ -73,6 +73,9 @@ test = [
 lint = [
     "ruff==0.16.2",
 ]
+audit = [
+    "pip-audit==2.10.1",
+]
 
 [project.urls]
 Homepage = "https://github.com/ArturSepp/TrendFollowingSystems"
