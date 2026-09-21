@@ -1,0 +1,110 @@
+{
+  "version": "1.0.0",
+  "repository": "TrendFollowingSystems",
+  "package": "trendfollowing",
+  "python_environment": "TrendFollowingSystems312",
+  "lint_paths": [
+    "src/trendfollowing/*.py",
+    "tests/*.py",
+    "examples/*.py"
+  ],
+  "preflight": [],
+  "docs": [
+    [
+      "-m",
+      "sphinx",
+      "-E",
+      "-W",
+      "--keep-going",
+      "-b",
+      "html",
+      "docs",
+      "{output}/html"
+    ]
+  ],
+  "tests": [
+    [
+      "-m",
+      "pytest",
+      "-o",
+      "cache_dir={output}/pytest"
+    ]
+  ],
+  "remote_only": [
+    "supported Python/OS matrix",
+    "clean core/extras environments",
+    "wheel and sdist",
+    "coverage gates",
+    "dependency floors and live compatibility",
+    "online link and security health"
+  ],
+  "required_jobs": [
+    "preflight",
+    "ci",
+    "docs",
+    "references"
+  ],
+  "workflow_inventory": {
+    "ci": {
+      "test": [
+        "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "Install uv and Python ${{ matrix.python-version }}",
+        "Sync the test environment",
+        "Run tests"
+      ],
+      "lint": [
+        "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "Install uv and Python",
+        "Check lint"
+      ],
+      "verification": [
+        "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "Install uv and Python",
+        "Sync the locked runtime environment",
+        "ARFIMA variance-scale gate",
+        "EWMA normalization gate"
+      ],
+      "wheel": [
+        "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "Install uv and Python",
+        "Build the wheel from the source distribution",
+        "Assert distribution contents",
+        "Install the wheel into a clean environment",
+        "Verify the installed wheel outside the checkout"
+      ],
+      "stack-policy": [
+        "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d",
+        "Exercise policy regressions",
+        "Check stack imports and optional adapter isolation"
+      ],
+      "lowest-dependencies": [
+        "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d",
+        "Keep the test environment outside the checkout",
+        "Resolve a fresh lowest-direct test environment",
+        "Record installed versions",
+        "Check optional dependencies stay outside package-root import",
+        "Test declared dependency floors without live provider credentials"
+      ]
+    },
+    "docs": {
+      "docs": [
+        "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
+        "Install uv and Python",
+        "Sync documentation environment",
+        "Verify redirect path and fragment handling",
+        "Build HTML with warnings as errors",
+        "Check documentation links",
+        "Build legacy documentation redirects",
+        "Configure GitHub Pages",
+        "Upload GitHub Pages artifact"
+      ],
+      "deploy": [
+        "Deploy GitHub Pages"
+      ]
+    }
+  },
+  "audit": false,
+  "consumers": []
+}
