@@ -65,8 +65,8 @@ def get_universe_data_path() -> str:
 
 def get_papers_data_path(paper: str = None, subfolder: str = None) -> str:
     """paper replication caches, not shipped with pip install.
-    get_papers_data_path('smart_diversification', 'data') ->
-    <root>/resources/papers/smart_diversification/data/"""
+    get_papers_data_path('tf_systems', 'data') ->
+    <root>/resources/papers/tf_systems/data/"""
     path = _resolve_external('PAPERS_DATA_PATH', env_var='TF_PAPERS_PATH')
     if paper is not None:
         path = os.path.join(path, paper, '')

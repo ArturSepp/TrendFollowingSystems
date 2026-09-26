@@ -1,7 +1,7 @@
 """
 shared return conventions of the trend-following papers.
 
-both papers fix the same conventions, and this module is their single source:
+the papers fix the same conventions, and this module is their single source:
 
 annualisation. daily statistics annualise with AF_DAILY = 260 trading days, the
 convention of the sifin paper's table 6 and analytic verifications. qis infers
@@ -10,8 +10,8 @@ explicit constant instead of relying on inference. quarterly and monthly
 statistics annualise with 4 and 12.
 
 sharpe ratios. arithmetic convention throughout: sqrt(a) times the mean over
-the standard deviation of periodic simple excess returns. the joim paper's
-regime decomposition (proposition 1) is exact only under arithmetic means, and
+the standard deviation of periodic simple excess returns. the long-run paper's
+regime decomposition of the sharpe ratio is exact only under arithmetic means, and
 the sifin paper's analytic sharpe ratios use the same convention.
 
 returns and navs. daily futures data are stored as prices built from log
