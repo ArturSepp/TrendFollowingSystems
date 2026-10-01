@@ -57,6 +57,10 @@ jobs:
       # The unavailable smart-diversification companion module skips itself in public checkouts.
       run: uv run --no-sync pytest
 
+    - name: Check frozen paper resources and output routing
+      if: matrix.primary
+      run: uv run --no-sync pytest papers/tf_systems/replication/tests -q
+
   lint:
     name: ruff
     runs-on: ubuntu-latest
@@ -68,6 +72,11 @@ jobs:
       uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
       with:
         python-version: "3.12"
+
+    - name: Check paper publication policy
+      run: |
+        python .github/scripts/check_paper_policy.py
+        python .github/scripts/paper_policy_test.py
 
     - name: Check lint
       run: uv run --locked --only-group lint ruff check src/trendfollowing/
@@ -139,6 +148,9 @@ jobs:
         assert not any("run_local" in name.split("/") for name in sdist_names)
         assert not any(name.endswith((".pyc", ".pyo")) for name in wheel_names)
         PY
+
+    - name: Exclude paper workspaces from both distributions
+      run: python .github/scripts/check_paper_policy.py --artifacts dist
 
     - name: Install the wheel into a clean environment
       run: |

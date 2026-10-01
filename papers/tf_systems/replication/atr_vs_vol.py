@@ -11,6 +11,7 @@ from enum import Enum
 
 # project
 from trendfollowing.systems.backtest_utils import compute_vol
+from papers.tf_systems.replication.paths import get_figure_path
 
 
 def get_ohlc_data(ticker: str = 'ES1 Index', time_period: qis.TimePeriod = None) -> pd.DataFrame:
@@ -169,7 +170,7 @@ def run_local(local: Locals):
     pd.set_option('display.max_columns', 500)
     pd.set_option('display.width', 1000)
 
-    local_path = os.environ.get("TF_FIGURE_PATH", qis.local_path.get_output_path())  # set TF_FIGURE_PATH to the paper figures folder
+    local_path = get_figure_path()  # optional external figure-directory override
 
     if local == Locals.ONE_PLOT:
         ohlc_data = get_ohlc_data(ticker='GC1 Comdty')

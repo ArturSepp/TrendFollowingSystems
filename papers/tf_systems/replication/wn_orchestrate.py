@@ -2,6 +2,7 @@
 white-noise net-sharpe figure in resumable parts: identical functions, identical rng order, lower peak memory
 usage: python wn_orchestrate.py 0|1|2 to compute one drift variable, python wn_orchestrate.py plot to assemble
 """
+
 # packages
 import gc
 import sys
@@ -22,11 +23,12 @@ from trendfollowing.systems.european import compute_tf_strat_pnl
 from trendfollowing.systems.backtest_utils import compute_path_stats
 from trendfollowing.analytics.expected_return import expected_pnl_white_noise, expected_turnover
 from trendfollowing.analytics.sharpe import sharpe_white_noise
+from papers.tf_systems.replication.paths import get_results_path, get_figure_path
 
 MEANS = [-0.5, 0.0, 0.5]
 SPANS = {'1w': 5, '2w': 10, '1m': 21, '3m': 63, '6m': 125, '1y': 250, '2y': 500}
 N_PATH, N_YEARS, AF, VOL_TARGET, VOL_SPAN, NET_COST = 1000, 50, 260, 0.15, 33, 0.0020
-PART = './results/wn_part_{k}.pkl'
+PART = (get_results_path() + '/wn_part_{k}.pkl')
 
 
 def compute_variable(k: int) -> None:
@@ -107,7 +109,7 @@ def plot_assembled() -> None:
                           title=f"(C) Net Sharpe ratio at cost of {1e4 * NET_COST:0.0f}bp per unit turnover",
                           var_format='{:.2f}', xlabel='Signal span', ax=axs[2], **kwargs)
         axs[2].axhline(0.0, color='black', lw=1.0, ls='--', alpha=0.6)
-    qis.save_fig(fig, file_name='expected_return_white_noise', local_path='./figs/')
+    qis.save_fig(fig, file_name='expected_return_white_noise', local_path=get_figure_path())
     print("figure saved")
     for field in ['srn', 'srn_an']:
         print(field, '\n', frames[field].round(3).T.to_string())

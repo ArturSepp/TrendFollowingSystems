@@ -1,6 +1,7 @@
 """
 illustration of different ts systems per instrument
 """
+
 import pandas as pd
 import os
 import numpy as np
@@ -17,6 +18,7 @@ from trendfollowing.systems.backtest_utils import compute_vol_norm_returns, comp
 from trendfollowing.systems.european import compute_tf_signal, compute_tf_strat_pnl
 from trendfollowing.systems.american import run_american_on_instrument
 from trendfollowing.systems.tsmom import compute_tsmom_signal_weight
+from papers.tf_systems.replication.paths import get_figure_path
 
 
 def plot_european_signals_long(price: pd.Series,
@@ -291,7 +293,7 @@ def run_local(local: Locals):
     Use for quick verification during development.
     """
 
-    local_path = os.environ.get("TF_FIGURE_PATH", qis.local_path.get_output_path())  # set TF_FIGURE_PATH to the paper figures folder
+    local_path = get_figure_path()  # optional external figure-directory override
 
     prices, volume_costs, benchmark_prices, descriptive_df, group_order = load_data(time_period=None)
 

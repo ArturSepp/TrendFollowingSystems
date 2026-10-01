@@ -1,5 +1,6 @@
 """ar and arfima net-sharpe figure data in resumable parts, identical rng order to the originals
 usage: python figpass_orchestrate.py ar 0|1 ; python figpass_orchestrate.py arfima 0|1|2"""
+
 # packages
 import gc, sys, time, pickle
 import numpy as np
@@ -12,12 +13,13 @@ from trendfollowing.systems.european import compute_tf_strat_pnl
 from trendfollowing.systems.backtest_utils import compute_path_stats
 from trendfollowing.analytics.expected_return import expected_pnl_ar1, expected_pnl_arfima, expected_turnover
 from trendfollowing.analytics.sharpe import sharpe_ar1, sharpe_arfima
+from papers.tf_systems.replication.paths import get_results_path
 
 SPANS = {'1w': 5, '2w': 10, '1m': 21, '3m': 63, '6m': 125, '1y': 250, '2y': 500}
 N_PATH, N_YEARS, AF, VOL_TARGET, VOL_SPAN, NET_COST = 1000, 50, 260, 0.15, 33, 0.0020
 FIGS = {'ar': dict(process=mf.pe.ProcessType.AR_P, variables=[0.05, -0.05], delta=0.0),
         'arfima': dict(process=mf.pe.ProcessType.ARFIMA, variables=[0.05, 0.0, -0.05], delta=0.02)}
-PART = './results/{fig}_part_{k}.pkl'
+PART = (get_results_path() + '/{fig}_part_{k}.pkl')
 
 def compute_all(fig_key: str) -> None:
     """one generation pass, identical rng stream, compute each part as its paths arrive"""

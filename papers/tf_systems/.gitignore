@@ -1,23 +1,29 @@
-# .gitignore for papers/tf_systems
-#
-# paper/ tracks the LaTeX source, the compiled PDF, figures/, and the SIAM class
-# file siamonline250211.cls (committed on the author's decision, 16 July 2026, so
-# the paper folder is self-contained and `make paper` works from a fresh clone).
-
-# LaTeX build artifacts (the PDF is TRACKED)
-paper/*.aux
-paper/*.log
-paper/*.out
-paper/*.synctex.gz
-paper/*.toc
-
-
-# regenerated intermediates that are not the committed caches
-replication/results/*.out
-
-# python
-**/__pycache__/
-*.pyc
-
-# local notes and reviews, never published
-private/
+# Exact existing manuscript and frozen-input publication exceptions.
+!/paper/figures/
+!/replication/data/reference/
+!/paper/TrendFollowing_PaperA_SIFIN_v1.tex
+!/paper/figures/ES1_short_signals.PNG
+!/paper/figures/aggregated_skewness.PNG
+!/paper/figures/american_grid_spans.PNG
+!/paper/figures/european_grid.PNG
+!/paper/figures/expected_return_ar.PNG
+!/paper/figures/expected_return_arfima1.PNG
+!/paper/figures/expected_return_white_noise.PNG
+!/paper/figures/signal_weight.PNG
+!/paper/figures/tf_prediction_medians.png
+!/paper/figures/tf_prediction_scatter.png
+!/paper/figures/tf_sg_backtest_paper.PNG
+!/paper/figures/tsmom_grid.PNG
+!/paper/siamonline250211.cls
+!/replication/data/README.md
+!/replication/data/reference/expected_return_ar_part_0.pkl
+!/replication/data/reference/expected_return_ar_part_1.pkl
+!/replication/data/reference/expected_return_arfima1_part_0.pkl
+!/replication/data/reference/expected_return_arfima1_part_1.pkl
+!/replication/data/reference/expected_return_arfima1_part_2.pkl
+!/replication/data/reference/expected_return_white_noise_part_0.pkl
+!/replication/data/reference/expected_return_white_noise_part_1.pkl
+!/replication/data/reference/expected_return_white_noise_part_2.pkl
+!/replication/data/reference/grid_cache.pkl
+!/replication/data/reference/sha256.json
+!/replication/data/reference/README.md

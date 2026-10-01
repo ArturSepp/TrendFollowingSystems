@@ -9,6 +9,7 @@ panel (C): empirical skewness of the gross single-filter european system at the 
 100 days on the 84 futures contracts: cross-sectional median and interquartile range of
 the standardised sample skewness of overlapping T-day sums (requires the packaged data)
 """
+
 # packages
 import numpy as np
 import pandas as pd
@@ -22,6 +23,7 @@ from trendfollowing.universe import load_data
 from trendfollowing.analytics.filters import span_to_nu
 from trendfollowing.analytics.autocorrelation import ma_weights
 from trendfollowing.analytics.skewness import skewness_white_noise, skewness_peak_horizon
+from papers.tf_systems.replication.paths import get_figure_path
 
 SPANS = [5.0, 20.0, 63.0, 250.0]
 COLORS = ['#4C72B0', '#DD8452', '#55A868', '#C44E52']
@@ -234,7 +236,7 @@ def run_local(local: Locals) -> None:
             ax.set_ylim(-0.15, 2.9)
             ax.grid(True, which='major', alpha=0.35, lw=0.6)
         import os
-        path = os.environ.get('TF_FIGURE_PATH', './')
+        path = get_figure_path()
         fig.savefig(f"{path}aggregated_skewness.PNG", dpi=300)
         print(f"saved to {path}aggregated_skewness.PNG")
 

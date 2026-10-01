@@ -2,3 +2,6 @@ prune src/trendfollowing/run_local
 prune src/trendfollowing/*/run_local
 prune src/trendfollowing/*/*/run_local
 prune src/trendfollowing/*/*/*/run_local
+prune papers
+prune agents
+prune resources

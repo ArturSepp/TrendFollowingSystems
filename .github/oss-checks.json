@@ -50,11 +50,13 @@
         "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
         "Install uv and Python ${{ matrix.python-version }}",
         "Sync the test environment",
-        "Run tests"
+        "Run tests",
+        "Check frozen paper resources and output routing"
       ],
       "lint": [
         "actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1",
         "Install uv and Python",
+        "Check paper publication policy",
         "Check lint"
       ],
       "verification": [
@@ -69,6 +71,7 @@
         "Install uv and Python",
         "Build the wheel from the source distribution",
         "Assert distribution contents",
+        "Exclude paper workspaces from both distributions",
         "Install the wheel into a clean environment",
         "Verify the installed wheel outside the checkout"
       ],

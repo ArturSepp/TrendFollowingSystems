@@ -1,4 +1,5 @@
 """grid search: american short span and tsmom period length that best reproduce the european attribution"""
+
 # packages
 import sys, time, pickle, os
 import numpy as np
@@ -10,8 +11,9 @@ from trendfollowing.universe import load_data
 from papers.tf_systems.replication.autocorr_attribution import compute_attribution_tables, SPANS, WARMUP, MIN_OBS, AF
 from trendfollowing.systems.american import run_american_system
 from trendfollowing.systems.tsmom import compute_tsmom_signal_weight
+from papers.tf_systems.replication.paths import get_results_path
 
-CACHE = './results/grid_cache.pkl'
+CACHE = (get_results_path() + '/grid_cache.pkl')
 cache = pickle.load(open(CACHE, 'rb')) if os.path.exists(CACHE) else {}
 
 prices = load_data()[0]

@@ -2,6 +2,7 @@
 assemble the redesigned tab:t6 (ls(250,20), gross and net blocks) and every number quoted in the text
 gates: analytic gross kappa=0 and kappa=3 must reproduce the printed table, mc gross already gated in the parts
 """
+
 # packages
 import sys
 import pickle
@@ -12,6 +13,7 @@ from trendfollowing.analytics.sharpe import compute_annualised_sharpe, compute_d
 from trendfollowing.analytics.autocorrelation import population_acf, ma_weights
 from trendfollowing.analytics.expected_return import expected_turnover
 from papers.tf_systems.replication.mc_sharpe import sr_underlying_analytic
+from papers.tf_systems.replication.paths import get_results_path
 
 AF, C, VT = 260.0, 0.0020, 0.15
 CONFIGS = [
@@ -46,7 +48,7 @@ for i, (name, mu_an, phi, d) in enumerate(CONFIGS):
     derived['max_kdelta'] = max(derived['max_kdelta'], abs(gross_an[0.0] - gross_an[3.0]), abs(net_an[0.0] - net_an[3.0]))
     parts = {}
     for inn in ('g', 't'):
-        with open(f'./results/t6_part_{i}_{inn}.pkl', 'rb') as fh:
+        with open(f"{get_results_path()}/t6_part_{i}_{inn}.pkl", 'rb') as fh:
             parts[inn] = pickle.load(fh)
         assert parts[inn]['gate_ok'], (i, inn)
     derived['max_gap_gross'] = max(derived['max_gap_gross'], abs(gross_an[0.0] - parts['t']['sr_gross']), abs(gross_an[0.0] - parts['g']['sr_gross']))
@@ -64,5 +66,5 @@ print(f"gates passed: analytic kappa=0 and kappa=3 reproduce the printed values 
 for k, v in derived.items():
     print(f"  {k}: {v:.4f}" if isinstance(v, float) else f"  {k}: {v}")
 print("\n".join(rows))
-with open('./results/t6_new_rows.pkl', 'wb') as fh:
+with open((get_results_path() + '/t6_new_rows.pkl'), 'wb') as fh:
     pickle.dump(dict(rows=rows, derived=derived, tur_ls=float(tur_ls)), fh)

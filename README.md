@@ -282,12 +282,14 @@ One entry point reproduces every figure, driven by the `PaperFigure` enum:
 python -m papers.tf_systems.replication.reproduce_all_figures
 ```
 
-Simulation figures are seed-exact (seed 8) and need no data. The Monte Carlo
-aggregates behind the process figures and the verification table are cached in
-`papers/tf_systems/replication/results/`, so those figures re-render in
-seconds without re-simulation. See
-[`papers/tf_systems/README.md`](papers/tf_systems/README.md) for the
-figure-by-figure map and the verification catalogue.
+Nine frozen caches in `papers/tf_systems/replication/data/reference/` support
+the three process figures and two attribution figures. Render those with
+`python -m papers.tf_systems.replication.cached_figures`; full regeneration above
+also runs expensive simulations and data-dependent stages. New output goes to
+the external paper runtime. Table 6.1 needs separate generated simulation parts.
+See [`papers/tf_systems/README.md`](papers/tf_systems/README.md) for commands,
+the figure map and verification catalogue. The approved manuscript source and
+figures are tracked; the reading PDF remains local.
 
 ## Repository layout
 
@@ -304,12 +306,12 @@ src/
         universe.py                         futures universe data layer
         backtests.py                        portfolio-level backtests of the three systems (qis)
 resources/
-    papers/                            writable paper-replication caches; not installed
+    papers/                            ignored legacy caches; new output stays external
 examples/                           self-contained usage cases; kept at repository root
 papers/
     tf_systems/                         'The Science and Practice of Trend-Following Systems'
-        paper/                              LaTeX source, siamonline class, compiled PDF, figures
-        replication/                        exhibit generators, verification scripts, MC caches
+        paper/                              approved LaTeX source, SIAM class and twelve figures
+        replication/                        generators, verification scripts, data/reference/, tests/
 tests/                              pytest suite
 ```
 
