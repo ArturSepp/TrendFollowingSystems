@@ -7,6 +7,8 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [1.3.0] - 2026-10-01
+
 ### Added
 
 - Added the trendfollowing handbook to the documentation, in the style of the qis and
