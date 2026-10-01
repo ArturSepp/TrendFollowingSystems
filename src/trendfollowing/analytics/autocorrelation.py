@@ -75,8 +75,10 @@ def power_autocorr(
 ) -> np.ndarray:
     """
     ar-1 branch (delta=0) returns autocorrelation powers phi^h with lag 0 equal to one
-    arfima branches return the autocovariance gamma(h) with lag 0 set to zero,
-    the convention used by expected_pnl_arfima
+    arfima branches return gamma0_tilde * rho(h) with lag 0 set to zero, where
+    gamma0_tilde = Gamma(1-2*delta)/Gamma(1-delta)^2 for every phi (not V_{phi,d})
+    the gamma functions are evaluated directly and overflow, so lags from 171 on are zero
+    or nan; population_acf gives the autocorrelation function at any length
     """
     if not np.abs(phi) < 1.0:
         raise ValueError(f"phi must satisfy |phi| < 1, got {phi!r}")

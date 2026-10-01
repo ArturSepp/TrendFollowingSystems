@@ -308,9 +308,9 @@ Contract details:
 
 > **Pitfall.** `power_autocorr` has two conventions in one function: its AR branch returns the
 > autocorrelations $\phi^h$ with lag zero equal to one, and its ARFIMA branches return
-> autocovariances with lag zero set to zero, scaled by $\gamma(0)$ (or by $V_{\phi,d}$ with
-> $\phi\ne 0$). It is the input of `expected_pnl_arfima`, not an autocorrelation function. Use
-> `population_acf` for an autocorrelation function.
+> autocorrelations scaled by $\Gamma(1-2d)/\Gamma(1-d)^2$ for every $\phi$, with lag zero set to
+> zero. Its gamma functions overflow, so lags from 171 on are zero or NaN. It is not an
+> autocorrelation function; use `population_acf`, which has no length limit.
 
 ## Interpretation and limitations
 

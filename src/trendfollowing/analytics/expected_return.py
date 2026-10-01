@@ -10,7 +10,8 @@ from typing import Optional
 
 # project
 from trendfollowing.analytics.filters import span_to_nu, compute_ewm_long_short_weights
-from trendfollowing.analytics.autocorrelation import power_autocorr
+from trendfollowing.analytics.autocorrelation import population_acf
+from trendfollowing.analytics.sharpe import expected_annual_return
 
 
 def expected_pnl_white_noise(
@@ -48,7 +49,7 @@ def expected_pnl_ar1(
     per leg, the autocorrelation channel sums the geometric series:
     sum_m nu^m phi^m = nu*phi/(1-nu*phi), scaled by h = sqrt(a)*sigma_target*(1-nu)/nu,
     which reduces to sqrt(a)*sigma_target * w * phi*(1-nu)/(1-nu*phi) per unit loading;
-    the drift channel adds the white-noise term when mean > 0
+    the drift channel adds the white-noise term for either sign of mean
     """
     weight_long, weight_short = compute_ewm_long_short_weights(
         long_span=long_span, short_span=short_span
@@ -62,15 +63,13 @@ def expected_pnl_ar1(
     else:
         pnl = weight_long * phi * (1.0 - long_nu) / (1.0 - long_nu * phi)
     pnl = np.sqrt(annualization_factor) * vol_target * pnl
-    if mean > 0.0:
-        mean_pnl = expected_pnl_white_noise(
-            long_span=long_span,
-            short_span=short_span,
-            mean=mean,
-            vol_target=vol_target,
-            annualization_factor=annualization_factor,
-        )
-        pnl += mean_pnl
+    pnl += expected_pnl_white_noise(
+        long_span=long_span,
+        short_span=short_span,
+        mean=mean,
+        vol_target=vol_target,
+        annualization_factor=annualization_factor,
+    )
     return pnl
 
 
@@ -85,7 +84,8 @@ def expected_pnl_ma1(
     """
     expected annual return of the european system under ma-1
     only the first autocorrelation is non-zero, rho(1) = phi/(1+phi^2), so the
-    autocorrelation channel per leg is w * nu*rho(1) * (1-nu)/nu = w * phi*(1-nu)/(1+phi^2)
+    autocorrelation channel per leg is w * nu*rho(1) * (1-nu)/nu = w * phi*(1-nu)/(1+phi^2);
+    the drift channel adds the white-noise term for either sign of mean
     """
     weight_long, weight_short = compute_ewm_long_short_weights(
         long_span=long_span, short_span=short_span
@@ -99,15 +99,13 @@ def expected_pnl_ma1(
     else:
         pnl = weight_long * phi * (1.0 - long_nu) / (1.0 + phi * phi)
     pnl = np.sqrt(annualization_factor) * vol_target * pnl
-    if mean > 0.0:
-        mean_pnl = expected_pnl_white_noise(
-            long_span=long_span,
-            short_span=short_span,
-            mean=mean,
-            vol_target=vol_target,
-            annualization_factor=annualization_factor,
-        )
-        pnl += mean_pnl
+    pnl += expected_pnl_white_noise(
+        long_span=long_span,
+        short_span=short_span,
+        mean=mean,
+        vol_target=vol_target,
+        annualization_factor=annualization_factor,
+    )
     return pnl
 
 
@@ -122,46 +120,20 @@ def expected_pnl_arfima(
 ) -> float:
     """
     expected annual return of the european system under arfima(1,delta,0)
-    the autocorrelation channel evaluates h * sum_m nu^m gamma(m) on the sowell
-    autocovariances from power_autocorr (truncated at 150 lags), per filter leg,
-    with h = (1-nu)/nu scaling; the drift channel adds the white-noise term when mean > 0
+    evaluates the generic expected return on the sowell autocorrelation function of
+    population_acf truncated at 2000 lags (paper section 5.1, as in sharpe_arfima);
+    the drift channel adds the white-noise term for either sign of mean, and
+    delta = 0 reduces to the ar-1 result
     """
-    pk = power_autocorr(delta=delta, phi=phi, n=150)
-
-    def compute_nu_filter(span: float) -> float:
-        nu = span_to_nu(span=span)
-        pnl = 0.0
-        nu_m = 1.0
-        for pk_ in pk:
-            pnl += nu_m * pk_
-            nu_m *= nu
-        norm = (1.0 - nu) / nu
-        return norm * pnl
-
-    weight_long, weight_short = compute_ewm_long_short_weights(
-        long_span=long_span, short_span=short_span
+    rho = population_acf(n_lags=2000, phi=phi, d=delta)
+    return expected_annual_return(
+        rho=rho,
+        long_span=long_span,
+        short_span=short_span,
+        sr_underlying=mean,
+        vol_target=vol_target,
+        af=annualization_factor,
     )
-
-    if short_span is not None:
-        pnl_long = compute_nu_filter(span=long_span)
-        pnl_short = compute_nu_filter(span=short_span)
-        pnl = weight_long * pnl_long - weight_short * pnl_short
-    else:
-        pnl = weight_long * compute_nu_filter(span=long_span)
-
-    pnl = (np.sqrt(annualization_factor) * vol_target) * pnl
-
-    if mean > 0.0:
-        mean_pnl = expected_pnl_white_noise(
-            long_span=long_span,
-            short_span=short_span,
-            mean=mean,
-            vol_target=vol_target,
-            annualization_factor=annualization_factor,
-        )
-        pnl += mean_pnl
-
-    return pnl
 
 
 def expected_turnover(

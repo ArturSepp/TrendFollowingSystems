@@ -7,6 +7,21 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Fixed
+
+- `expected_pnl_ar1`, `expected_pnl_ma1` and `expected_pnl_arfima` now add the drift channel
+  for a negative annualised drift `mean`, as `expected_pnl_white_noise` and
+  `expected_annual_return` do; a negative `mean` was previously ignored.
+- `expected_pnl_arfima` now evaluates `expected_annual_return` on the ARFIMA(1,d,0)
+  autocorrelation function truncated at 2000 lags, as Section 5.1 of the paper states and as
+  `sharpe_arfima` does. It previously summed autocovariances, scaled by
+  Gamma(1-2d)/Gamma(1-d)^2, truncated at 150 lags: 1.9% high at d=0.1 and short spans, and 9%
+  low at d=0.02 and a 500-day span. With `delta=0` it now returns the AR(1) result instead of a
+  wrong value or NaN. Against the frozen Monte Carlo caches of the paper's ARFIMA process figure,
+  the 2000-lag values lie within the 95% confidence intervals at every span, where the 150-lag
+  values did not at the one- and two-year spans; those caches, which store the 150-lag analytic
+  values, are unchanged.
+
 ## [1.3.0] - 2026-10-01
 
 ### Added

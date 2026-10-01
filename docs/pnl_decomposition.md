@@ -261,6 +261,7 @@ np.testing.assert_allclose(drift - generic, l * 0.15 / np.sqrt(260.0) * 0.25)
 np.testing.assert_allclose(expected_pnl_white_noise(long_span=63, mean=0.5), drift - generic)
 negative = tf.expected_annual_return(rho=rho_ar, long_span=63, vol_target=0.15, sr_underlying=-0.5)
 np.testing.assert_allclose(negative, drift)
+np.testing.assert_allclose(expected_pnl_ar1(phi=phi, long_span=63, mean=-0.5), drift, rtol=1e-12)
 
 # MA(1) with theta = 0.3: rho(1) = theta / (1 + theta^2)
 rho_ma = np.array([1.0, 0.3 / 1.09])
@@ -272,11 +273,12 @@ single = tf.expected_annual_return(rho=rho_ar, long_span=250)
 long_short = tf.expected_annual_return(rho=rho_ar, long_span=250, short_span=20)
 np.testing.assert_allclose([single, long_short], [0.016031, 0.000083], atol=5e-7)
 
-# expected_pnl_arfima evaluates autocovariances truncated at 150 lags (see the pitfall below)
+# ARFIMA: the generic formula on 2000 lags of the autocorrelation; 150 lags lose the tail
 rho_frac = tf.population_acf(n_lags=2000, d=0.02)
-truncated = expected_pnl_arfima(delta=0.02, long_span=500)
-np.testing.assert_allclose(truncated / tf.expected_annual_return(rho=rho_frac, long_span=500),
-                           0.9067, atol=5e-5)
+arfima = tf.expected_annual_return(rho=rho_frac, long_span=500)
+np.testing.assert_allclose(expected_pnl_arfima(delta=0.02, long_span=500), arfima, rtol=1e-12)
+truncated = tf.expected_annual_return(rho=rho_frac[:150], long_span=500)
+np.testing.assert_allclose(truncated / arfima, 0.9061, atol=5e-5)
 
 # Poisson-kernel reading of the AR(1) spectrum: 2 Phi - 1 by quadrature
 def ar1_spectral_density(lam):
@@ -318,7 +320,7 @@ adds 1.85% for either sign. The single 250-day filter expects 1.60%, while LS(25
 | White noise | drift channel only | `trendfollowing.expected_pnl_white_noise(long_span, short_span=None, mean=0.0, vol_target=0.15, annualization_factor=260.0)` |
 | AR(1) | $h_{1y}\nu\phi/(1-\nu\phi)$ plus drift | `trendfollowing.expected_pnl_ar1(phi, long_span, short_span=None, vol_target=0.15, mean=0.0, annualization_factor=260.0)` |
 | MA(1) | $l\sigma_{\mathrm{target}}\sqrt{\mathrm{af}}(1-\nu)\theta/(1+\theta^2)$ plus drift | `trendfollowing.expected_pnl_ma1(phi, long_span, ...)` |
-| ARFIMA(1,d,0), paper convention | autocovariance sum truncated at 150 lags | `trendfollowing.expected_pnl_arfima(delta, long_span, short_span=None, phi=0.0, ...)` |
+| ARFIMA(1,d,0) | $h_{1y}\Psi_\nu$ on the autocorrelations truncated at 2000 lags, plus drift | `trendfollowing.expected_pnl_arfima(delta, long_span, short_span=None, phi=0.0, ...)` |
 
 The functions live in
 [expected_return.py](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/src/trendfollowing/analytics/expected_return.py)
@@ -335,18 +337,20 @@ Contract details:
 - `compute_psi_nu` raises `ValueError` unless $0\lt\nu\lt 1$ and `rho[0]` equals one.
 - `expected_annual_return` computes the drift channel from $\mu_{\mathrm{an}}^2$, so a negative
   drift adds the same expected return as a positive one.
-- `expected_pnl_ar1`, `expected_pnl_ma1` and `expected_pnl_arfima` add the drift channel only when
-  `mean > 0`; a negative `mean` is ignored. `expected_pnl_white_noise` uses `mean**2` for either
-  sign.
-- `expected_pnl_arfima` sums $\nu^m\gamma(m)$ over the autocovariances of `power_autocorr`,
-  truncated at 150 lags. It is the function behind the analytic expected-return lines of the
-  paper's process figures and is kept for their reproduction.
+- `expected_pnl_white_noise`, `expected_pnl_ar1`, `expected_pnl_ma1` and `expected_pnl_arfima`
+  add the same drift channel, for either sign of `mean`.
+- `expected_pnl_arfima` evaluates `expected_annual_return` on
+  `population_acf(n_lags=2000, phi=phi, d=delta)`, the truncation of Section 5.1 of the paper and
+  of `sharpe_arfima`; `delta=0` gives the AR(1) result. The analytic values stored in the frozen
+  Monte Carlo caches of the paper's ARFIMA process figure were computed with an earlier 150-lag
+  autocovariance sum, which the [changelog](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CHANGELOG.md)
+  records.
 
-> **Pitfall.** For a long-memory process, `expected_pnl_arfima` differs from
-> `expected_annual_return(rho=population_acf(n_lags=2000, phi=phi, d=d), ...)` in two ways: it
-> uses autocovariances, which scale the channel by $\gamma(0)$ ($1.9\%$ at $d=0.1$), and its
-> 150-lag truncation drops the slowly decaying tail. At $d=0.02$ and a two-year span it reports
-> 9% less than the 2000-lag value. Use the generic function with a long autocorrelation array.
+> **Pitfall.** `compute_psi_nu` and `expected_annual_return` truncate $\Psi_\nu$ at the length of
+> `rho`, and under long memory the autocorrelation tail decays slowly. At $d=0.02$ and a two-year
+> span, an array of 150 lags gives 9% less than one of 2000 lags, where the sum has converged.
+> Pass at least 2000 lags for slow filters under long memory, as `expected_pnl_arfima` and
+> `sharpe_arfima` do.
 
 ## Interpretation and limitations
 
