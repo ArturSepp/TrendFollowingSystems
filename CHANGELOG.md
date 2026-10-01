@@ -19,6 +19,16 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
   `tests/test_documentation_handbook.py` enforces the page structure, references, API coverage
   and GitHub-portable mathematics.
 
+### Fixed
+
+- `run_american_system` and `run_tsmom_system` with `portfolio_covar_span` now give zero
+  leverage on days with non-positive portfolio variance, matching `run_european_tf_system`.
+  `np.reciprocal` was called with `where=` but no `out=`, which leaves the masked cells
+  uninitialised, so those days took arbitrary leverage. On the packaged futures data this turned
+  the zero American weights of the warmup period into NaN, which dropped the cost of opening the
+  first positions. Days with positive portfolio variance are unchanged.
+  `tests/test_portfolio_vol_target.py` covers all three runners.
+
 ## [1.2.0] - 2026-09-08
 
 ### Added
