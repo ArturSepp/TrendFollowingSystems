@@ -18,7 +18,14 @@ def test_sphinx_configuration_uses_canonical_url_and_myst(monkeypatch) -> None:
 
     assert config["root_doc"] == "index"
     assert config["source_suffix"] == {".md": "markdown"}
-    assert config["extensions"] == ["myst_parser", "sphinx_sitemap"]
+    assert config["extensions"] == [
+        "myst_parser",
+        "sphinx_sitemap",
+        "sphinx.ext.autodoc",
+        "trendfollowing_callouts",
+    ]
+    assert config["myst_enable_extensions"] == ["dollarmath"]
+    assert config["nitpicky"] is True
     assert config["html_baseurl"] == CANONICAL_DOCS_URL
     assert config["html_extra_path"] == ["robots.txt"]
     assert config["sitemap_url_scheme"] == "{link}"

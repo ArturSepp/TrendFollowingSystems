@@ -24,6 +24,11 @@ Systems*. **Read and download the paper on SSRN:**
 See [Citation](#citation) for the BibTeX entry. The replication material for
 every figure and table is in [`papers/tf_systems/`](papers/tf_systems/).
 
+**Documentation:** the [trendfollowing handbook](https://trendfollowingsystems.readthedocs.io/en/latest/)
+develops every result below chapter by chapter (filters, normalisation, processes, the P&L
+identity, the closed-form Sharpe ratio, costs, skewness and the three systems), with worked
+examples that the test suite executes and an API reference grouped by chapter.
+
 `trendfollowing` implements the paper's central result: an exact decomposition
 of the European trend-following system's P&L into an autocorrelation channel
 and a squared-drift channel,

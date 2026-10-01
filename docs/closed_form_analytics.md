@@ -1,4 +1,21 @@
+---
+myst:
+  html_meta:
+    description: >-
+      Use the trendfollowing closed forms to compare European-system filter spans under white
+      noise, AR(1), ARFIMA or an empirical autocorrelation function: inputs, units, outputs,
+      exact and leading-order interfaces, the span-selection example and failure modes.
+---
+
 # Closed-form analytics and span selection
+
+*Author: [Artur Sepp](https://github.com/ArturSepp) / First recorded: [2026-08-17](https://github.com/ArturSepp/TrendFollowingSystems/commit/fa893628c2beeb51e07742eadb929e647ca19ba6)*
+
+A guide to the analytical interface of [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
+Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
+The derivations are in Part II of the handbook, from
+[the P&L decomposition](pnl_decomposition.md) to
+[turnover, costs and the net Sharpe ratio](turnover_and_net_sharpe.md).
 
 Use the closed forms to compare European-system filter spans under an explicit return process
 before running an empirical backtest. They describe population moments under stated assumptions;
