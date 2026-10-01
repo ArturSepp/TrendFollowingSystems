@@ -7,6 +7,18 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Added
+
+- Added the trendfollowing handbook to the documentation, in the style of the qis and
+  optimalportfolios handbooks: fourteen methodology chapters and a case study in four parts
+  (foundations, the European system in closed form, reference systems, evidence and inference),
+  each with an eight-row convention card, results with concise proofs, Insight and Pitfall
+  callouts and a worked example executed by `tests/test_documentation_examples.py`; a notation
+  chapter, a single bibliography with Crossref-checked DOIs, an installation page, a
+  documentation standard, and an API reference generated with autodoc and grouped by chapter.
+  `tests/test_documentation_handbook.py` enforces the page structure, references, API coverage
+  and GitHub-portable mathematics.
+
 ## [1.2.0] - 2026-09-08
 
 ### Added

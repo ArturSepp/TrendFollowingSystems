@@ -1,4 +1,21 @@
+---
+myst:
+  html_meta:
+    description: >-
+      Explain realised European trend-following Sharpe ratios with sample autocorrelation and
+      drift on the packaged futures: the in-sample attribution workflow, volatility
+      normalisation and lag construction, data coverage, point-in-time use and estimation risk.
+---
+
 # Predict Sharpe from autocorrelation and drift
+
+*Author: [Artur Sepp](https://github.com/ArturSepp) / First recorded: [2026-08-17](https://github.com/ArturSepp/TrendFollowingSystems/commit/1bf07efd5d45d8f5296d7a5fc897893b445a967c)*
+
+A guide to the attribution workflow of [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
+Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
+The formula is derived in [the closed-form Sharpe ratio](sharpe_ratio_closed_form.md), and the
+paper's attribution across 84 contracts is reported in
+[the futures evidence](case_study_futures_evidence.md).
 
 Use this workflow to explain a realized European trend-following Sharpe ratio with sample
 autocorrelation and drift measured over the same history. It is an in-sample descriptive
