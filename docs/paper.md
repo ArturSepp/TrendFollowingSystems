@@ -115,5 +115,5 @@ package test suite.
 ```
 
 Cite the software version a replication ran as well; the
-[README](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/README.md#citation) gives the
+[README](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/README.md#user-content-citation) gives the
 `@software` entry.
