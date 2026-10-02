@@ -190,7 +190,14 @@ for t in range(n):
 z = compute_vol_norm_returns(returns=returns, vol_span=33)
 nu_sigma = tf.span_to_nu(33)
 variance = np.empty(n)
-variance[0] = np.var(returns)  # full-sample seed: an in-sample initialisation
+seed = np.var(returns)  # full-sample seed: an in-sample initialisation
+# Older qis versions emit the seed at row zero; current versions update it with r_0^2.
+# Check both supported initialisation contracts, then verify every subsequent update.
+first_variance = compute_vol(returns=returns, vol_span=33, is_lag1=False)[0] ** 2
+if np.isclose(first_variance, seed, rtol=1e-12, atol=0.0):
+    variance[0] = seed
+else:
+    variance[0] = nu_sigma * seed + (1.0 - nu_sigma) * returns[0] ** 2
 for t in range(1, n):
     variance[t] = nu_sigma * variance[t - 1] + (1.0 - nu_sigma) * returns[t] ** 2
 sigma_lagged = np.sqrt(np.concatenate(([variance[0]], variance[:-1])))
@@ -263,12 +270,14 @@ API reference: {py:func}`trendfollowing.systems.backtest_utils.compute_vol`,
 
 Contract details:
 
-- The recursion is seeded with the full-sample variance of each column (`np.nanvar`), and the
-  first row's squared return does not enter: `qis.ewm_recursion` treats the first row as the
-  state before the data. The seed uses future observations, so the first weeks of $\sigma_t$ are
+- The recursion is seeded with the full-sample variance of each column (`np.nanvar`). Current
+  `qis.ewm_recursion` treats this seed as the state before the first observation and updates it
+  with the first squared return. Older qis versions instead emit the seed at row zero; the
+  independent recursion above checks both contracts so the reviewed lock and the live
+  dependency-compatibility run are covered. The seed uses future observations, so the first weeks of $\sigma_t$ are
   not point in time; the runners' 250-day warmup lets the seed decay to $\nu_\sigma^{250}$,
   about $3\times 10^{-7}$ at the 33-day span.
-- With `is_lag1=True`, the first row repeats the seed, so $z_0=r_0/\sigma_0$.
+- With `is_lag1=True`, the first row repeats the first computed volatility, so $z_0=r_0/\sigma_0$.
 - `compute_vol_norm_returns` has the default `vol_span=31.0`, while every runner and the paper
   use 33 days. Pass the span explicitly.
 
