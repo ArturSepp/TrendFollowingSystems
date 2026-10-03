@@ -1,10 +1,12 @@
 """cross-system attribution at the grid-search winners: american (span, 2) and tsmom (L=1, M=span)"""
+
 # packages
 import pickle
 import numpy as np
 import matplotlib.pyplot as plt
+from papers.tf_systems.replication.paths import REFERENCE_DIR, get_figure_path
 
-cache = pickle.load(open('./results/grid_cache.pkl', 'rb'))
+cache = pickle.load(open(str(REFERENCE_DIR / "grid_cache.pkl"), 'rb'))
 predicted = cache['predicted']
 SPANS = [5, 10, 21, 42, 63, 125, 250, 520]
 
@@ -46,5 +48,5 @@ cbar = fig.colorbar(sc, ax=axes, shrink=0.85, ticks=range(len(SPANS)))
 cbar.ax.set_yticklabels([str(s) for s in SPANS])
 cbar.set_label('filter span (days)')
 fig.suptitle('European closed form predicts American and TSMOM performance at the best-matching parameters', fontsize=12)
-fig.savefig('./cross_system_attribution_best.png', dpi=200, bbox_inches='tight')
+fig.savefig(get_figure_path() + 'cross_system_attribution_best.png', dpi=200, bbox_inches='tight')
 print("figure saved")

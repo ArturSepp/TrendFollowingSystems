@@ -3,8 +3,9 @@ paper figures tf_prediction_scatter and tf_prediction_medians: the european clos
 predicted from the sample acf and drift of z_t against the realized gross backtests of the
 european, american, and tsmom systems at matched lookbacks
 american short span = 2 days and tsmom period length L = 1 day with M = span periods are the
-closest discretized counterparts of the european filter (grid search in papers/tf_systems/replication/results/grid_search_systems.py)
+closest discretized counterparts of the european filter (grid search in papers/tf_systems/replication/grid_search_systems.py)
 """
+
 # packages
 import pickle
 import numpy as np
@@ -20,6 +21,7 @@ from papers.tf_systems.replication.autocorr_attribution import (compute_attribut
                                                                        SPANS, WARMUP, MIN_OBS, AF)
 from trendfollowing.systems.american import run_american_system
 from trendfollowing.systems.tsmom import compute_tsmom_signal_weight
+from papers.tf_systems.replication.paths import REFERENCE_DIR, get_figure_path
 
 AM_SHORT_SPAN: int = 2   # american fast leg, days
 TSMOM_L: int = 1         # tsmom period length, days; M = span periods
@@ -156,13 +158,13 @@ def plot_prediction_medians(tables: Dict[str, pd.DataFrame]) -> plt.Figure:
 
 class Locals(Enum):
     COMPUTE_AND_PLOT = 1   # full computation from the packaged dataset (~15 minutes)
-    PLOT_FROM_CACHE = 2    # plot from papers/tf_systems/replication/results/grid_cache.pkl if present
+    PLOT_FROM_CACHE = 2    # plot from replication/data/reference/grid_cache.pkl
 
 
 def run_local(local: Locals) -> None:
-    local_path = qis.local_path.get_output_path()
+    local_path = get_figure_path()
     if local == Locals.PLOT_FROM_CACHE:
-        tables = compute_cross_system_tables(prices=None, cache_file='papers/tf_systems/replication/results/grid_cache.pkl')
+        tables = compute_cross_system_tables(prices=None, cache_file=str(REFERENCE_DIR / "grid_cache.pkl"))
     else:
         prices = load_data()[0]
         tables = compute_cross_system_tables(prices=prices)

@@ -1,6 +1,7 @@
 """
 figures for article
 """
+
 import pandas as pd
 import os
 import numpy as np
@@ -22,6 +23,7 @@ from trendfollowing.backtests import (cross_backtest_portfolio_covar_span,
                                                       backtest_american_atr_multiplies_grid,
                                                       backtest_tsmom_grid,
                                                       TFstrategy)
+from papers.tf_systems.replication.paths import get_figure_path
 
 PERF_PARAMS = qis.PerfParams(freq_reg='ME', freq_vol='B', freq_skewness='QE', freq_drawdown='B',
                              sharpe_convention=qis.perfstats.config.SharpeConvention.ARITHMETIC)  # eq (5.1) convention
@@ -786,7 +788,7 @@ def run_local(local: Locals):
     Use for quick verification during development.
     """
 
-    local_path = os.environ.get("TF_FIGURE_PATH", qis.local_path.get_output_path())  # set TF_FIGURE_PATH to the paper figures folder
+    local_path = get_figure_path()  # optional external figure-directory override
 
     prices, volume_costs, benchmark_prices, descriptive_df, group_order = load_data(time_period=None)
 

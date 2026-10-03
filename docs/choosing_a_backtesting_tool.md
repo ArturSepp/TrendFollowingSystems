@@ -1,4 +1,17 @@
+---
+myst:
+  html_meta:
+    description: >-
+      A dated, source-backed comparison of trendfollowing with pysystemtrade, vectorbt and
+      Backtesting.py by workflow, analytical scope, data, execution, audience and licence.
+---
+
 # Choosing a trend-following or backtesting tool
+
+*Author: [Artur Sepp](https://github.com/ArturSepp) / First recorded: [2026-08-17](https://github.com/ArturSepp/TrendFollowingSystems/commit/8ce4378d5ce53f036e99d0ffac7284047ccd8a18)*
+
+A package comparison for [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
+Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
 
 **Version snapshot: 2026-08-17.** This guide compares workflows and public capabilities, not
 popularity. **No universal winner** exists: the appropriate tool depends on whether the job is

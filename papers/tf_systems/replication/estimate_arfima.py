@@ -1,6 +1,7 @@
 """
 estimate
 """
+
 import os
 import numpy as np
 import pandas as pd
@@ -15,6 +16,7 @@ from enum import Enum
 from trendfollowing.universe import load_data
 from trendfollowing.systems.european import run_european_tf_system
 from trendfollowing.systems.backtest_utils import compute_path_stats
+from papers.tf_systems.replication.paths import get_figure_path
 
 # add paths
 os.environ["R_HOME"] = r"C:\Program Files\R\R-4.4.2"
@@ -233,7 +235,7 @@ def run_local(local: Locals):
     pd.set_option('display.width', 1000)
 
     import matplotlib.pyplot as plt
-    local_path = os.environ.get("TF_FIGURE_PATH", qis.local_path.get_output_path())  # set TF_FIGURE_PATH to the paper figures folder
+    local_path = get_figure_path()  # optional external figure-directory override
 
 
     #time_period = qis.TimePeriod(start='31Dec1998', end='08Nov2024')
@@ -266,7 +268,7 @@ def run_local(local: Locals):
             print(df1)
             print(df1.describe())
             data[key] = df1
-        qis.save_df_to_excel(data=data, file_name='arifram_estimates', local_path=qis.get_output_path(), add_current_date=True)
+        qis.save_df_to_excel(data=data, file_name='arifram_estimates', local_path=get_figure_path(), add_current_date=True)
 
         df1 = gr_data.get_group('phi(1)').set_index('asset', drop=True)['Estimate']
         qis.plot_bars(df=df1)

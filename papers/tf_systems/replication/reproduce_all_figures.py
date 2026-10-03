@@ -1,14 +1,16 @@
 """
 single entry point to reproduce all figures of The Science and Practice of Trend-Following Systems
 simulation figures require no data, and data figures run from the dataset shipped in trendfollowing/resources
-figures are saved to TF_FIGURE_PATH if set, and to the qis output path otherwise, with file names matching the paper exhibits
+figures use an external TF_FIGURE_PATH or the configured local runtime, with paper exhibit names
 """
+
 # packages
 import os
 from enum import Enum
 from typing import List, Optional, Tuple
 # qis
 import qis as qis
+from papers.tf_systems.replication.paths import get_results_path, validate_output_path
 
 
 class PaperFigure(Enum):
@@ -100,7 +102,7 @@ def reproduce_figure(figure: PaperFigure) -> None:
         from papers.tf_systems.replication import mc_net_sharpe_paper_figs as mnf
         for case in [mnf.Locals.COMPUTE_WHITE_NOISE, mnf.Locals.COMPUTE_AR,
                      mnf.Locals.COMPUTE_ARFIMA, mnf.Locals.PLOT]:
-            mnf.run_local(local=case)
+            mnf.run_local(local=case, parts_path=get_results_path())
 
     elif figure == PaperFigure.CROSS_SYSTEM_ATTRIBUTION:
         from papers.tf_systems.replication import cross_system_attribution_figs as csf
@@ -135,7 +137,7 @@ def reproduce_all_figures(figures: Optional[List[PaperFigure]] = None,
     simulation figures always run, and data-dependent figures run only when include_data_dependent is true
     """
     if local_path is not None:
-        os.environ["TF_FIGURE_PATH"] = local_path
+        os.environ["TF_FIGURE_PATH"] = str(validate_output_path(local_path))
     if figures is None:
         figures = SIMULATION_FIGURES + (DATA_FIGURES if include_data_dependent else [])
     completed, skipped = [], []

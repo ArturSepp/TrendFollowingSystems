@@ -1,4 +1,20 @@
+---
+myst:
+  html_meta:
+    description: >-
+      Choose and backtest the European, American and TSMOM reference systems of trendfollowing:
+      position rules, the common input and output contract, costs, volatility targeting, caps,
+      warmup, timing, the packaged universe and the verification catalogue.
+---
+
 # Compare and backtest the three systems
+
+*Author: [Artur Sepp](https://github.com/ArturSepp) / First recorded: [2026-08-17](https://github.com/ArturSepp/TrendFollowingSystems/commit/2e9ee625ba6b396bea03e17cb853a6bfd78aab72)*
+
+A guide to the reference systems of [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
+Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
+Each system has its own handbook chapter: [European](european_system.md),
+[American](american_system.md) and [time-series momentum](tsmom_system.md).
 
 `trendfollowing` contains three reference implementations from *The Science and Practice of
 Trend-Following Systems*. They share a data and P&L contract, but they do not encode the same

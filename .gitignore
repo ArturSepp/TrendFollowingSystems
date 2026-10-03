@@ -29,14 +29,30 @@ example_*.png
 # internal notes - never publish
 papers/tf_systems/private/
 
-# companion paper material - untracked while under blind review
-papers/smart_diversification/
-
 # SSRN working-paper build - uploaded to SSRN, not carried in the repository
 papers/tf_systems/paper/TrendFollowing_PaperA_SSRN.*
-resources/papers/smart_diversification/
 /agents/
-/papers/smart_diversification_slides
 /papers/layer_attribution_2026/
 /papers/tf_diversification_long_run_2026
 /resources/papers/tf_diversification_long_run_2026
+
+# Paper workspace policy: preserve existing public tf_systems files only.
+/papers/*
+!/papers/__init__.py
+!/papers/AGENTS.md
+!/papers/README.md
+!/papers/tf_systems/
+/papers/**/drafts/
+/papers/**/private/
+/papers/**/agents/
+/papers/**/paper/**
+/papers/**/presentations/**
+/papers/**/replication/data/**
+/papers/**/replication/data/local/
+/papers/**/replication/results/
+/papers/**/replication/outputs/
+# Legacy local caches are retained on disk; new runs belong outside the checkout.
+/resources/papers/
+
+# Local Claude settings and worktrees are machine-specific.
+/.claude/

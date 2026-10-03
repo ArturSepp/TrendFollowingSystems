@@ -4,6 +4,7 @@ of the american and tsmom systems at matched lookbacks
 american: (long=span, short=5), paper defaults for buffer and stops, gross
 tsmom: L=5 daily returns per period, M=round(span/5) periods, gross
 """
+
 # packages
 import sys
 import numpy as np
@@ -16,6 +17,7 @@ from trendfollowing.universe import load_data
 from papers.tf_systems.replication.autocorr_attribution import compute_attribution_tables, SPANS, WARMUP, MIN_OBS, AF
 from trendfollowing.systems.american import run_american_system
 from trendfollowing.systems.tsmom import compute_tsmom_signal_weight
+from papers.tf_systems.replication.paths import get_figure_path
 
 prices = load_data()[0]
 returns = qis.to_returns(prices, is_log_returns=True, is_first_zero=False)
@@ -75,5 +77,5 @@ for ax, realized, title in [(axes[0], realized_am, '(A) American TF (span, 5)'),
     ax.set_xlim(lim); ax.set_ylim(lim)
     print(f"{title}: slope {b:.3f}, intercept {a:.3f}, corr {corr:.3f}, n {len(x)}")
 fig.suptitle('European closed form predicts American and TSMOM performance', fontsize=12)
-fig.savefig('./cross_system_attribution.png', dpi=200)
+fig.savefig(get_figure_path() + 'cross_system_attribution.png', dpi=200)
 print("figure saved")

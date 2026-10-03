@@ -16,6 +16,18 @@
 
 Guidance for AI coding agents working in the **TrendFollowingSystems** repository.
 
+## OSS documentation standard
+
+- Before creating or substantively revising reader-facing documentation, read the
+  [shared OSS documentation standard](https://github.com/ArturSepp/ArturSepp/blob/main/docs/documentation_standard.md).
+  It owns the common layout, author/date attribution, portable Markdown mathematics,
+  references, reproducible figures, and review requirements.
+- Apply this repository's API, docstring, data, build, and validation conventions alongside
+  that guide. Keep package-specific procedures here or in the local documentation supplement;
+  update common rules in the shared guide instead of maintaining another copy.
+- Linking the standard does not mark legacy pages migrated or reviewed. Preserve explicit
+  pending work and record checks actually performed.
+
 ## Project overview
 
 `trendfollowing` provides closed-form trend-following analytics, reference system
@@ -59,6 +71,25 @@ OCA never imports StochVolModels or the private SigmaStrats consumer. Exact
 maintainer-tool exceptions are recorded in `.github/stack-policy.json`; they do
 not authorise adding those dependencies to core or importing them at package root.
 
+## Paper workspace policy (TFS override)
+
+- Follow `papers/AGENTS.md` for the six-section layout and publication rules.
+  Only existing `tf_systems` source/figure/class exceptions remain approved;
+  the reading PDF and SSRN source remain local. Companion workspaces stay ignored.
+- Paper-specific working records belong in ignored `papers/<paper_id>/agents/`.
+  This overrides the generated shared core's root-only record location for paper
+  work; repository-wide records remain in root `agents/`.
+- Frozen paper inputs live in `replication/data/reference/`. Preserve their
+  bytes and the packaged futures data. Never copy the common dataset into papers.
+- Paper-specific tests live in `replication/tests/test_*.py`; existing top-level
+  package tests and standalone verification scripts keep their established paths.
+- New output, caches and LaTeX builds belong outside the checkout and OneDrive.
+  Before Python or checks, configure the runtime using `Enter-AgentRepo.ps1` from
+  the shared `ArturSepp/scripts/repo_governance/` directory with this repository's
+  `-RepoPath` and the stack `-RepositoriesRoot`. Use the external interpreter above.
+- Check the actual index with `.github/scripts/check_paper_policy.py` before
+  committing; `--worktree` previews unstaged work. Check both built archives too.
+
 ## Repository layout
 
 ```
@@ -69,7 +100,7 @@ src/trendfollowing/
   run_local/   source-adjacent development runners; excluded from distributions
   resources/   immutable futures data installed with the package
   backtests.py, universe.py
-resources/     writable paper replication caches; not installed
+resources/     ignored legacy local caches and compatibility documentation; not installed
 papers/        replication code for the paper (importable: papers.*)
 tests/         top-level test modules (test_*.py)
 examples/      runnable examples; kept at repository root
@@ -124,8 +155,9 @@ plus Windows and macOS 3.12, separate verification, and built-artifact jobs.
 - Do not modify the futures dataset in `src/trendfollowing/resources/futures/` or the
   universe definitions: published backtests depend on them.
 - Do not reimplement performance statistics or plotting — use `qis`.
-- Do not commit backtest output, figures, or log files (`sg.log` in the repository root
-  is an accident, not a pattern to follow).
+- Do not commit new backtest output or log files. Existing approved manuscript
+  figures and frozen reference inputs are exact exceptions in the paper policy;
+  new publication assets need an explicit decision and exact allowlist entry.
 
 <!-- ===== SHARED AGENT CORE (consumer variant) — begin =====
      Generated from SHARED_AGENT_CORE.md in the maintainer's project knowledge. Do not hand-edit

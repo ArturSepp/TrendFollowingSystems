@@ -1,4 +1,3 @@
-
 # packages
 import gc
 import os
@@ -24,6 +23,7 @@ from trendfollowing.analytics.expected_return import (expected_pnl_ar1, expected
                                                       expected_pnl_white_noise)
 from trendfollowing.systems.backtest_utils import compute_path_stats, compute_vol_norm_returns
 from trendfollowing.systems.european import compute_tf_strat_pnl
+from papers.tf_systems.replication.paths import get_figure_path
 
 
 def report_process_pnl(process_type: pe.ProcessType = pe.ProcessType.AR_P,
@@ -690,7 +690,7 @@ def run_local(local: Locals):
     long_spans = [5, 10, 20, 40, 60, 90, 130, 260, 520]
     long_spans = {'1w': 5, '2w': 10, '1m': 21, '3m': 63, '6m': 125, '1y': 250, '2y': 500}
 
-    local_path = os.environ.get("TF_FIGURE_PATH", qis.local_path.get_output_path())  # set TF_FIGURE_PATH to the paper figures folder
+    local_path = get_figure_path()  # optional external figure-directory override
 
     if local == Locals.ARTICLE_FIGURES:
         # phis = [0.1, 0.05, -0.05, -0.1]

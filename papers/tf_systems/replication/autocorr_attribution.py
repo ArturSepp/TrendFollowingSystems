@@ -6,6 +6,7 @@ panels: (a) evolution of ewm lag-1 autocorrelation across instruments,
         (b) predicted vs realised sharpe scatter across instruments and spans,
         (c) cross-sectional medians by span: predicted (autocorrelation-only), predicted (total), realised
 """
+
 # packages
 import os
 import numpy as np
@@ -22,6 +23,7 @@ from trendfollowing.systems.backtest_utils import compute_vol_norm_returns
 from trendfollowing.systems.european import compute_tf_strat_pnl
 from trendfollowing.analytics.sharpe import compute_annualised_sharpe, compute_realized_sharpe
 from trendfollowing.analytics.filters import span_to_nu
+from papers.tf_systems.replication.paths import get_figure_path
 
 SPANS: List[int] = [5, 10, 21, 42, 63, 125, 250, 520]  # ewma filter spans in days
 VOL_SPAN: int = 33  # ewma span of the volatility estimator, as in the paper backtests
@@ -209,7 +211,7 @@ class Locals(Enum):
 
 
 def run_local(local: Locals):
-    local_path = os.environ.get("TF_FIGURE_PATH", qis.local_path.get_output_path())
+    local_path = get_figure_path()
     if local == Locals.ATTRIBUTION_FIGURE:
         prices, _, _, descriptive_df, _ = load_data()
         predicted_total, predicted_ac, realised, stats = compute_attribution_tables(prices=prices)

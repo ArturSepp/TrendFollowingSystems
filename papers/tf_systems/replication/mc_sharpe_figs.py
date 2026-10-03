@@ -3,6 +3,7 @@ comparison tables and errorbar figures for the analytical sharpe ratio vs monte 
 figures follow the article style of papers.tf_systems.replication.mc_expected_return_figs: qis.plot_errorbar with mc errorbars and exact analytic markers
 tables report analytic vs mc pooled sharpe with 95% confidence intervals per process and filter span
 """
+
 # packages
 import os
 import numpy as np
@@ -15,6 +16,7 @@ from typing import Dict, List, Optional
 import qis as qis
 from qis.plots.utils import get_n_colors
 from papers.tf_systems.replication.mc_sharpe import run_verification
+from papers.tf_systems.replication.paths import get_figure_path
 
 LONG_SPANS: Dict[str, int] = {'1w': 5, '2w': 10, '1m': 21, '3m': 63, '6m': 125, '1y': 250, '2y': 500}
 LS_CASE = (250.0, 20.0)  # long-short filter of the empirical section
@@ -176,7 +178,7 @@ class Locals(Enum):
 
 
 def run_local(local: Locals):
-    local_path = os.environ.get("TF_FIGURE_PATH", qis.local_path.get_output_path())  # set TF_FIGURE_PATH to the paper figures folder
+    local_path = get_figure_path()  # optional external figure-directory override
     if local == Locals.SHARPE_VERIFICATION:
         df = compute_sharpe_verification()
         df.to_csv(f"{local_path}sharpe_verification.csv", index=False)

@@ -1,5 +1,6 @@
 """Repository-level guards for the U3a documentation foundation."""
 
+import json
 from pathlib import Path
 import runpy
 from types import SimpleNamespace
@@ -17,7 +18,14 @@ def test_sphinx_configuration_uses_canonical_url_and_myst(monkeypatch) -> None:
 
     assert config["root_doc"] == "index"
     assert config["source_suffix"] == {".md": "markdown"}
-    assert config["extensions"] == ["myst_parser", "sphinx_sitemap"]
+    assert config["extensions"] == [
+        "myst_parser",
+        "sphinx_sitemap",
+        "sphinx.ext.autodoc",
+        "trendfollowing_callouts",
+    ]
+    assert config["myst_enable_extensions"] == ["dollarmath"]
+    assert config["nitpicky"] is True
     assert config["html_baseurl"] == CANONICAL_DOCS_URL
     assert config["html_extra_path"] == ["robots.txt"]
     assert config["sitemap_url_scheme"] == "{link}"
@@ -117,13 +125,23 @@ def test_robots_file_allows_crawling_and_names_the_canonical_sitemap() -> None:
 
 
 def test_pages_workflow_builds_checks_and_deploys_documentation() -> None:
-    workflow = (
-        REPOSITORY_ROOT / ".github" / "workflows" / "docs.yml"
-    ).read_text(encoding="utf-8")
+    workflow = (REPOSITORY_ROOT / ".github" / "workflows" / "docs.yml").read_text(encoding="utf-8")
 
+    profile = json.loads((REPOSITORY_ROOT / ".github/oss-checks.json").read_text())
+    assert [
+        "-m",
+        "sphinx",
+        "-E",
+        "-W",
+        "--keep-going",
+        "-b",
+        "html",
+        "docs",
+        "{output}/html",
+    ] in profile["docs"]
     required_contract = (
         "uv sync --locked --extra docs",
-        "python -m sphinx -E -W --keep-going -b html docs docs/_build/html",
+        "python .github/oss_checks.py docs --working-tree",
         "python -m sphinx -E -W -b linkcheck docs docs/_build/linkcheck",
         "actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b",
         "actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b",

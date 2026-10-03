@@ -1,12 +1,14 @@
 """panel (c) analogue for the best-spec american and tsmom systems:
 cross-sectional medians of predicted (european closed form) and realized sharpe ratios by span,
 with the interquartile band of the realized values"""
+
 # packages
 import pickle
 import numpy as np
 import matplotlib.pyplot as plt
+from papers.tf_systems.replication.paths import REFERENCE_DIR, get_figure_path
 
-cache = pickle.load(open('./results/grid_cache.pkl', 'rb'))
+cache = pickle.load(open(str(REFERENCE_DIR / "grid_cache.pkl"), 'rb'))
 predicted = cache['predicted']
 SPANS = [5, 10, 21, 42, 63, 125, 250, 520]
 
@@ -40,5 +42,5 @@ for ax, tag, prm, title in [(axes[0], 'am', 2, '(A) American TF (span, 2)'),
     ax.legend(loc='upper right', frameon=False, fontsize=9)
     print(f"{title}: spans {list(xs)}, realized medians {[f'{v:.2f}' for v in med_real]}, predicted medians {[f'{v:.2f}' for v in med_pred]}")
 fig.suptitle('Cross-sectional medians by span: European prediction vs realized American and TSMOM performance', fontsize=12)
-fig.savefig('./cross_system_panel_c.png', dpi=200)
+fig.savefig(get_figure_path() + 'cross_system_panel_c.png', dpi=200)
 print("figure saved")

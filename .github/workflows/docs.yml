@@ -6,37 +6,12 @@ permissions:
   pages: read
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - .github/workflows/docs.yml
-      - .github/scripts/*docs_redirects.py
-      - docs/**
-      - examples/**
-      - src/trendfollowing/**
-      - CHANGELOG.md
-      - CITATION.cff
-      - pyproject.toml
-      - README.md
-      - uv.lock
-  pull_request:
-    branches: [main]
-    paths:
-      - .github/workflows/docs.yml
-      - .github/scripts/*docs_redirects.py
-      - docs/**
-      - examples/**
-      - src/trendfollowing/**
-      - CHANGELOG.md
-      - CITATION.cff
-      - pyproject.toml
-      - README.md
-      - uv.lock
+  workflow_call:
+    inputs:
+      online:
+        type: boolean
+        default: false
   workflow_dispatch:
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -60,17 +35,20 @@ jobs:
     - name: Verify redirect path and fragment handling
       run: uv run --no-sync python .github/scripts/test_docs_redirects.py
 
-    - name: Build HTML with warnings as errors
-      run: uv run --no-sync python -m sphinx -E -W --keep-going -b html docs docs/_build/html
+    - name: Build documentation with the shared profile
+
+      run: uv run --no-sync python .github/oss_checks.py docs --working-tree --output-dir "$RUNNER_TEMP/oss-docs"
 
     - name: Check documentation links
+
+      if: inputs.online || github.event_name == 'workflow_dispatch'
       run: uv run --no-sync python -m sphinx -E -W -b linkcheck docs docs/_build/linkcheck
 
     # Publish only redirects on GitHub Pages; Read the Docs serves the full site.
     - name: Build legacy documentation redirects
       run: >-
         uv run --no-sync python .github/scripts/build_docs_redirects.py
-        --source docs/_build/html
+        --source "$RUNNER_TEMP/oss-docs/html"
         --output docs/_build/redirects
         --base-url https://trendfollowingsystems.readthedocs.io/en/latest/
         --project-prefix /TrendFollowingSystems/

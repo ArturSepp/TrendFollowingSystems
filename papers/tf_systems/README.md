@@ -1,11 +1,15 @@
 # The Science and Practice of Trend-Following Systems
 
-Replication folder for Sepp & Lucic, *The Science and Practice of
-Trend-Following Systems*. The compiled manuscript is
-[`paper/TrendFollowing_PaperA_SIFIN_v1.pdf`](paper/TrendFollowing_PaperA_SIFIN_v1.pdf)
-(47 pages). The analytics are implemented in the `trendfollowing` package at
-the repository root; this folder holds the manuscript source and the code that
-regenerates every figure and table.
+*Author: [Artur Sepp](https://github.com/ArturSepp)*
+
+Project: [TrendFollowingSystems](https://github.com/ArturSepp/TrendFollowingSystems).
+Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
+
+Companion workspace for Sepp and Lucic, *The Science and Practice of
+Trend-Following Systems*. The existing SIFIN LaTeX source, SIAM class and twelve
+figure files are tracked. No compiled PDF is tracked or supplied by this layout
+migration. Read the paper on [SSRN](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3167787).
+The SSRN-format source remains local. See the [paper contract](../AGENTS.md).
 
 ## The paper in one paragraph
 
@@ -27,42 +31,69 @@ above one month. At matched parameters, all three systems are statistically
 indistinguishable from the SG Trend Index by the Ledoit-Wolf test (Sharpe
 ratios of 0.47, 0.50, and 0.55 against 0.47, net of costs and 2/20 fees).
 
-## Layout
+## Layout and builds
 
-```
+```text
 tf_systems/
-├── Makefile
-├── paper/                       LaTeX source and the compiled manuscript
-│   ├── TrendFollowing_PaperA_SIFIN_v1.tex  .pdf
-│   └── figures/                 the eleven manuscript figures (committed; regenerable)
-├── replication/
-│   ├── *.py                     exhibit generators and verification scripts (maps below)
-│   ├── data/                    empty by design: the paper runs from the common dataset in
-│   │                            trendfollowing/resources/ (see data/README.md)
-│   └── results/                 committed Monte Carlo caches (process-figure parts, grid cache)
-└── private/                     untracked local notes and reviews (never published)
+  paper/                    approved SIFIN source, class and twelve figures
+  drafts/                   previous versions and their figures; ignored
+  presentations/            local by default; no current public exceptions
+  private/                  correspondence and reviews; ignored
+  agents/                   working records; ignored
+  replication/
+    data/
+      reference/            nine frozen caches, provenance and SHA-256 hashes
+      local/                restricted inputs, if needed; ignored
+    tests/                  offline input and output-routing checks
+    *.py                    existing research and verification entry points
 ```
 
-## LaTeX class file
+Local sections may be absent in a fresh clone. Common futures inputs remain in
+`src/trendfollowing/resources/futures/`; they are not duplicated here. The nine
+existing caches were moved without changing bytes from the former repository
+`resources/papers/tf_systems/results/` directory. Legacy local caches in
+`resources/` are retained but ignored. New runs use external runtime directories.
 
-Read and download the paper on SSRN:
-[ssrn.com/abstract=3167787](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3167787).
-The LaTeX source, figures, and compiled PDF here are the replication copy.
+On the maintainer's Windows host, configure `Enter-AgentRepo.ps1` as directed by
+root `AGENTS.md` and use `C:\Python\TrendFollowingSystems312\Scripts\python.exe`.
+Never create an environment under OneDrive. `TF_PAPER_OUTPUT_PATH` selects an
+absolute run directory outside the checkout and OneDrive; its default is the
+configured `AGENT_LOCAL_ROOT/outputs/tf_systems` runtime. `TF_FIGURE_PATH` may
+select a separate external figure directory.
 
-SIFIN is one of SIAM's online-only journals, so the manuscript uses
-`siamonline250211.cls` from SIAM's
-[LaTeX2e Multimedia Macros](https://epubs.siam.org/journal-authors). The class
-file is committed in `paper/`, so the folder is self-contained:
-`make paper` runs three `pdflatex` passes with no BibTeX (the bibliography is
-inline).
-The committed PDF is the production build: 47 pages, zero warnings, zero
-overfull boxes. The 3.05pt overfull `\vbox` per running-head page in the log
-is inherent to the class and invisible in the PDF, as documented in the
-preamble.
+To build the approved current manuscript from the repository root:
 
-## Reproducing the exhibits
+```console
+python -m papers.tf_systems.replication.build_paper
+```
 
-Exhibit generators run from the repository root (they import
+This copies approved assets to external `latex-build/` and invokes three
+pdflatex passes. The existing SIAM class remains tracked; the bibliography is
+inline. The helper does not replace the source or publish a PDF. A successful
+layout migration is not a claim that the manuscript compiled in this environment.
+
+## Render the available frozen exhibits
+
+```console
+python -m papers.tf_systems.replication.cached_figures
+python -m pytest papers/tf_systems/replication/tests -q
+```
+
+The first command reads only `replication/data/reference/` and renders the three
+process figures and two cross-system attribution figures into external
+`figures/`. It does not run the full Monte Carlo experiment or overwrite the
+approved PNGs. Rendering can vary with dependency versions; pixel equality is
+not assumed. The other manuscript exhibits require their own computation.
+
+`mc_net_sharpe_paper_figs.run_local(COMPUTE_...)` writes new parts to external
+`results/`. `PLOT` reads frozen references by default; pass an explicit external
+`parts_path` to plot a newly generated run. Missing run parts raise an error
+instead of falling back to historical caches.
+
+## Full exhibit generation
+
+The full generator includes expensive simulations and data-dependent stages.
+Run it from the repository root in the configured environment (it imports
 `papers.tf_systems.replication.*` and `trendfollowing`):
 
 ```bash
@@ -75,27 +106,26 @@ The `PaperFigure` enum maps the manuscript exhibits to the generators:
 |---|---|---|
 | Figure 2.1 filter impulse responses | `signal_weight` | `filter_figs.py` |
 | Figure 4.1 system illustration on ES1 | `ES1_short_signals` | `illustrate_systems.py` |
-| Figures 6.1-6.3 process figures | `expected_return_{white_noise, ar, arfima1}` | `mc_net_sharpe_paper_figs.py` (from `results/` caches) |
-| Table 6.1 Student-t verification | `sharpe_verification_t6` | `mc_sharpe.py`, `t6_assemble.py` (from `results/` caches) |
+| Figures 6.1-6.3 process figures | `expected_return_{white_noise, ar, arfima1}` | `mc_net_sharpe_paper_figs.py` (from frozen reference caches) |
+| Table 6.1 Student-t verification | `sharpe_verification_t6` | `mc_sharpe.py`, `t6_assemble.py` (requires separate generated `t6_part_*` caches) |
 | Table 7.1 universe, Table 7.2 costs | `universe_table`, `cost_assumptions` | `reproduce_all_figures.py` stages |
 | Figure 7.1 grid backtests | `european_grid`, `american_grid_spans`, `tsmom_grid` | `backtest_figs.py` |
 | Figure 7.2 SG Trend comparison | `tf_sg_backtest_paper` | `backtest_figs.py` |
-| Figures 7.3-7.4 attribution | `tf_prediction_scatter`, `tf_prediction_medians` | `cross_system_attribution_figs.py` (grid cache in `results/`) |
+| Figures 7.3-7.4 attribution | `tf_prediction_scatter`, `tf_prediction_medians` | `cross_system_attribution_figs.py` (frozen grid cache in `data/reference/`) |
 | Figure 7.4 aggregated skewness | `aggregated_skewness` | `aggregated_skewness_fig.py` (closed form + MC + empirical panel, requires the packaged data) |
 
-Simulation figures are seed-exact (seed 8) and need no data. The Monte Carlo
-aggregates behind the process figures and the verification table are cached in
-`replication/results/`, so those figures re-render in seconds without
-re-simulation: re-rendering from the committed caches reproduces the committed
-PNGs pixel for pixel. Empirical figures run from the packaged dataset.
-Figures are written to `TF_FIGURE_PATH` if set, and to the `qis` output path
-otherwise.
+The existing simulation designs and seeds are unchanged. Frozen reference
+inputs cover the process figures and cross-system attribution, not every table.
+Table 6.1 requires separately generated Monte Carlo parts. Empirical stages use
+the packaged dataset; the ATR comparison may require terminal access.
+New results and figure candidates remain external. See the
+[cache provenance](replication/data/reference/README.md) for preservation scope.
 
 The statistical comparison against the SG Trend Index (Ledoit-Wolf test on
 monthly net-of-fee returns) reruns with:
 
 ```bash
-cd replication && PYTHONPATH=../../.. python sg_sharpe_test.py
+python -m papers.tf_systems.replication.sg_sharpe_test
 ```
 
 ## Verification of manuscript claims
@@ -111,7 +141,7 @@ cd replication && PYTHONPATH=../../.. python sg_sharpe_test.py
 ## Cross-system attribution development
 - `grid_search_systems.py` — parameter search over American (span, short) and TSMOM (L, M)
   specifications; identifies (short=2) and (L=1, M=span) as the closest discretized counterparts
-  of the European filter. Results cached in `grid_cache.pkl`.
+  of the European filter. New results cached in external `results/grid_cache.pkl`.
 - `cross_system_attribution.py`, `cross_system_attribution_best.py`, `cross_system_panel_c.py` —
   exploratory versions of the cross-system exhibits. The paper figures are produced by
   `papers/tf_systems/replication/cross_system_attribution_figs.py`.

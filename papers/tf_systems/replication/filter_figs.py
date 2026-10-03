@@ -2,6 +2,7 @@
 filter impulse-response figure of the paper: propagation of a unit impulse through (long-short) ewma filters
 the figure is saved as signal_weight, matching the paper exhibit
 """
+
 # packages
 import os
 import numpy as np
@@ -12,6 +13,7 @@ from enum import Enum
 from typing import Optional
 # qis
 import qis as qis
+from papers.tf_systems.replication.paths import get_figure_path
 
 
 def plot_filter_weights(local_path: Optional[str] = None) -> plt.Figure:
@@ -48,7 +50,7 @@ class Locals(Enum):
 
 
 def run_local(local: Locals):
-    local_path = os.environ.get("TF_FIGURE_PATH", qis.local_path.get_output_path())  # set TF_FIGURE_PATH to the paper figures folder
+    local_path = get_figure_path()  # optional external figure-directory override
     if local == Locals.FILTER_WEIGHTS:
         plot_filter_weights(local_path=local_path)
         plt.show()

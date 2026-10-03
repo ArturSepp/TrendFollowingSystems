@@ -4,8 +4,10 @@ okabe-ito colorblind-safe palette, enlarged fonts, seaborn darkgrid, darkblue ti
 data are computed in resumable per-configuration parts with the identical rng stream (seed 8)
 as the original module mc_expected_return_figs.py, so all values reproduce the manuscript
 usage: run_local(local=Locals.COMPUTE_<FIG>) to build the parts, then
-run_local(local=Locals.PLOT) to render
+run_local(local=Locals.PLOT, parts_path=<external results>) to render new runs;
+default PLOT reads the frozen reference inputs
 """
+
 # packages
 import gc
 import os
@@ -25,6 +27,7 @@ from trendfollowing.systems.backtest_utils import compute_path_stats
 from trendfollowing.analytics.expected_return import (expected_pnl_white_noise, expected_pnl_ar1,
                                                       expected_pnl_arfima, expected_turnover)
 from trendfollowing.analytics.sharpe import sharpe_white_noise, sharpe_ar1, sharpe_arfima
+from papers.tf_systems.replication.paths import REFERENCE_DIR, get_results_path, get_figure_path, validate_output_path
 
 SPANS: Dict[str, int] = {'1w': 5, '2w': 10, '1m': 21, '3m': 63, '6m': 125, '1y': 250, '2y': 500}
 N_PATH, N_YEARS, AF = 1000, 50, 260
@@ -191,8 +194,12 @@ class Locals(Enum):
     PLOT = 4             # renders all three figures from the parts
 
 
-def run_local(local: Locals, parts_path: str = 'papers/tf_systems/replication/results') -> None:
-    local_path = qis.local_path.get_output_path()
+def run_local(local: Locals, parts_path: str = None) -> None:
+    if parts_path is None:
+        parts_path = str(REFERENCE_DIR) if local == Locals.PLOT else get_results_path()
+    if local != Locals.PLOT:
+        parts_path = str(validate_output_path(parts_path))
+    local_path = get_figure_path()
     if local == Locals.COMPUTE_WHITE_NOISE:
         compute_parts('expected_return_white_noise', parts_path=parts_path)
     elif local == Locals.COMPUTE_AR:

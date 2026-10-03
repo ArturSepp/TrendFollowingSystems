@@ -3,6 +3,7 @@ mc parts for the redesigned tab:t6: ls(250,20) only, pooled gross (gated against
 each part is independent (per-config seed = 8 + idx), pickled for assembly
 usage: python t6_ls_parts.py <idx> <g|t>
 """
+
 # packages
 import gc
 import sys
@@ -12,6 +13,7 @@ import numpy as np
 # project
 # run from the repository root with the package installed
 from papers.tf_systems.replication.mc_sharpe import simulate_returns, compute_signal_mc, BURN, SIGMA_TARGET, AF
+from papers.tf_systems.replication.paths import get_results_path
 
 C_NET = 0.0020
 CONFIGS = [
@@ -65,7 +67,7 @@ def part(idx: int, innovation: str) -> None:
     gate_ok = abs(round(sr_gross, 3) - want) < 1e-9
     out = dict(idx=idx, innovation=innovation, sr_gross=sr_gross, sr_net=sr_net, a_turnover=a_u, gate_ok=gate_ok,
                want=want, f_mean=float(np.mean(f)), f_std=float(np.std(f)), u_mean=float(np.mean(u)))
-    with open(f'./results/t6_part_{idx}_{innovation}.pkl', 'wb') as fh:
+    with open(f"{get_results_path()}/t6_part_{idx}_{innovation}.pkl", 'wb') as fh:
         pickle.dump(out, fh)
     flag = 'GATE OK' if gate_ok else f'GATE FAIL (want {want})'
     print(f"idx={idx} {innovation}: gross {sr_gross:.3f} [{flag}], net {sr_net:.3f}, aU {a_u:.1%}, {time.time()-t0:.0f}s", flush=True)

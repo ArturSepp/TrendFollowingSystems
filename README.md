@@ -24,6 +24,11 @@ Systems*. **Read and download the paper on SSRN:**
 See [Citation](#citation) for the BibTeX entry. The replication material for
 every figure and table is in [`papers/tf_systems/`](papers/tf_systems/).
 
+**Documentation:** the [trendfollowing handbook](https://trendfollowingsystems.readthedocs.io/en/latest/)
+develops every result below chapter by chapter (filters, normalisation, processes, the P&L
+identity, the closed-form Sharpe ratio, costs, skewness and the three systems), with worked
+examples that the test suite executes and an API reference grouped by chapter.
+
 `trendfollowing` implements the paper's central result: an exact decomposition
 of the European trend-following system's P&L into an autocorrelation channel
 and a squared-drift channel,
@@ -282,12 +287,14 @@ One entry point reproduces every figure, driven by the `PaperFigure` enum:
 python -m papers.tf_systems.replication.reproduce_all_figures
 ```
 
-Simulation figures are seed-exact (seed 8) and need no data. The Monte Carlo
-aggregates behind the process figures and the verification table are cached in
-`papers/tf_systems/replication/results/`, so those figures re-render in
-seconds without re-simulation. See
-[`papers/tf_systems/README.md`](papers/tf_systems/README.md) for the
-figure-by-figure map and the verification catalogue.
+Nine frozen caches in `papers/tf_systems/replication/data/reference/` support
+the three process figures and two attribution figures. Render those with
+`python -m papers.tf_systems.replication.cached_figures`; full regeneration above
+also runs expensive simulations and data-dependent stages. New output goes to
+the external paper runtime. Table 6.1 needs separate generated simulation parts.
+See [`papers/tf_systems/README.md`](papers/tf_systems/README.md) for commands,
+the figure map and verification catalogue. The approved manuscript source and
+figures are tracked; the reading PDF remains local.
 
 ## Repository layout
 
@@ -304,12 +311,12 @@ src/
         universe.py                         futures universe data layer
         backtests.py                        portfolio-level backtests of the three systems (qis)
 resources/
-    papers/                            writable paper-replication caches; not installed
+    papers/                            ignored legacy caches; new output stays external
 examples/                           self-contained usage cases; kept at repository root
 papers/
     tf_systems/                         'The Science and Practice of Trend-Following Systems'
-        paper/                              LaTeX source, siamonline class, compiled PDF, figures
-        replication/                        exhibit generators, verification scripts, MC caches
+        paper/                              approved LaTeX source, SIAM class and twelve figures
+        replication/                        generators, verification scripts, data/reference/, tests/
 tests/                              pytest suite
 ```
 
@@ -417,7 +424,7 @@ should also cite the version it ran:
   author  = {Sepp, Artur and Lucic, Vladimir},
   title   = {trendfollowing},
   year    = {2026},
-  version = {1.2.0},
+  version = {1.3.0},
   url     = {https://github.com/ArturSepp/TrendFollowingSystems}
 }
 ```

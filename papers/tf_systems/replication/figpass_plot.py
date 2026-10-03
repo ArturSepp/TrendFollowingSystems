@@ -1,4 +1,5 @@
 """restyle the three process figures: okabe-ito cvd-safe palette, print-legible fonts, template conventions"""
+
 # packages
 import pickle
 import numpy as np
@@ -10,16 +11,17 @@ import seaborn as sns
 import sys
 # run from the repository root with the package installed
 import qis
+from papers.tf_systems.replication.paths import get_results_path, get_figure_path
 
 SPANS = ['1w', '2w', '1m', '3m', '6m', '1y', '2y']
 NET_COST = 0.0020
-OUT = './{name}.PNG'
+OUT = get_figure_path() + '{name}.PNG'
 FIGS = {
-    'expected_return_white_noise': dict(parts='results/wn_part_{k}.pkl', ks=3, labels=[('drift', -0.5), ('drift', 0.0), ('drift', 0.5)],
+    'expected_return_white_noise': dict(parts=get_results_path() + '/wn_part_{k}.pkl', ks=3, labels=[('drift', -0.5), ('drift', 0.0), ('drift', 0.5)],
                                         colors=['#D55E00', '#000000', '#0072B2']),
-    'expected_return_ar': dict(parts='results/ar_part_{k}.pkl', ks=2, labels=[('phi', 0.05), ('phi', -0.05)],
+    'expected_return_ar': dict(parts=get_results_path() + '/ar_part_{k}.pkl', ks=2, labels=[('phi', 0.05), ('phi', -0.05)],
                                colors=['#0072B2', '#D55E00']),
-    'expected_return_arfima1': dict(parts='results/arfima_part_{k}.pkl', ks=3, labels=[('phi', 0.05), ('phi', 0.0), ('phi', -0.05)],
+    'expected_return_arfima1': dict(parts=get_results_path() + '/arfima_part_{k}.pkl', ks=3, labels=[('phi', 0.05), ('phi', 0.0), ('phi', -0.05)],
                                     colors=['#0072B2', '#000000', '#D55E00']),
 }
 
