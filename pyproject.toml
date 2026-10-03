@@ -71,7 +71,7 @@ test = [
     "pytest-cov>=4.0",
 ]
 lint = [
-    "ruff==0.16.2",
+    "ruff==0.16.9",
 ]
 
 [project.urls]
