@@ -7,6 +7,15 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Documentation
+
+- Titled documentation pages other than the homepage `<page title> - trendfollowing`, instead
+  of ending every title with the full site title, which search results cut off.
+- Removed the site-wide meta description, which every page carried beside its own; each page
+  now has one description, from its front matter.
+- Left the noindex search page and the general index out of the sitemap. No signature or
+  computed value changes.
+
 ## [1.3.0] - 2026-10-01
 
 ### Added

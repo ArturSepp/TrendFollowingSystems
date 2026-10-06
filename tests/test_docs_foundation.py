@@ -1,9 +1,15 @@
 """Repository-level guards for the U3a documentation foundation."""
 
+from html.parser import HTMLParser
 import json
 from pathlib import Path
+import re
 import runpy
+import subprocess
+import sys
 from types import SimpleNamespace
+
+import pytest
 
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[1]
@@ -48,6 +54,87 @@ def test_sphinx_configuration_uses_readthedocs_canonical_override(monkeypatch) -
 
     assert config["html_baseurl"] == canonical_url
     assert context["pageurl"] == canonical_url
+
+
+def test_built_pages_carry_short_titles_one_description_and_a_page_sitemap(
+    monkeypatch, tmp_path
+) -> None:
+    """Build two pages with the site's templates, metadata and sitemap settings.
+
+    Furo would otherwise end every title with the full ``html_title``, a site-wide description
+    would sit beside each page's own, and the sitemap would list the noindex search page.
+    """
+    for module in ("sphinx", "furo", "myst_parser", "sphinx_sitemap"):
+        pytest.importorskip(module)
+    monkeypatch.delenv("READTHEDOCS_CANONICAL_URL", raising=False)
+    config = runpy.run_path(str(DOCS_ROOT / "conf.py"))
+    settings = {
+        key: config[key]
+        for key in (
+            "project",
+            "html_title",
+            "html_baseurl",
+            "myst_html_meta",
+            "sitemap_url_scheme",
+            "sitemap_excludes",
+        )
+        if key in config
+    }
+    source = tmp_path / "source"
+    source.mkdir()
+    (source / "conf.py").write_text(
+        "extensions = ['myst_parser', 'sphinx_sitemap']\n"
+        "html_theme = 'furo'\n"
+        f"templates_path = [{str(DOCS_ROOT / '_templates')!r}]\n"
+        + "".join(f"{key} = {value!r}\n" for key, value in settings.items()),
+        encoding="utf-8",
+    )
+    descriptions = {"index": "The landing page.", "method": "The European system page."}
+    (source / "index.md").write_text(
+        f"---\nmyst:\n  html_meta:\n    description: {descriptions['index']}\n---\n\n"
+        "# Home\n\n```{toctree}\nmethod\n```\n",
+        encoding="utf-8",
+    )
+    (source / "method.md").write_text(
+        f"---\nmyst:\n  html_meta:\n    description: {descriptions['method']}\n---\n\n"
+        "# The European system\n\nA method.\n",
+        encoding="utf-8",
+    )
+    output = tmp_path / "html"
+    result = subprocess.run(
+        [sys.executable, "-m", "sphinx", "-W", "-q", "-b", "html", str(source), str(output)],
+        capture_output=True,
+        text=True,
+        timeout=120,
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+
+    class Head(HTMLParser):
+        """Collect the description tags of a page head."""
+
+        def __init__(self) -> None:
+            super().__init__()
+            self.descriptions = []
+
+        def handle_starttag(self, tag, attrs) -> None:
+            attrs = dict(attrs)
+            if tag == "meta" and attrs.get("name") == "description":
+                self.descriptions.append(attrs["content"])
+
+    for name, title in (
+        ("index", settings["html_title"]),
+        ("method", f"The European system - {settings['project']}"),
+    ):
+        head = (output / f"{name}.html").read_text(encoding="utf-8").split("</head>")[0]
+        assert re.findall(r"<title>(.*?)</title>", head) == [title]
+        parser = Head()
+        parser.feed(head)
+        assert parser.descriptions == [descriptions[name]]
+    sitemap = (output / "sitemap.xml").read_text(encoding="utf-8")
+    assert sorted(re.findall(r"<loc>(.*?)</loc>", sitemap)) == [
+        f"{CANONICAL_DOCS_URL}index.html",
+        f"{CANONICAL_DOCS_URL}method.html",
+    ]
 
 
 def test_landing_page_routes_every_required_destination() -> None:

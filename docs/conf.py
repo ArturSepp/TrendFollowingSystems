@@ -8,7 +8,8 @@ optimalportfolios handbooks. Three local mechanisms support it:
 2. ``api.md`` documents the public objects with autodoc, grouped by the chapter that explains
    them. The package docstrings are plain-text formula notes rather than reStructuredText, so
    ``_docstring_as_literal`` renders each one verbatim instead of parsing it as markup.
-3. ``_templates/page.html`` names the package versions of the build in the page footer.
+3. ``_templates/page.html`` names the package versions of the build in the page footer, and
+   ``_templates/base.html`` titles pages other than the homepage ``<page title> - trendfollowing``.
 """
 
 import os
@@ -71,11 +72,9 @@ html_theme_options = {
     "source_directory": "docs/",
 }
 
+# Every page states its own description in its front matter. A site-wide description here would
+# be emitted beside it as a second description tag on every page.
 myst_html_meta = {
-    "description lang=en": (
-        "trendfollowing provides closed-form trend-following analytics, reference system "
-        "implementations, and reproducible futures evidence in Python."
-    ),
     "keywords": (
         "trend-following, time-series momentum, managed futures, quantitative finance, Python"
     ),
@@ -84,6 +83,8 @@ myst_html_meta = {
 
 sitemap_url_scheme = "{link}"
 sitemap_indent = 2
+# The search page is marked noindex and the general index only lists links to other pages.
+sitemap_excludes = ["search.html", "genindex.html"]
 
 # The PDF prints the methodology chapters as one book; xelatex reads the Unicode of the prose.
 latex_engine = "xelatex"
