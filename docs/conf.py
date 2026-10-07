@@ -8,10 +8,12 @@ optimalportfolios handbooks. Three local mechanisms support it:
 2. ``api.md`` documents the public objects with autodoc, grouped by the chapter that explains
    them. The package docstrings are plain-text formula notes rather than reStructuredText, so
    ``_docstring_as_literal`` renders each one verbatim instead of parsing it as markup.
-3. ``_templates/page.html`` names the package versions of the build in the page footer.
+3. ``_templates/page.html`` names the package versions of the build in the page footer, and
+   ``_templates/base.html`` titles pages other than the homepage ``<page title> - trendfollowing``.
 """
 
 import os
+import re
 import sys
 
 try:
@@ -58,9 +60,23 @@ autodoc_member_order = "bysource"
 html_theme = "furo"
 html_title = "trendfollowing - closed-form trend-following analytics"
 html_short_title = "trendfollowing"
-html_baseurl = os.environ.get(
-    "READTHEDOCS_CANONICAL_URL",
-    "https://trendfollowingsystems.readthedocs.io/en/latest/",
+
+
+def _consolidate_stable(url: str) -> str:
+    """Return the canonical base URL with the moving ``stable`` alias replaced by ``latest``.
+
+    Read the Docs builds ``stable`` from the newest release tag and ``latest`` from ``main``, so
+    both serve the same pages. Left alone, each copy names itself canonical and search engines see
+    every page twice. Numbered versions keep their own canonical URL.
+    """
+    return re.sub(r"(\.readthedocs\.io/en/)stable(/|$)", r"\1latest\2", url)
+
+
+html_baseurl = _consolidate_stable(
+    os.environ.get(
+        "READTHEDOCS_CANONICAL_URL",
+        "https://trendfollowingsystems.readthedocs.io/en/latest/",
+    )
 )
 html_extra_path = ["robots.txt"]
 html_static_path = ["_static"]
@@ -71,11 +87,9 @@ html_theme_options = {
     "source_directory": "docs/",
 }
 
+# Every page states its own description in its front matter. A site-wide description here would
+# be emitted beside it as a second description tag on every page.
 myst_html_meta = {
-    "description lang=en": (
-        "trendfollowing provides closed-form trend-following analytics, reference system "
-        "implementations, and reproducible futures evidence in Python."
-    ),
     "keywords": (
         "trend-following, time-series momentum, managed futures, quantitative finance, Python"
     ),
@@ -84,6 +98,8 @@ myst_html_meta = {
 
 sitemap_url_scheme = "{link}"
 sitemap_indent = 2
+# The search page is marked noindex and the general index only lists links to other pages.
+sitemap_excludes = ["search.html", "genindex.html"]
 
 # The PDF prints the methodology chapters as one book; xelatex reads the Unicode of the prose.
 latex_engine = "xelatex"
