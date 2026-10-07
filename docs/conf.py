@@ -13,6 +13,7 @@ optimalportfolios handbooks. Three local mechanisms support it:
 """
 
 import os
+import re
 import sys
 
 try:
@@ -59,9 +60,23 @@ autodoc_member_order = "bysource"
 html_theme = "furo"
 html_title = "trendfollowing - closed-form trend-following analytics"
 html_short_title = "trendfollowing"
-html_baseurl = os.environ.get(
-    "READTHEDOCS_CANONICAL_URL",
-    "https://trendfollowingsystems.readthedocs.io/en/latest/",
+
+
+def _consolidate_stable(url: str) -> str:
+    """Return the canonical base URL with the moving ``stable`` alias replaced by ``latest``.
+
+    Read the Docs builds ``stable`` from the newest release tag and ``latest`` from ``main``, so
+    both serve the same pages. Left alone, each copy names itself canonical and search engines see
+    every page twice. Numbered versions keep their own canonical URL.
+    """
+    return re.sub(r"(\.readthedocs\.io/en/)stable(/|$)", r"\1latest\2", url)
+
+
+html_baseurl = _consolidate_stable(
+    os.environ.get(
+        "READTHEDOCS_CANONICAL_URL",
+        "https://trendfollowingsystems.readthedocs.io/en/latest/",
+    )
 )
 html_extra_path = ["robots.txt"]
 html_static_path = ["_static"]

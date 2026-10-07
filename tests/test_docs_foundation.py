@@ -38,14 +38,29 @@ def test_sphinx_configuration_uses_canonical_url_and_myst(monkeypatch) -> None:
     assert config["myst_html_meta"]["google-site-verification"]
 
 
-def test_sphinx_configuration_uses_readthedocs_canonical_override(monkeypatch) -> None:
-    canonical_url = "https://trendfollowingsystems.readthedocs.io/en/stable/"
-    monkeypatch.setenv("READTHEDOCS_CANONICAL_URL", canonical_url)
+@pytest.mark.parametrize(
+    ("service_url", "canonical_url"),
+    [
+        # stable and latest serve the same pages, so both name latest as canonical
+        (
+            "https://trendfollowingsystems.readthedocs.io/en/stable/",
+            CANONICAL_DOCS_URL,
+        ),
+        (
+            "https://trendfollowingsystems.readthedocs.io/en/1.3.0/",
+            "https://trendfollowingsystems.readthedocs.io/en/1.3.0/",
+        ),
+    ],
+)
+def test_sphinx_configuration_uses_readthedocs_canonical_override(
+    monkeypatch, service_url, canonical_url
+) -> None:
+    monkeypatch.setenv("READTHEDOCS_CANONICAL_URL", service_url)
     config = runpy.run_path(str(DOCS_ROOT / "conf.py"))
     context = {"pageurl": f"{canonical_url}index.html"}
 
     config["_use_root_canonical"](
-        SimpleNamespace(config=SimpleNamespace(html_baseurl=canonical_url)),
+        SimpleNamespace(config=SimpleNamespace(html_baseurl=config["html_baseurl"])),
         "index",
         "page.html",
         context,
