@@ -7,7 +7,7 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
-### Documentation
+### Fixed
 
 - Titled documentation pages other than the homepage `<page title> - trendfollowing`, instead
   of ending every title with the full site title, which search results cut off.
