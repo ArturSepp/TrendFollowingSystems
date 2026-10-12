@@ -2222,7 +2222,7 @@ wheels = [
 
 [[package]]
 name = "qis"
-version = "5.33.2"
+version = "5.33.4"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "matplotlib", version = "3.10.9", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11'" },
@@ -2241,9 +2241,9 @@ dependencies = [
     { name = "seaborn" },
     { name = "statsmodels" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/13/84/867a0de9e24ce366cf38b941776ec5d50e46680bcdb73989a47f337f749f/qis-5.33.2.tar.gz", hash = "sha256:42ed2595e9f66b8f2464fd4a349d43f72d7db8082bc907cfecc3c53f132f4a42", size = 1141829, upload-time = "2026-10-01T15:32:22.424Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/d9/01/1ac54b1ae12aaeda787025c0337aa138d07ce91419be2b56d34f95cde8ca/qis-5.33.4.tar.gz", hash = "sha256:99186d8d2674e2f89fee3a31002dfa710a276826a3babc5b47875d601d0c1015", size = 1174315, upload-time = "2026-10-07T08:46:08.021Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/00/8e/78b7c31782d8be8a53024d2b666200e76ca682a860edaccea14234494db9/qis-5.33.2-py3-none-any.whl", hash = "sha256:24ae5a29cc73f3aa7b926f40a175c5603fad0647d9d95d9686f08294177b9733", size = 1407067, upload-time = "2026-10-01T15:32:20.278Z" },
+    { url = "https://files.pythonhosted.org/packages/c7/a1/ecdaa2b69c7e23507f7010dfcf8a43facc4b71504c42f900bf918327dfe3/qis-5.33.4-py3-none-any.whl", hash = "sha256:bfed854bb98c5bb5e2f7400685845bcc8027a7f512120ebb43b27370120ff4eb", size = 1445513, upload-time = "2026-10-07T08:46:05.866Z" },
 ]
 
 [[package]]
