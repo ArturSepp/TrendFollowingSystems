@@ -83,8 +83,11 @@ uv run --no-sync pytest
 The repository's [AGENTS.md](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/AGENTS.md)
 and [CONTRIBUTING.md](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CONTRIBUTING.md)
 state the build, lint and documentation commands and the constraints on numerical changes. The
-package is licensed under GPL-3.0-or-later, unlike most of the stack, which is MIT; review the
-copyleft obligations before distributing an extension.
+first-party software uses MIT from version 1.3.1.post1. Earlier releases retain their original
+GPL-3.0-or-later terms. Preserve the full [licence](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/LICENSE)
+and [upstream notices](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/NOTICE).
+Market-data, vendor-service and manuscript permissions are separate; the software licence
+does not grant those rights. Dependencies retain their own licences.
 
 ## See also
 

@@ -7,6 +7,18 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+## [1.3.1.post1] - 2026-10-19
+
+### Changed
+
+- Licensed the first-party software under MIT, retaining Artur Sepp and Vladimir Lucic's
+  copyright and authorship. Earlier published versions and tags retain their original terms.
+- Included full ARFIMA Unlicense and QIS MIT attributions in both distribution archives,
+  and aligned package metadata, citation and current installation/licensing guidance.
+- This is a licensing-only post-release: numerical implementations, public APIs, dependency
+  requirements and the eight packaged futures-data files are unchanged. Market-data,
+  vendor-service and manuscript permissions remain separate from the software licence.
+
 ## [1.3.1] - 2026-10-07
 
 ### Fixed

@@ -37,7 +37,7 @@ general-purpose execution engine; portfolio analytics and reporting are delegate
 
 It is the replication package for *The Science and Practice of Trend-Following Systems*
 (Sepp and Lucic, 2026). Distribution and import name `trendfollowing`. Licensed
-**GPL-3.0** (`LICENSE`) — unlike most of the stack, which is MIT. Depends on `qis` for
+**MIT** from 1.3.1.post1 (`LICENSE`, retained upstream terms in `NOTICE`). Depends on `qis` for
 analytics and reporting.
 
 ## Ecosystem position

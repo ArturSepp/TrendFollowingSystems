@@ -1,8 +1,8 @@
 """Render portable Insight and Pitfall blockquotes as admonitions.
 
 Adapted from ``QuantInvestStrats/docs/_ext/qis_callouts.py`` (MIT License, Copyright (c) Artur
-Sepp), as is the optimalportfolios copy; this file is distributed with trendfollowing under the
-package's GPL-3.0-or-later licence.
+Sepp), as is the optimalportfolios copy. This file retains MIT terms; see the package's
+LICENSE and NOTICE for the full permission notice and upstream attribution.
 
 A chapter marks a practical insight or a common error as an ordinary Markdown blockquote whose
 first word is bold, for example ``> **Pitfall.** ...``. GitHub and VS Code show a readable

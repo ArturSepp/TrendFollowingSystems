@@ -70,4 +70,4 @@ changing the paper or its expected values.
 ## Conduct and licence
 
 Be civil and assume good faith. By contributing, you agree that your contribution is licensed
-under this project's GPL-3.0-or-later licence.
+under this project's MIT licence, preserving applicable third-party notices.

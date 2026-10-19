@@ -424,11 +424,18 @@ should also cite the version it ran:
   author  = {Sepp, Artur and Lucic, Vladimir},
   title   = {trendfollowing},
   year    = {2026},
-  version = {1.3.1},
+  version = {1.3.1.post1},
   url     = {https://github.com/ArturSepp/TrendFollowingSystems}
 }
 ```
 
 ## License
 
-GPL-3.0-or-later — see [`LICENSE`](LICENSE).
+MIT from version 1.3.1.post1 — see [`LICENSE`](LICENSE). Earlier published releases
+retain their original GPL-3.0-or-later terms. The transition changes licensing and
+attribution only; numerical implementations, public APIs and bundled data are unchanged.
+
+Retained ARFIMA and QIS attributions and full upstream terms are in [`NOTICE`](NOTICE).
+The software licence does not grant rights to third-party market data, vendor services or
+manuscripts; their applicable permissions remain separate. Dependencies retain their own
+licences, so MIT describes this package rather than every component in an installed environment.
