@@ -24,8 +24,12 @@ the Monte Carlo verification need no data at all.
 python -m pip install trendfollowing
 ```
 
-The distribution and import names are both `trendfollowing`. Supported Python versions are 3.10
-and newer; continuous integration runs Linux on Python 3.10 to 3.14 and Windows and macOS on 3.12.
+The distribution and import names are both `trendfollowing`. Current `main` and the next release
+require Python 3.11 or newer and patched Pillow 13.0.0 or newer. Published releases retain the
+requirements in their package metadata. Continuous integration runs Linux on Python 3.11 to 3.14
+and Windows and macOS on 3.12; Read the Docs builds with Python 3.12.
+
+The current source declares these runtime dependency floors:
 
 | Dependency | Minimum version | Used for |
 |---|---|---|
@@ -34,6 +38,7 @@ and newer; continuous integration runs Linux on Python 3.10 to 3.14 and Windows 
 | scipy | 1.11 | special functions, filters and the test statistics |
 | numba | 0.59 | compiled path simulation and system state machines |
 | matplotlib | 3.8 | figures of the examples and the replication |
+| Pillow | 13.0.0 | patched image processing used by matplotlib and qis |
 | statsmodels | 0.14.2 | statistical utilities |
 | [qis](https://github.com/ArturSepp/QuantInvestStrats) | 5.0.9 | EWMA recursions, returns, portfolio analytics and reporting |
 

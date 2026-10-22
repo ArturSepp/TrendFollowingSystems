@@ -13,9 +13,14 @@ sorts wrong wherever the field is read as a date, Zenodo included.
 """
 # packages
 import re
+import tomllib
+from importlib.metadata import metadata as distribution_metadata
 from importlib.metadata import version as distribution_version
 from pathlib import Path
 from typing import Optional
+from packaging.requirements import Requirement
+from packaging.specifiers import SpecifierSet
+from packaging.version import Version
 import yaml
 
 import trendfollowing
@@ -45,9 +50,6 @@ BOUNDARY = (
 def _pyproject_version() -> str:
     """
     the [project] version string.
-
-    Parsed with a regular expression rather than tomllib, which arrived in 3.11 while the
-    supported floor is 3.10.
 
     Returns:
         the version
@@ -175,3 +177,26 @@ def test_citation_cff_date_released_is_a_date():
     assert date_released is not None, "CITATION.cff has no date-released field"
     assert re.fullmatch(r'\d{4}-\d{2}-\d{2}', date_released), (
         f"date-released must be YYYY-MM-DD, got {date_released!r}")
+
+
+def test_python_and_pillow_requirements_exclude_vulnerable_fallback():
+    """Source, installed metadata and the lock cannot retain the unpatched Pillow branch."""
+    project = tomllib.loads(REPO_ROOT.joinpath('pyproject.toml').read_text(encoding='utf-8'))[
+        'project']
+    installed = distribution_metadata('trendfollowing')
+    for python_requirement in (project['requires-python'], installed['Requires-Python']):
+        supported = SpecifierSet(python_requirement)
+        assert '3.10' not in supported
+        assert '3.11' in supported
+
+    for requirements in (project['dependencies'], installed.get_all('Requires-Dist')):
+        pillow = next(Requirement(item) for item in requirements
+                      if Requirement(item).name.lower() == 'pillow')
+        assert pillow.marker is None
+        assert '12.3.0' not in pillow.specifier
+        assert '13.0.0' in pillow.specifier
+
+    lock = tomllib.loads(REPO_ROOT.joinpath('uv.lock').read_text(encoding='utf-8'))
+    pillow_versions = [item['version'] for item in lock['package'] if item['name'] == 'pillow']
+    assert pillow_versions
+    assert all(Version(item) >= Version('13.0.0') for item in pillow_versions)

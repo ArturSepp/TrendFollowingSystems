@@ -7,6 +7,14 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Changed
+
+- Dropped Python 3.10 support; the minimum supported Python version is now 3.11.
+- Required patched Pillow >= 13.0.0 for every supported interpreter and removed the
+  Python 3.10 lockfile fallback to Pillow 12.3.0.
+- Updated the CI matrix, minimum-dependency job and installation documentation for
+  Python 3.11+, and removed the obsolete test/docs TOML parser compatibility dependency.
+
 ## [1.3.1.post1] - 2026-10-19
 
 ### Changed

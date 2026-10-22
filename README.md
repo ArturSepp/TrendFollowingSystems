@@ -73,8 +73,10 @@ engine; portfolio analytics and reporting are delegated to `qis`, option-chain w
 pip install trendfollowing
 ```
 
-Python >= 3.10 and `qis` >= 5.0.9. The analytical layer and the Monte Carlo
-verification run without any data. Wheels and source checkouts include the
+Current `main` requires Python >= 3.11, `qis` >= 5.0.9 and patched `Pillow` >= 13.0.0.
+Published releases retain the requirements in their package metadata.
+The analytical layer and the Monte Carlo verification run without any data.
+Wheels and source checkouts include the
 empirical dataset (84 futures contracts, benchmarks, volume-based costs;
 1959–2026). For an editable checkout with the test and lint tools, see [Testing](#testing).
 

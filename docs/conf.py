@@ -14,11 +14,7 @@ optimalportfolios handbooks. Three local mechanisms support it:
 
 import os
 import sys
-
-try:
-    import tomllib
-except ModuleNotFoundError:  # Python 3.10 metadata tests use the compatible parser.
-    import tomli as tomllib
+import tomllib
 from pathlib import Path
 
 DOCS_DIR = Path(__file__).resolve().parent

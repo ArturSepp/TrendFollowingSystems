@@ -122,7 +122,7 @@ uv run --no-sync python -m sphinx -E -W -b linkcheck docs docs/_build/linkcheck
 `[tool.pytest.ini_options] pythonpath = ["."]` puts the repository root on `sys.path`
 only so tests can import the non-installed `papers.*` replication modules under a bare
 `pytest` invocation. `tests/test_src_layout.py` prevents that exception from masking a
-legacy root `trendfollowing/` package. Supported Python is >= 3.10; CI runs Linux 3.10–3.14
+legacy root `trendfollowing/` package. Supported Python is >= 3.11; CI runs Linux 3.11–3.14
 plus Windows and macOS 3.12, separate verification, and built-artifact jobs.
 
 ## Conventions
