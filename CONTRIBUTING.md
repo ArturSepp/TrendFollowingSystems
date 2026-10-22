@@ -1,5 +1,10 @@
 # Contributing to TrendFollowingSystems
 
+*Author: [Artur Sepp](https://github.com/ArturSepp) / First recorded: [2026-08-22](https://github.com/ArturSepp/TrendFollowingSystems/commit/f484c4924276814fe4219574976fca8c0a9e6299)*
+
+Source: [TrendFollowingSystems](https://github.com/ArturSepp/TrendFollowingSystems).
+Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
+
 Thanks for your interest in `trendfollowing`. The package is the replication library for
 *The Science and Practice of Trend-Following Systems*, so published results and the distinction
 between reusable package workflows and paper replication constrain what can change.
@@ -23,6 +28,51 @@ figures, backtest output, or changes to published paper values.
 Use the bug-report template and include the `trendfollowing` version, Python version, operating
 system, a minimal reproducer, and the full traceback or incorrect output. Prefer generated data.
 If the problem concerns a paper result, name the exhibit and the replication command used.
+
+## Starter tasks
+
+These are bounded proposals, not assigned issues or confirmed defects. Recheck source and open
+work before agreeing one task. Use the existing [feature form](https://github.com/ArturSepp/TrendFollowingSystems/issues/new?template=feature_request.yml),
+Area **Documentation or deterministic example**. Include the task ID, owner, exact paths, reproduction, acceptance and focused
+check under Proposed behavior; retain required boundary checkboxes. Use the bug form only for
+observed incorrect behaviour. Keep numerical code, public signatures, dependencies, fixtures and
+canonical examples unchanged for these documentation tasks.
+
+### TF-1: clarify closed-form output
+
+Owner: TrendFollowingSystems. Edit only `docs/quickstart.md` to resolve one observed output-reading ambiguity. Acceptance: identify both model Sharpe numbers and the 260-day/zero-drift convention without calling them realised investment results.
+
+```console
+python examples/quickstart.py
+python -m pytest tests/test_examples.py -k quickstart -q
+```
+
+### TF-2: explain the offline data boundary
+
+Owner: TrendFollowingSystems. Edit only `docs/workflows.md` to clarify which workflow uses generated inputs and which uses bundled futures resources. Acceptance: a reader can choose a data-free task without changing resource paths or frozen data.
+
+```console
+python -m pytest tests/test_packaged_resources.py -q
+```
+
+### TF-3: check release navigation
+
+Owner: TrendFollowingSystems. Edit only `docs/quickstart.md` to clarify one released-versus-main boundary. Acceptance: keep the pinned canonical script and distinguish stable/main without changing paper values or packaging.
+
+```console
+python -m pytest tests/test_docs_foundation.py -q
+```
+
+Run the package's existing strict HTML command after a documentation edit and inspect the
+changed passage. On the maintainer's OneDrive checkout, dot-source the shared
+`Enter-AgentRepo.ps1` first and use `C:\Python\TrendFollowingSystems312\Scripts\python.exe`.
+Keep exports, caches, builds and run output on C. The `uv` setup below is for ordinary contributor
+checkouts outside OneDrive; never create `.venv` in the synchronized checkout.
+
+Follow the [shared review guidance](https://github.com/ArturSepp/ArturSepp/blob/main/docs/contributing_to_stack.md#review-attribution-and-automation-assisted-changes).
+Record the revision, actual versions, exact checks and skips, rendered review and material
+automation assistance. Preserve MIT licensing and retained third-party attribution. Automated checks do not
+establish independent reader success. Review time and acceptance are not promised.
 
 ## Development setup
 

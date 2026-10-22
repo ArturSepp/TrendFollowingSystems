@@ -41,10 +41,10 @@ def test_sphinx_configuration_uses_canonical_url_and_myst(monkeypatch) -> None:
 @pytest.mark.parametrize(
     ("service_url", "canonical_url"),
     [
-        # stable and latest serve the same pages, so both name latest as canonical
+        # Stable and main may differ; preserve each channel canonical URL.
         (
             "https://trendfollowingsystems.readthedocs.io/en/stable/",
-            CANONICAL_DOCS_URL,
+            "https://trendfollowingsystems.readthedocs.io/en/stable/",
         ),
         (
             "https://trendfollowingsystems.readthedocs.io/en/1.3.0/",
