@@ -64,7 +64,7 @@ Both are deterministic closed forms: they require no network or dataset, write n
 open no GUI. The stated convention is 260 trading days per year, zero underlying drift, and a
 single 63-day EWMA filter. Change `PHI`, `D`, or `LONG_SPAN` first when exploring assumptions.
 
-Current `main` requires Python 3.11 or newer and patched Pillow 13.0.0 or newer; the pinned
+Version 1.4.0 requires Python 3.11 or newer and patched Pillow 13.0.0 or newer; the pinned
 1.3.1 example above retains its original requirements. The package depends on `qis` for portfolio
 analytics and reporting. Continue with the {doc}`maintained example workflows <workflows>` for
 span selection, ACF prediction, and the packaged-universe backtest.

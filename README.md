@@ -73,8 +73,8 @@ engine; portfolio analytics and reporting are delegated to `qis`, option-chain w
 pip install trendfollowing
 ```
 
-Current `main` requires Python >= 3.11, `qis` >= 5.0.9 and patched `Pillow` >= 13.0.0.
-Published releases retain the requirements in their package metadata.
+Version 1.4.0 requires Python >= 3.11, `qis` >= 5.0.9 and patched `Pillow` >= 13.0.0.
+Earlier releases retain the requirements in their package metadata.
 The analytical layer and the Monte Carlo verification run without any data.
 Wheels and source checkouts include the
 empirical dataset (84 futures contracts, benchmarks, volume-based costs;
@@ -368,7 +368,7 @@ them, so a replication should also cite the version it ran:
   author  = {Sepp, Artur and Lucic, Vladimir},
   title   = {trendfollowing},
   year    = {2026},
-  version = {1.3.1.post1},
+  version = {1.4.0},
   url     = {https://github.com/ArturSepp/TrendFollowingSystems}
 }
 ```

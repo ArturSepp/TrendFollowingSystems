@@ -24,8 +24,8 @@ the Monte Carlo verification need no data at all.
 python -m pip install trendfollowing
 ```
 
-The distribution and import names are both `trendfollowing`. Current `main` and the next release
-require Python 3.11 or newer and patched Pillow 13.0.0 or newer. Published releases retain the
+The distribution and import names are both `trendfollowing`. Version 1.4.0 requires
+Python 3.11 or newer and patched Pillow 13.0.0 or newer. Earlier releases retain the
 requirements in their package metadata. Continuous integration runs Linux on Python 3.11 to 3.14
 and Windows and macOS on 3.12; Read the Docs builds with Python 3.12.
 
