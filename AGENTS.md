@@ -271,3 +271,8 @@ For an authorized publication: commit, tag that exact main-reachable commit as
 supported. A GitHub Release page is optional and created only when requested; it is not
 required for a local build, pip installation or routine package publication. Development
 versions on main may be ahead of PyPI. Do not publish or bump a version for unrelated work.
+
+For release-documentation corrections, follow the
+[channel maintenance procedure](CONTRIBUTING.md#release-documentation-channels): backport the
+applicable documentation changes to `stable` and verify both published quickstarts. Keep the
+`stable` branch's package code, dependency and version metadata aligned with its released tag.
