@@ -16,6 +16,15 @@ import xml.etree.ElementTree as ET
 
 
 DEFAULT_ROOT = "https://trendfollowingsystems.readthedocs.io/en/latest/"
+# Advance this contract only with a verified released quickstart and both deployed channels.
+QUICKSTART_VERSION = "1.4.0"
+QUICKSTART_PYTHON = "3.11"
+QUICKSTART_PILLOW = "13.0.0"
+QUICKSTART_SCRIPT = (
+    "https://raw.githubusercontent.com/ArturSepp/TrendFollowingSystems/"
+    "2248d9bf866c3b2067c2e4ad1ef9cf7121d80fc5/examples/quickstart.py"
+)
+QUICKSTART_ROOTS = (DEFAULT_ROOT, DEFAULT_ROOT.replace("/latest/", "/stable/"))
 PAGE_PATHS = {
     "landing": ("", ""),
     "quickstart": ("quickstart.html", "quickstart.html"),
@@ -70,6 +79,8 @@ class HtmlDocument:
     primary_text: str
     links: tuple[str, ...]
     has_navigation: bool
+    primary_prose: str = ""
+    primary_code: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -93,6 +104,9 @@ class _AuditHtmlParser(HTMLParser):
         self.canonicals: list[str] = []
         self.robots_directives: list[str] = []
         self.primary_parts: list[str] = []
+        self.prose_parts: list[str] = []
+        self.code_parts: list[list[str]] = []
+        self._in_primary_pre = False
         self.links: list[str] = []
         self.has_navigation = False
         self._in_title = False
@@ -104,10 +118,16 @@ class _AuditHtmlParser(HTMLParser):
 
         if tag == "title":
             self._in_title = True
-        if tag == "main" or attributes.get("role", "").lower() == "main":
+        if not self._primary_depth and (
+            tag == "main" or attributes.get("role", "").lower() == "main"
+        ):
             self._primary_depth = 1
         elif self._primary_depth and tag not in _VOID_ELEMENTS:
             self._primary_depth += 1
+
+        if tag == "pre" and self._primary_depth:
+            self._in_primary_pre = True
+            self.code_parts.append([])
 
         role = attributes.get("role", "").lower()
         if tag == "nav" or role == "navigation":
@@ -136,6 +156,8 @@ class _AuditHtmlParser(HTMLParser):
         tag = tag.lower()
         if tag == "title":
             self._in_title = False
+        if tag == "pre":
+            self._in_primary_pre = False
         if self._primary_depth:
             self._primary_depth -= 1
 
@@ -144,6 +166,10 @@ class _AuditHtmlParser(HTMLParser):
             self.title_parts.append(data)
         if self._primary_depth:
             self.primary_parts.append(data)
+            if self._in_primary_pre:
+                self.code_parts[-1].append(data)
+            else:
+                self.prose_parts.append(data)
 
 
 def _collapse_whitespace(value: str) -> str:
@@ -172,7 +198,66 @@ def parse_html(html: str) -> HtmlDocument:
         primary_text=_collapse_whitespace(" ".join(parser.primary_parts)),
         links=tuple(parser.links),
         has_navigation=parser.has_navigation,
+        primary_prose=_collapse_whitespace(" ".join(parser.prose_parts)),
+        primary_code=tuple("".join(parts) for parts in parser.code_parts),
     )
+
+
+def validate_quickstart(document: HtmlDocument) -> list[str]:
+    """Reject stale released setup claims and commands in the primary page content."""
+    errors: list[str] = []
+    setups = re.findall(
+        r"trendfollowing\s+([\w.]+)\s+on\s+Python\s+(\d+\.\d+)\b", document.primary_prose
+    )
+    if not setups or set(setups) != {(QUICKSTART_VERSION, QUICKSTART_PYTHON)}:
+        errors.append(
+            f"setup: expected TFS {QUICKSTART_VERSION} on Python {QUICKSTART_PYTHON}; "
+            f"found {setups!r}"
+        )
+    python_floors = re.findall(r"(?:requires|supports) Python (\d+\.\d+)", document.primary_prose)
+    if any(floor != QUICKSTART_PYTHON for floor in python_floors):
+        errors.append(f"setup: conflicting Python minimum {python_floors!r}")
+    floors = re.findall(r"Pillow\s+([\d.]+)\s+or newer", document.primary_prose)
+    if not floors or set(floors) != {QUICKSTART_PILLOW}:
+        errors.append(f"Pillow: expected minimum {QUICKSTART_PILLOW}; found {floors!r}")
+
+    # Join Pygments span contents without injecting spaces inside commands or URLs.
+    code = "\n".join(document.primary_code)
+    installs = [line.strip() for line in code.splitlines()
+                if re.search(r"\bpip\s+install\b", line) and "trendfollowing" in line]
+    pins = re.findall(r"\btrendfollowing(?:==([\w.+-]+))?", "\n".join(installs))
+    if not installs or set(pins) != {QUICKSTART_VERSION}:
+        errors.append(f"install: expected every TFS command to pin {QUICKSTART_VERSION}; "
+                      f"found {installs!r}")
+    scripts = re.findall(
+        r"https://raw\.githubusercontent\.com/ArturSepp/TrendFollowingSystems/"
+        r"[^\s\"']+/examples/quickstart\.py", code
+    )
+    if not scripts or set(scripts) != {QUICKSTART_SCRIPT}:
+        errors.append(f"script: expected {QUICKSTART_SCRIPT}; found {scripts!r}")
+    return errors
+
+
+def audit_quickstarts(
+    attempts: int = 3, retry_delay: float = 1.0, timeout: float = 15.0,
+) -> tuple[list[str], dict[str, int]]:
+    """Check both public quickstarts, including redirects and bounded HTTP failures."""
+    errors: list[str] = []
+    for root in QUICKSTART_ROOTS:
+        url = urljoin(root, "quickstart.html")
+        try:
+            result = _fetch(url, attempts, retry_delay, timeout)
+        except RuntimeError as error:
+            errors.append(f"{url}: {error}")
+            continue
+        if result.status != 200:
+            errors.append(f"{url}: expected HTTP 200, got {result.status}")
+        if _normalise_url(result.final_url) != _normalise_url(url):
+            errors.append(f"{url}: unexpected redirect to {result.final_url}")
+        if _content_type(result) != "text/html":
+            errors.append(f"{url}: expected text/html, got {_content_type(result)!r}")
+        errors.extend(f"{url}: {error}" for error in validate_quickstart(parse_html(result.text)))
+    return errors, {"quickstart_pages": len(QUICKSTART_ROOTS)}
 
 
 def _directive_tokens(values: tuple[str, ...]) -> set[str]:
@@ -430,10 +515,15 @@ def audit_site(
 
 def _parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument(
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument(
         "--root",
         default=DEFAULT_ROOT,
         help="Canonical deployed documentation root",
+    )
+    mode.add_argument(
+        "--quickstarts", action="store_true",
+        help="Check released instructions on latest and stable",
     )
     parser.add_argument("--attempts", type=int, default=3, help="Bounded attempts per URL")
     parser.add_argument("--retry-delay", type=float, default=1.0, help="Seconds between attempts")
@@ -452,18 +542,24 @@ def main(argv: list[str] | None = None) -> int:
     """Run the command-line deployed documentation audit."""
 
     args = _parse_args(argv)
-    errors, summary = audit_site(
-        root=args.root,
-        attempts=args.attempts,
-        retry_delay=args.retry_delay,
-        timeout=args.timeout,
-    )
+    options = dict(attempts=args.attempts, retry_delay=args.retry_delay, timeout=args.timeout)
+    label = "Read the Docs quickstarts" if args.quickstarts else "deployed documentation audit"
+    if args.quickstarts:
+        errors, summary = audit_quickstarts(**options)
+    else:
+        errors, summary = audit_site(root=args.root, **options)
     if errors:
-        print("FAIL: deployed documentation audit", file=sys.stderr)
+        print(f"FAIL: {label}", file=sys.stderr)
         for error in errors:
             print(f"- {error}", file=sys.stderr)
         return 1
-    print("PASS: deployed documentation audit")
+    print(f"PASS: {label}")
+    if args.quickstarts:
+        print(f"- TFS {QUICKSTART_VERSION}; Python {QUICKSTART_PYTHON}; "
+              f"Pillow >= {QUICKSTART_PILLOW}")
+        for root in QUICKSTART_ROOTS:
+            print(f"- {urljoin(root, 'quickstart.html')}")
+        return 0
     print(f"- root: {args.root.rstrip('/') + '/'}")
     print(f"- priority HTML pages: {summary['priority_pages']}")
     print(f"- sitemap URLs: {summary['sitemap_urls']}")

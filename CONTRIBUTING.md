@@ -118,6 +118,19 @@ After pushing, verify both Read the Docs builds and inspect each published quick
 pin, Python version, Pillow requirement and canonical example link. A successful build can
 still serve stale instructions when its source branch or tag predates the correction.
 
+The **External documentation health** workflow checks both published quickstarts daily, on
+relevant pushes to `main`, and on manual dispatch. Run the same check locally with:
+
+```console
+python tools/check_deployed_docs.py --quickstarts
+```
+
+The check rejects stale package pins, Python setup claims, Pillow minimums and example URLs,
+including conflicting install commands. Failed requests, missing content and channel redirects
+also fail it. Each request has a timeout and bounded retries. The expected released workflow is
+recorded in the `QUICKSTART_*` constants in `tools/check_deployed_docs.py`; advance those values
+with a verified released quickstart and align both published channels before accepting the check.
+
 ## Pull requests
 
 - Keep one focused topic per pull request.
