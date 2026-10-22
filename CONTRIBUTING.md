@@ -100,6 +100,24 @@ uv run --no-sync python -m sphinx -E -W -b linkcheck docs docs/_build/linkcheck
 contributor environments, not package extras: use `test` for pytest, `lint` for Ruff, and retain
 the `docs` extra for Read the Docs.
 
+## Release documentation channels
+
+Read the Docs `latest` builds `main`. The `stable` channel builds the maintained `stable`
+branch, which contains the current released package code and reviewed documentation corrections.
+The current baseline is TFS 1.4.0 on Python 3.11, with Pillow 13.0.0 or newer.
+Read the Docs supports this explicit branch through its
+[custom stable version convention](https://docs.readthedocs.com/platform/stable/versions.html).
+
+When correcting instructions for an existing release, commit the fix to `main` and backport the
+applicable documentation changes to `stable`. Keep package code, dependencies and version
+metadata on `stable` aligned with the released tag. Advance that baseline only after a new
+package release has passed verification. Published release tags and PyPI artifacts remain
+immutable.
+
+After pushing, verify both Read the Docs builds and inspect each published quickstart's package
+pin, Python version, Pillow requirement and canonical example link. A successful build can
+still serve stale instructions when its source branch or tag predates the correction.
+
 ## Pull requests
 
 - Keep one focused topic per pull request.

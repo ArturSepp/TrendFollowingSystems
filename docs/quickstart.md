@@ -38,10 +38,11 @@ path should point to the installed package in the selected environment's `site-p
 
 This CPU calculation returns two deterministic closed-form Sharpe ratios, not an empirical backtest or investment forecast. It needs no data, credentials or optional extras and writes no files. `qis` is a core dependency for analytics/reporting; the packaged futures resources are not part of this first-use path. The fixed convention is 260 trading days per year, zero underlying drift and a 63-day EWMA filter.
 
-[Stable documentation](https://trendfollowingsystems.readthedocs.io/en/stable/) is the release channel;
-[latest](https://trendfollowingsystems.readthedocs.io/en/latest/) follows main and may include unreleased changes. Check the build's
-source version; a stable alias is not proof of the latest PyPI upload. Existing figures,
-results and conventions below remain the canonical example's contract.
+[Stable documentation](https://trendfollowingsystems.readthedocs.io/en/stable/) follows the
+maintained `stable` branch: TFS 1.4.0 with documentation corrections. The
+[latest channel](https://trendfollowingsystems.readthedocs.io/en/latest/) follows `main` and may
+include unreleased changes. Check the build's source version and the installed package version.
+Existing figures, results and conventions below remain the canonical example's contract.
 
 Install the released package from PyPI:
 
