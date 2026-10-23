@@ -16,6 +16,7 @@ from qis.utils.np_ops import set_nans_for_warmup_period
 from numba import njit
 from typing import Optional, Union, Tuple
 from trendfollowing.systems.backtest_utils import (
+    _compute_causal_portfolio_var,
     compute_pnl,
     compute_vol_norm_returns,
     BacktestOutputs,
@@ -142,7 +143,7 @@ def run_european_tf_system(
         weights = np.clip(weights, -weight_cap, weight_cap)
 
     if portfolio_covar_span is not None:
-        portfolio_var = qis.compute_portfolio_var_np(
+        portfolio_var = _compute_causal_portfolio_var(
             returns=returns_np, weights=weights, span=portfolio_covar_span
         )
         # np.reciprocal with where= but no out= leaves the masked cells uninitialised (undefined

@@ -7,6 +7,21 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Fixed
+
+- Start portfolio EWMA covariance from zero in all three systems, including with older
+  supported QIS versions whose portfolio-variance API has no seed argument. Use an explicit
+  zero seed with newer QIS and a compatibility kernel with the same update and missing-data
+  decay for older QIS. Preserve current-weight risk estimation, next-period P&L, zero-variance
+  leverage handling and warmup rules. Regression tests cover targeted future-price invariance
+  for all three systems and both covariance paths against an independent reference.
+- Seed per-market EWMA volatility with each instrument's first finite squared return instead
+  of its full-sample variance, removing future-data dependence from initialization. Preserve
+  the existing volatility lag, position/P&L timing and warmup rules. Startup estimates and
+  first tradable dates can change, including for instruments with an initially zero return.
+  Regression tests cover independent estimator references, future-data invariance, and the
+  existing lag and warmup rules, including portfolio-targeted European and TSMOM runs.
+
 ## [1.4.0] - 2026-10-22
 
 ### Changed

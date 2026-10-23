@@ -41,12 +41,17 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to <https://unlicense.org>
 
-QIS documentation callouts
--------------------------
+QIS-derived code
+----------------
 
 docs/_ext/trendfollowing_callouts.py was adapted from
 QuantInvestStrats/docs/_ext/qis_callouts.py. The original Artur Sepp attribution
 is retained in that file. The full QIS MIT notice follows.
+
+The zero-seeded portfolio covariance compatibility kernel in
+src/trendfollowing/systems/backtest_utils.py adapts compute_portfolio_var_np from
+qis/portfolio/risk/ewm_covar_risk.py, retaining its update and missing-data rules.
+Reviewed upstream version: v5.0.9, commit f13054f8316d882ae704fd8d0293d031111ef0dd.
 
 Source: https://github.com/ArturSepp/QuantInvestStrats
 

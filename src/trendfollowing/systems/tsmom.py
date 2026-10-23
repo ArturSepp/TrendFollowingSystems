@@ -13,6 +13,7 @@ from qis.utils.df_freq import df_resample_at_int_index
 from qis.utils.np_ops import set_nans_for_warmup_period
 from typing import Optional, Union, Tuple
 from trendfollowing.systems.backtest_utils import (
+    _compute_causal_portfolio_var,
     compute_pnl,
     compute_vol_norm_returns,
     BacktestOutputs,
@@ -89,7 +90,7 @@ def run_tsmom_system(
     )
 
     if portfolio_covar_span is not None:
-        portfolio_var = qis.compute_portfolio_var_np(
+        portfolio_var = _compute_causal_portfolio_var(
             returns=returns.to_numpy(), weights=weights.to_numpy(), span=portfolio_covar_span
         )
         # np.reciprocal with where= but no out= leaves the masked cells uninitialised (undefined

@@ -9,8 +9,9 @@ https://ssrn.com/abstract=3167787
 import numpy as np
 import pandas as pd
 import qis as qis
-from qis.utils.np_ops import np_cumsum, np_nanstd, np_nansum, np_nanvar
+from qis.utils.np_ops import np_cumsum, np_nanstd, np_nansum
 from dataclasses import dataclass
+from inspect import signature
 from numba import njit
 from typing import Tuple, Union
 
@@ -119,14 +120,30 @@ def compute_pnl(
 @njit
 def compute_vol(returns: np.ndarray, vol_span: float = 31.0, is_lag1: bool = True) -> np.ndarray:
     """
-    compute return_t / ewma_vol_{t-1}
+    daily EWMA volatility, seeded with the first finite squared return of each column
+
+    Zero is a valid seed; no volatility floor is applied. Missing observations follow
+    the QIS forward-fill rule. The optional one-row lag repeats the first estimate
+    at row zero. Warmup masking remains the responsibility of the system runners.
     """
     ewm_lambda = 1.0 - 2.0 / (vol_span + 1.0)
+    squared_returns = np.square(returns)
+    # qis.compute_ewm_vol and set_init_dim1 are Python wrappers, unavailable inside njit.
+    # Select their X0 seed here; the EWMA recursion itself remains delegated to QIS.
     if returns.ndim == 1:
-        init_value = np.nanvar(returns)
+        init_value = 0.0
+        for value in squared_returns:
+            if np.isfinite(value):
+                init_value = value
+                break
     else:
-        init_value = np_nanvar(returns, axis=0)[0]
-    vols = qis.ewm_recursion(a=np.square(returns), ewm_lambda=ewm_lambda, init_value=init_value)
+        init_value = np.zeros(returns.shape[1])
+        for column in range(returns.shape[1]):
+            for row in range(returns.shape[0]):
+                if np.isfinite(squared_returns[row, column]):
+                    init_value[column] = squared_returns[row, column]
+                    break
+    vols = qis.ewm_recursion(a=squared_returns, ewm_lambda=ewm_lambda, init_value=init_value)
 
     if is_lag1:
         if returns.ndim == 1:  # add extra row 0
@@ -165,6 +182,46 @@ def compute_vol_target_weight(
     )
     weights = vol_target / vols
     return weights, vols
+
+
+# QIS compute_portfolio_var_np before covar0 cannot accept a causal seed; its pandas
+# wrapper also calls that noncausal kernel. RiskModel is absent at the supported floor.
+# This bounded-memory compatibility kernel follows QIS's MIT-licensed recursion
+# (see NOTICE), changing only its initial covariance. Newer QIS uses its own kernel below.
+@njit
+def _compute_portfolio_var_zero_seed(
+    returns: np.ndarray, weights: np.ndarray, span: float
+) -> np.ndarray:
+    """Compatibility for the seed-less QIS API, with its existing gap/weight rules."""
+    ewm_lambda = 1.0 - 2.0 / (span + 1.0)
+    ewm_lambda_1 = 1.0 - ewm_lambda
+    last_covar = np.zeros((returns.shape[1], returns.shape[1]))
+    finite_weights = np.where(np.isfinite(weights), weights, 0.0)
+    portfolio_var = np.zeros(returns.shape[0])
+    for idx in range(returns.shape[0]):
+        row = returns[idx]
+        covar = ewm_lambda_1 * np.outer(row, row) + ewm_lambda * last_covar
+        covar = np.where(np.isfinite(covar), covar, ewm_lambda * last_covar)
+        last_covar = covar
+        weights_t = np.ascontiguousarray(finite_weights[idx])
+        portfolio_var[idx] = weights_t.T @ covar @ weights_t
+    return portfolio_var
+
+
+def _compute_causal_portfolio_var(
+    returns: np.ndarray, weights: np.ndarray, span: float
+) -> np.ndarray:
+    """Current-weight portfolio variance, explicitly zero-seeded on every QIS version.
+
+    Keep the existing same-row covariance/weight pairing and missing-data decay.
+    Detect the seed argument rather than relying on a QIS version or default.
+    """
+    if 'covar0' in signature(qis.compute_portfolio_var_np).parameters:
+        return qis.compute_portfolio_var_np(
+            returns=returns, weights=weights, span=span,
+            covar0=np.zeros((returns.shape[1], returns.shape[1])),
+        )
+    return _compute_portfolio_var_zero_seed(returns=returns, weights=weights, span=span)
 
 
 # @njit

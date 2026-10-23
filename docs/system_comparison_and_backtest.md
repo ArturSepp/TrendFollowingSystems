@@ -85,10 +85,11 @@ reporting conventions rather than assuming a second reporting implementation her
 
 ## Warmup and no look-ahead timing
 
-The default `warmup_period=250` suppresses the first 250 rows of European and TSMOM weights.
-American counts finite observations separately for each instrument and cannot open a position
-until more than 250 have been seen. A calendar row count and an instrument's observation count
-are not interchangeable in a ragged panel.
+The default `warmup_period=250` suppresses the first 250 finite European and TSMOM weights
+separately for each instrument. American counts finite observations separately for each
+instrument and cannot open a position until more than 250 have been seen. A calendar row count
+and an instrument's observation count are not interchangeable in a ragged panel. These warmup
+rules are unchanged by the volatility seed correction.
 
 At the application boundary, the shared P&L function enforces no look-ahead: an exposure decided
 at date *t* is multiplied by the return at *t+1*. After initialization, European and TSMOM
@@ -96,18 +97,25 @@ normalize a return using lagged volatility. Current-date information may enter a
 *t* because that weight is held only over the next interval. Costs are charged on the date the
 exposure changes.
 
-That application lag prevents a direct same-row signal/P&L accident.
-It does not make a supplied full-panel calculation fully point-in-time.
-The current volatility helper seeds its EWMA with the
-variance of the supplied return array, and optional portfolio covariance targeting starts from an
-in-sample covariance. These are in-sample initialization choices. The 250-day warmup attenuates
-their influence but does not change their information set.
+The volatility helper seeds each column's EWMA with its first finite squared return. Earlier
+rows remain missing, and a zero first squared return remains zero without an epsilon or floor.
+Normalisation retains its one-row lag, including duplication of the first array row at the lag
+boundary; position sizing uses the current estimate. Optional portfolio covariance targeting
+uses a zero covariance seed before the first row on every supported QIS version. TFS passes
+`covar0` explicitly to `qis.compute_portfolio_var_np` where that argument exists. Older versions,
+including QIS 5.0.9, have no seed argument and use TFS's compatibility kernel with the same EWMA
+update and missing-data decay. Risk estimation still pairs the weights and covariance known at
+date *t*; P&L still applies those weights over *t+1*. Zero or negative portfolio variance still
+gives zero leverage. No warmup rule or rebalance calendar is changed.
 
-For a strict point-in-time research comparison, estimate on expanding or rolling prefixes that
-contain only information available at each decision date, and record the seed and burn-in rule.
-Also keep universe membership, cost schedules, parameter selection, and portfolio covariance
-estimation point-in-time. The packaged full-history workflow is a paper replication; it is not an
-out-of-sample trading simulation merely because weight application is lagged.
+The application lag prevents a direct same-row signal/P&L accident.
+It does not make a supplied full-panel calculation fully point-in-time. Universe membership,
+cost schedules, parameter selection and portfolio covariance estimation also need point-in-time
+inputs.
+For prefix comparisons, retain the original TSMOM rebalance calendar: its block schedule is
+anchored to the supplied index's end, so truncating the index can shift the rebalance phase.
+Record the seed and burn-in rule. The packaged full-history workflow is a paper replication;
+it is not an out-of-sample trading simulation merely because weight application is lagged.
 
 ## Packaged universe and override
 

@@ -184,7 +184,7 @@ def test_system_comparison_guide_routes_to_built_symbols_and_authoritative_examp
         "portfolio-level volatility targeting",
         "`warmup_period=250`",
         "no look-ahead",
-        "in-sample initialization",
+        "zero covariance seed",
         "does not make a supplied full-panel calculation fully point-in-time",
         "date *t*",
         "*t+1*",

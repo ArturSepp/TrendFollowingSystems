@@ -210,9 +210,11 @@ f_{t+1}=w_t r_{t+1}.
 $$
 
 The European signal $S_t$ uses $z_t$, which uses $\sigma_{t-1}$; the position size uses $\sigma_t$.
-Both are known at the close of day $t$. A cost is charged on the day the weight changes. The
-backtest runners initialise their volatility and covariance recursions from full-sample moments,
-an in-sample choice whose influence the 250-day warmup attenuates but does not remove; the
+Both are known at the close of day $t$. A cost is charged on the day the weight changes. Each
+instrument's volatility recursion starts from its first finite squared return, including zero,
+with no epsilon or floor. The existing lag boundary and warmup rules are retained. Optional
+portfolio covariance starts from zero before the first row on every supported QIS version,
+using an explicit QIS seed where available and a compatibility kernel otherwise. The
 [European system chapter](european_system.md) states the details.
 
 ### Population and sample moments

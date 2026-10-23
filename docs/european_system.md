@@ -41,7 +41,7 @@ cost model.
 | Convention | This article |
 |---|---|
 | Return basis | Log returns $\log(s_t/s_{t-1})$ of each price column, used for the signal and for the P&L |
-| Normalisation | EWMA volatility of span `vol_span`, lagged one day, seeded with the full-sample variance |
+| Normalisation | EWMA volatility of span `vol_span`, lagged one day, seeded with each column's first finite squared return |
 | Signal filter | Variance-preserving single filter or LS(`long_span`,`short_span`), capped at `signal_cap` |
 | Moment basis | Sample paths of the supplied prices |
 | Annualisation | `annualization_factor=260` for the volatility target and the portfolio covariance |
@@ -93,8 +93,10 @@ realised volatility is low (B), and the realised volatility of the P&L averages 
 1. **Returns.** $\ell_t=\log(s_t/s_{t-1})$ through `qis.to_returns(prices, is_log_returns=True)`;
    the first row is missing.
 2. **Normalisation.** $z_t=\ell_t/\sigma_{t-1}$ with the lagged EWMA volatility of span
-   `vol_span`, seeded with the full-sample variance (`compute_vol_norm_returns`). The first two
-   rows of $z$ are missing: the first return, and the first lagged volatility.
+   `vol_span`, seeded with each column's first finite squared return
+   (`compute_vol_norm_returns`). The first two rows of $z$ are missing for a complete price
+   history: the first return, and the first lagged volatility. A zero first return stays a zero
+   variance seed; no epsilon or floor is added.
 3. **Signal.** The variance-preserving filter of $z$ through `qis.compute_ewm_long_short`, started
    at zero, and clipped to $[-\bar S,\bar S]$ when `signal_cap` is set (`compute_tf_signal`).
 4. **Weight.** $w_t=S_t\sigma_{\mathrm{target}}/(\sqrt{\mathrm{af}}\sigma_t)$ with the unlagged
@@ -102,10 +104,13 @@ realised volatility is low (B), and the realised volatility of the P&L averages 
    (`compute_tf_signal_weight`).
 5. **Portfolio volatility target.** When `portfolio_covar_span` is set, every weight is multiplied
    by $\lambda_t=\sigma_P/\sqrt{\mathrm{af}w_t^{\top}\Sigma_tw_t}$, where $\Sigma_t$ is the EWMA
-   covariance of the returns up to $t$ seeded with the full-sample covariance
-   (`qis.compute_portfolio_var_np`); days with a non-positive portfolio variance get zero leverage.
+   covariance started from zero before the first row, using returns through $t$. TFS passes an
+   explicit zero seed to `qis.compute_portfolio_var_np` where supported; older QIS versions use
+   a compatibility kernel with the same update and missing-data decay. Days with a non-positive
+   portfolio variance get zero leverage.
 6. **Warmup.** The first `warmup_period` finite weights of each column are set to missing. With the
-   default 250, the first weight falls on row 252 of the panel.
+   default 250 and a complete history with finite weights from row 2, the first retained weight
+   falls on row 252 of the panel. Ragged starts and zero-volatility observations can delay it.
 7. **P&L and costs.** `compute_pnl` forms, per instrument, the gross and net daily contributions
    and aggregates them.
 
@@ -265,8 +270,8 @@ Contract details:
 - The function defaults differ between layers: `vol_target=0.3` in the runner,
   `0.15` in `compute_tf_strat_pnl` and `0.30` in `compute_tf_signal_weight`; spans default to 31
   or 33 days. Pass every parameter explicitly when comparing runs.
-- The volatility and covariance recursions are seeded with full-sample moments, an in-sample
-  initialisation that the warmup attenuates but does not remove; see the
+- Per-instrument volatility initialisation is causal and preserves the existing lag and warmup
+  rules. Portfolio covariance also starts from zero on every supported QIS version; see the
   [system comparison guide](system_comparison_and_backtest.md).
 
 ## Interpretation and limitations

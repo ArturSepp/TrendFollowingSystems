@@ -81,7 +81,8 @@ $$
 z_t=\frac{r_t}{\sigma_{t-1}} .
 $$
 
-The return of day $t$ enters $\sigma_t$ but not $\sigma_{t-1}$, so it never scales itself. Under
+After initialisation, the return of day $t$ enters $\sigma_t$ but not $\sigma_{t-1}$, so it does
+not scale itself. The array's first row retains the boundary convention described below. Under
 a correctly specified conditional variance, $z_t$ has unit variance; empirically, for S&P 500
 futures the EWMA volatility averages 17% and $z_t$ has a standard deviation of 0.96 (Sepp and
 Lucic, 2026, Section 2.2).
@@ -186,18 +187,11 @@ for t in range(n):
     returns[t] = np.sqrt(garch_variance) * innovations[t]
     garch_variance = omega + alpha * returns[t] ** 2 + beta * garch_variance
 
-# the estimator: EWMA of squared returns seeded with the sample variance, lagged by one day
+# the estimator: EWMA seeded with the first squared return, lagged by one day
 z = compute_vol_norm_returns(returns=returns, vol_span=33)
 nu_sigma = tf.span_to_nu(33)
 variance = np.empty(n)
-seed = np.var(returns)  # full-sample seed: an in-sample initialisation
-# Older qis versions emit the seed at row zero; current versions update it with r_0^2.
-# Check both supported initialisation contracts, then verify every subsequent update.
-first_variance = compute_vol(returns=returns, vol_span=33, is_lag1=False)[0] ** 2
-if np.isclose(first_variance, seed, rtol=1e-12, atol=0.0):
-    variance[0] = seed
-else:
-    variance[0] = nu_sigma * seed + (1.0 - nu_sigma) * returns[0] ** 2
+variance[0] = returns[0] ** 2  # independent reference: no future observations in the seed
 for t in range(1, n):
     variance[t] = nu_sigma * variance[t - 1] + (1.0 - nu_sigma) * returns[t] ** 2
 sigma_lagged = np.sqrt(np.concatenate(([variance[0]], variance[:-1])))
@@ -270,14 +264,16 @@ API reference: {py:func}`trendfollowing.systems.backtest_utils.compute_vol`,
 
 Contract details:
 
-- The recursion is seeded with the full-sample variance of each column (`np.nanvar`). Current
-  `qis.ewm_recursion` treats this seed as the state before the first observation and updates it
-  with the first squared return. Older qis versions instead emit the seed at row zero; the
-  independent recursion above checks both contracts so the reviewed lock and the live
-  dependency-compatibility run are covered. The seed uses future observations, so the first weeks of $\sigma_t$ are
-  not point in time; the runners' 250-day warmup lets the seed decay to $\nu_\sigma^{250}$,
-  about $3\times 10^{-7}$ at the 33-day span.
+- Each column is seeded with its first finite squared return. Rows before that observation stay
+  missing, wholly missing columns stay missing, and subsequent missing observations carry the
+  previous estimate forward. The seed uses no future observations at the date it first appears.
+  A first squared return of zero remains zero: no epsilon or volatility floor is added, so
+  division by a zero estimate can produce non-finite normalised returns or weights.
 - With `is_lag1=True`, the first row repeats the first computed volatility, so $z_0=r_0/\sigma_0$.
+- Normalisation retains the one-row volatility lag, while position sizing uses the current
+  estimate. The runners' warmup rules are unchanged: European and TSMOM suppress the first
+  `warmup_period` finite weights separately in each column; American retains its observation
+  counter. A changed seed can change when a weight first becomes finite.
 - `compute_vol_norm_returns` has the default `vol_span=31.0`, while every runner and the paper
   use 33 days. Pass the span explicitly.
 

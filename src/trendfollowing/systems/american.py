@@ -14,7 +14,9 @@ from qis.utils.df_ops import get_first_nonnan_values
 from numba import njit
 from typing import Union, Optional, Tuple
 
-from trendfollowing.systems.backtest_utils import compute_pnl, compute_vol, BacktestOutputs
+from trendfollowing.systems.backtest_utils import (
+    compute_pnl, compute_vol, BacktestOutputs, _compute_causal_portfolio_var,
+)
 
 
 @njit
@@ -146,7 +148,7 @@ def run_american_system(
         )
 
     if portfolio_covar_span is not None:
-        portfolio_var = qis.compute_portfolio_var_np(
+        portfolio_var = _compute_causal_portfolio_var(
             returns=returns_np, weights=weights, span=portfolio_covar_span
         )
         # np.reciprocal with where= but no out= leaves the masked cells uninitialised (undefined
