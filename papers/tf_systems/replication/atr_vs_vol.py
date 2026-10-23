@@ -23,7 +23,7 @@ def get_ohlc_data(ticker: str = 'ES1 Index', time_period: qis.TimePeriod = None)
     file_name = f"tf_system_data_ohlc_{ticker.split()[0].lower()}"
     file_path = os.path.join(LOCAL_PATH, f"{file_name}.csv")
     if os.path.isfile(file_path):
-        df = qis.load_df_from_csv(file_name=file_name, local_path=LOCAL_PATH)
+        df = qis.load_df_from_csv(file_name=file_name, local_path=LOCAL_PATH, dayfirst=False)
     else:
         from bbg_fetch import fetch_fields_timeseries_per_ticker  # runtime dependency: requires terminal access
         df = fetch_fields_timeseries_per_ticker(ticker=ticker, fields=['PX_OPEN', 'PX_HIGH', 'PX_LOW', 'PX_LAST'])

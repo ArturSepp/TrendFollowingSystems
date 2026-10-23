@@ -9,6 +9,9 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Fixed
 
+- Pass an explicit boolean date-order option to the packaged futures and OHLC CSV loaders,
+  fixing pandas 3.1 compatibility when QIS defaults to `dayfirst=None`. Preserve every
+  packaged ISO date and keep the pandas 3.1 validation covered with older locked dependencies.
 - Start portfolio EWMA covariance from zero in all three systems, including with older
   supported QIS versions whose portfolio-variance API has no seed argument. Use an explicit
   zero seed with newer QIS and a compatibility kernel with the same update and missing-data

@@ -144,6 +144,7 @@ def load_data(
         dataset_keys=['prices', 'volume_costs', 'benchmark_prices', 'descriptive_df'],
         file_name='tf_system_data',
         local_path=local_path,
+        dayfirst=False,  # ISO dates; pandas 3.1 rejects QIS's historical None default.
     )
     prices = dfs['prices']
     volume_costs = dfs['volume_costs']

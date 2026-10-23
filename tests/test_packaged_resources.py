@@ -41,7 +41,8 @@ def test_resource_override_is_resolved_when_load_data_is_called(monkeypatch, tmp
     )
     calls = []
 
-    def fake_load_df_dict_from_csv(*, dataset_keys, file_name, local_path):
+    def fake_load_df_dict_from_csv(*, dataset_keys, file_name, local_path, dayfirst):
+        assert dayfirst is False
         calls.append(local_path)
         return {
             "prices": prices,

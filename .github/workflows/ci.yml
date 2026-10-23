@@ -1,15 +1,25 @@
 # SHARED CI CORE v1.0 — T1 — synced 2026-08-22
 name: CI
-run-name: ${{ github.event_name == 'schedule' && 'Dependency compatibility (live resolution)' || 'CI' }}
+run-name: ${{ (github.event_name == 'schedule' || inputs.live_dependencies) && 'Dependency compatibility (live resolution)' || 'CI' }}
 
 permissions:
   contents: read
 
 on:
   workflow_call:
+    inputs:
+      live_dependencies:
+        description: Resolve current dependencies instead of the lockfile
+        type: boolean
+        default: false
   schedule:
     - cron: "37 3 * * *"
   workflow_dispatch:
+    inputs:
+      live_dependencies:
+        description: Resolve current dependencies instead of the lockfile
+        type: boolean
+        default: false
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -39,11 +49,11 @@ jobs:
         python-version: ${{ matrix.python-version }}
 
     - name: Sync the test environment
-      # Primary cell installs uv.lock exactly; floating cells test today's resolution.
+      # Normal runs install uv.lock; scheduled or opt-in runs test today's resolution.
       # Retried because observed failures here are transport failures, not test failures.
       shell: bash
       run: |
-        sync_cmd=(uv sync --group test ${{ github.event_name == 'schedule' && '--upgrade' || '--locked' }})
+        sync_cmd=(uv sync --group test ${{ (github.event_name == 'schedule' || inputs.live_dependencies) && '--upgrade' || '--locked' }})
         for attempt in 1 2 3; do
           if "${sync_cmd[@]}"; then exit 0; fi
           if [ "$attempt" -eq 3 ]; then echo "::error::uv sync failed after 3 attempts"; exit 1; fi
