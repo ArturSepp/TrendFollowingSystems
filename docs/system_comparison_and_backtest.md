@@ -11,8 +11,9 @@ myst:
 
 *Author: [Artur Sepp](https://github.com/ArturSepp) / First recorded: [2026-08-17](https://github.com/ArturSepp/TrendFollowingSystems/commit/2e9ee625ba6b396bea03e17cb853a6bfd78aab72)*
 
-A guide to the reference systems of [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
+Implemented in [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
 Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
+
 Each system has its own handbook chapter: [European](european_system.md),
 [American](american_system.md) and [time-series momentum](tsmom_system.md).
 

@@ -11,8 +11,9 @@ myst:
 
 *Author: [Artur Sepp](https://github.com/ArturSepp) / First recorded: [2026-08-17](https://github.com/ArturSepp/TrendFollowingSystems/commit/1bf07efd5d45d8f5296d7a5fc897893b445a967c)*
 
-A guide to the attribution workflow of [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
+Implemented in [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
 Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
+
 The formula is derived in [the closed-form Sharpe ratio](sharpe_ratio_closed_form.md), and the
 paper's attribution across 84 contracts is reported in
 [the futures evidence](case_study_futures_evidence.md).

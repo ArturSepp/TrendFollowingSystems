@@ -12,10 +12,12 @@ myst:
 
 *Author: [Artur Sepp](https://github.com/ArturSepp) / First recorded: [2026-08-16](https://github.com/ArturSepp/TrendFollowingSystems/commit/1bceb64e2e10fa0014d10f4fbb69c84ece61f667)*
 
+Implemented in [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
+Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
+
 The package accompanies Artur Sepp and Vladimir Lucic's *The Science and Practice of
 Trend-Following Systems*, of which [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems)
 is the replication package.
-Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
 
 - [Read the paper on SSRN](https://papers.ssrn.com/sol3/papers.cfm?abstract_id=3167787), or on
   [arXiv](https://arxiv.org/abs/2607.19497).

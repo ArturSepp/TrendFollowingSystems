@@ -12,6 +12,9 @@ myst:
 
 *Author: [Artur Sepp](https://github.com/ArturSepp) / First recorded: [2026-08-16](https://github.com/ArturSepp/TrendFollowingSystems/commit/1bceb64e2e10fa0014d10f4fbb69c84ece61f667)*
 
+Implemented in [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
+Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
+
 <a id="trendfollowing"></a>
 
 [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems) is a Python library of
@@ -24,7 +27,6 @@ time-series-momentum systems on a packaged panel of 84 futures. It is the replic
 replication library, not a broker integration or general-purpose execution engine; portfolio
 analytics and reporting are delegated to [qis](https://github.com/ArturSepp/QuantInvestStrats).
 
-Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
 
 ## Start here
 

@@ -8,9 +8,9 @@ myst:
 
 # Bibliography
 
-*Author: [Artur Sepp](https://github.com/ArturSepp)*
+*Author: [Artur Sepp](https://github.com/ArturSepp) / First recorded: [2026-10-01](https://github.com/ArturSepp/TrendFollowingSystems/commit/0bb930e9aba0b2c7d7a1dccbb26b05e3b77358c3)*
 
-This is the reference list of the [trendfollowing documentation](https://github.com/ArturSepp/TrendFollowingSystems).
+Implemented in [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
 Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
 
 Every entry below is written once, in one style: authors, year, title, venue with volume, issue and

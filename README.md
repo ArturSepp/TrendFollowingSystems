@@ -1,5 +1,10 @@
 # trendfollowing
 
+*Author: [Artur Sepp](https://github.com/ArturSepp) / First recorded: [2026-07-20](https://github.com/ArturSepp/TrendFollowingSystems/commit/d18103784e5edf98f792542b27ef852d8624046d)*
+
+Implemented in [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
+Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
+
 **Closed-form trend-following analytics, reference system implementations, and reproducible
 futures evidence in Python for quantitative researchers and practitioners**
 

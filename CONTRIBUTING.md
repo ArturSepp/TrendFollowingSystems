@@ -2,7 +2,7 @@
 
 *Author: [Artur Sepp](https://github.com/ArturSepp) / First recorded: [2026-08-22](https://github.com/ArturSepp/TrendFollowingSystems/commit/f484c4924276814fe4219574976fca8c0a9e6299)*
 
-Source: [TrendFollowingSystems](https://github.com/ArturSepp/TrendFollowingSystems).
+Implemented in [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
 Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
 
 Thanks for your interest in `trendfollowing`. The package is the replication library for

@@ -9,9 +9,9 @@ myst:
 
 # Documentation standard
 
-*Author: [Artur Sepp](https://github.com/ArturSepp)*
+*Author: [Artur Sepp](https://github.com/ArturSepp) / First recorded: [2026-10-01](https://github.com/ArturSepp/TrendFollowingSystems/commit/0bb930e9aba0b2c7d7a1dccbb26b05e3b77358c3)*
 
-This standard applies to [TrendFollowingSystems](https://github.com/ArturSepp/TrendFollowingSystems).
+Implemented in [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
 Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
 
 This is the trendfollowing supplement to the
@@ -45,6 +45,12 @@ Four page forms exist:
 
 `tests/test_documentation_handbook.py` lists the methodology chapters and the case study and checks
 their structure.
+
+Use the linked Artur Sepp byline and the trendfollowing repository/software-citation block
+shown at the top of this page on every human-authored page, including the README, contribution
+guide and resource guide. Each page's First recorded date links to its own earliest verified
+source history, following renames and earlier source formats when applicable. A new uncommitted
+page keeps the author-only byline until commit evidence exists.
 
 ## Handbook conventions
 

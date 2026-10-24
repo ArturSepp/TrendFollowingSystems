@@ -10,7 +10,7 @@ myst:
 
 *Author: [Artur Sepp](https://github.com/ArturSepp) / First recorded: [2026-08-17](https://github.com/ArturSepp/TrendFollowingSystems/commit/8ce4378d5ce53f036e99d0ffac7284047ccd8a18)*
 
-A package comparison for [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
+Implemented in [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
 Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
 
 **Version snapshot: 2026-08-17; trendfollowing licence updated for 1.3.1.post1 on 2026-10-19.**

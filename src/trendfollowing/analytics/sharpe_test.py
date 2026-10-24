@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 from typing import NamedTuple, Optional
 from scipy.stats import norm
+import qis
 
 
 class SharpeDiffTest(NamedTuple):
@@ -39,6 +40,10 @@ def sharpe_difference_test(
     """
     test H0: sr(returns1) = sr(returns2) on paired return series
 
+    Uses qis.sharpe_difference_test when available, retaining the historical NamedTuple
+    result. The legacy implementation below supports older declared QIS dependencies.
+    This is unprewhitened Bartlett HAC with a normal reference, not the Ledoit-Wolf bootstrap.
+
     Parameters
     ----------
     returns1, returns2: pd.Series
@@ -57,6 +62,13 @@ def sharpe_difference_test(
     ------
     ValueError on misaligned inputs, short samples, or degenerate variances
     """
+    qis_test = getattr(qis, 'sharpe_difference_test', None)
+    if qis_test is not None:
+        result = qis_test(returns1=returns1, returns2=returns2, n_lags=n_lags, af=af)
+        return SharpeDiffTest(*(getattr(result, field) for field in SharpeDiffTest._fields))
+
+    # qis.sharpe_difference_test is absent in older supported QIS releases. Keep the
+    # pre-existing numerical path only for that compatibility case; QIS owns new inference.
     if not isinstance(returns1, pd.Series) or not isinstance(returns2, pd.Series):
         raise ValueError(f"returns must be pd.Series, got {type(returns1)!r}, {type(returns2)!r}")
     joint = pd.concat([returns1.rename('r1'), returns2.rename('r2')], axis=1, sort=True).dropna()

@@ -7,6 +7,12 @@ and the project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+### Changed
+
+- Delegate the paired HAC Sharpe-difference test to QIS when its new public API is
+  available, preserving the TFS signature and NamedTuple fields. Retain the existing
+  implementation for older supported QIS versions; no dependency floor changes.
+
 ### Fixed
 
 - Pass an explicit boolean date-order option to the packaged futures and OHLC CSV loaders,
