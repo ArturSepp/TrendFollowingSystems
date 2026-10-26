@@ -15,7 +15,10 @@ optimalportfolios handbooks. Three local mechanisms support it:
 import os
 import sys
 import tomllib
+from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import quote, urljoin
+from xml.etree import ElementTree
 
 DOCS_DIR = Path(__file__).resolve().parent
 sys.path.insert(0, str(DOCS_DIR / "_ext"))
@@ -142,9 +145,57 @@ def _docstring_as_literal(app, what, name, obj, options, lines) -> None:
     lines[:] = ["::", ""] + body + [""]
 
 
+class _CanonicalHead(HTMLParser):
+    """Read canonical and indexing metadata from the HTML actually being published."""
+
+    def __init__(self):
+        super().__init__()
+        self.canonicals = []
+        self.noindex = False
+        self.redirect = False
+
+    def handle_starttag(self, tag, attrs):
+        attributes = dict(attrs)
+        if tag == "link" and attributes.get("rel") == "canonical":
+            self.canonicals.append(attributes.get("href"))
+        if tag == "meta" and attributes.get("name", "").lower() == "robots":
+            self.noindex |= "noindex" in attributes.get("content", "").lower()
+        if tag == "meta" and attributes.get("http-equiv", "").lower() == "refresh":
+            self.redirect = True
+
+def _write_canonical_sitemap(app, exception) -> None:
+    """Offer only rendered, self-canonical pages from this build's own channel."""
+    if exception is not None or app.builder.name != "html" or not app.config.html_baseurl:
+        return
+    base = app.config.html_baseurl.rstrip("/") + "/"
+    urls = set()
+    for docname in app.env.found_docs:
+        head = _CanonicalHead()
+        file = Path(app.builder.get_outfilename(docname))
+        head.feed(file.read_text(encoding="utf-8").split("</head>")[0])
+        if head.noindex or head.redirect or len(head.canonicals) != 1:
+            continue
+        uri = app.builder.get_target_uri(docname)
+        expected = urljoin(base, quote("" if uri == "index.html" else uri, safe="/%"))
+        if head.canonicals == [expected]:
+            urls.add(expected)
+    namespace = "http://www.sitemaps.org/schemas/sitemap/0.9"
+    root = ElementTree.Element(f"{{{namespace}}}urlset")
+    for url in sorted(urls):
+        entry = ElementTree.SubElement(root, f"{{{namespace}}}url")
+        ElementTree.SubElement(entry, f"{{{namespace}}}loc").text = url
+    ElementTree.indent(root)
+    ElementTree.ElementTree(root).write(
+        Path(app.outdir) / "sitemap.xml", encoding="utf-8", xml_declaration=True,
+        default_namespace=namespace,
+    )
+
+
 def setup(app) -> None:
     """Register documentation build hooks."""
     app.connect("html-page-context", _use_root_canonical)
+    # Run after sphinx-sitemap has written its XML at priority 500.
+    app.connect("build-finished", _write_canonical_sitemap, priority=800)
     app.connect("autodoc-process-docstring", _docstring_as_literal)
 
 
