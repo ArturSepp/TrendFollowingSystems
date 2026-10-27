@@ -1,8 +1,8 @@
 # Committing with GitHub Desktop
 
-*Author: [Artur Sepp](https://github.com/ArturSepp)*
+*Author: [Artur Sepp](https://github.com/ArturSepp) / First recorded: [2026-09-21](https://github.com/ArturSepp/TrendFollowingSystems/commit/b536862e32e2406f6c42f8f6050586bc27f8776e)*
 
-Project: [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
+Implemented in [trendfollowing](https://github.com/ArturSepp/TrendFollowingSystems).
 Software citation: [CITATION.cff](https://github.com/ArturSepp/TrendFollowingSystems/blob/main/CITATION.cff).
 
 Create a working branch, select the intended changes, and commit normally. The installed
