@@ -1,1 +1,1 @@
-{"notifications": {}, "repository": "ArturSepp/TrendFollowingSystems", "schema_version": 1}
+{"notifications": {"22ac29cfadc81c47a535f20c7fab88e57744e62e8e1f6277c5f73e04022bcbc2": {"details": ["Optional extras (advisory): failure"], "head": "53c371007e55319be01bf08e93a302286170743f", "kind": "failed", "phase": "posting", "pr": 39}}, "repository": "ArturSepp/TrendFollowingSystems", "schema_version": 1}
